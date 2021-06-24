@@ -1,3 +1,5 @@
+package org.vova;
+
 import java.util.Scanner;
 
 public class Controller {
