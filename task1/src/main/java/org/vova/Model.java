@@ -1,3 +1,5 @@
+package org.vova;
+
 public class Model {
     private String greeting;
 

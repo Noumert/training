@@ -1,3 +1,5 @@
+package org.vova;
+
 public class View {
     // Text's constants
     public static final String INPUT_HELLO_WORD = "Input first \"Hello\" then \"world!\": ";
