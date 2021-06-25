@@ -6,7 +6,7 @@ public class Model {
     // The Program logic
 
     /**
-     * in this method add valueInt with this.value
+     * in this method add greetingPart with this.greeting
      * @param greetingPart
      * @return sum
      */
