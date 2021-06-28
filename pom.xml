@@ -13,5 +13,6 @@
     <modules>
         <module>task1</module>
         <module>task2test</module>
+        <module>task2game</module>
     </modules>
 </project>
