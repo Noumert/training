@@ -22,7 +22,7 @@ public class Model {
      * @return random number
      */
     public int rand(int minBarrier,int maxBarrier) {
-        return (int)(Math.random()*(maxBarrier-minBarrier+1)+minBarrier);
+        return (int)Math.ceil(Math.random()*(maxBarrier-minBarrier-1)+minBarrier);
     }
 
     /**
@@ -31,7 +31,7 @@ public class Model {
      * @return random number
      */
     public int rand() {
-        return (int)(Math.random()*(MAX_RAND+1));
+        return (int)Math.ceil(Math.random()*(maxBarrier-minBarrier-1)+minBarrier);
     }
 
     public char CheckNumber(int number) {
