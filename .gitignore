@@ -1,2 +1,7 @@
 # Project exclude paths
 /target/
+/task2game/target/
+/task1/target/
+/.idea/
+/task2game/task2game.iml
+/task2gameV2/task2gameV2.iml
