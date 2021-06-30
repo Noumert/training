@@ -45,7 +45,7 @@ public class ModelTest {
                 isMoreThanMax = true;
             }
         }
-        Assert.assertFalse((isLessThanMin && isMoreThanMax));
+        Assert.assertFalse((isLessThanMin || isMoreThanMax));
     }
 
     //Passed
