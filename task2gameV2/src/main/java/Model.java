@@ -11,17 +11,17 @@ public class Model {
     private List<Integer> yourWay = new ArrayList<Integer>();
 
     // [1-99]
-    public int setSecretValue(){
-        secretValue = (int)Math.ceil(Math.random()*
+    public int setSecretValue() {
+        secretValue = (int) Math.ceil(Math.random() *
                 (maxBarrier - minBarrier - 1) + minBarrier);
         return secretValue;
     }
 
-    public boolean checkValue (int value){
+    public boolean checkValue(int value) {
         yourWay.add(value);
-        if (value == secretValue){
+        if (value == secretValue) {
             return false;
-        } else if (value > secretValue){
+        } else if (value > secretValue) {
             maxBarrier = value;
         } else {
             minBarrier = value;
@@ -29,7 +29,7 @@ public class Model {
         return true;
     }
 
-    public void setPrimaryBarrier(int minBarrier, int maxBarrier){
+    public void setPrimaryBarrier(int minBarrier, int maxBarrier) {
         this.minBarrier = minBarrier;
         this.maxBarrier = maxBarrier;
     }
@@ -37,12 +37,15 @@ public class Model {
     public int getSecretValue() {
         return secretValue;
     }
+
     public int getMinBarrier() {
         return minBarrier;
     }
+
     public int getMaxBarrier() {
         return maxBarrier;
     }
+
     public List<Integer> getYourWay() {
         return yourWay;
     }

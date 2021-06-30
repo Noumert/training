@@ -10,5 +10,15 @@ public class View {
     public static final String CONGRATULATION = "CONGRATULATION! You WIN! Secret value = ";
     public static final String YOUR_WAY = "YOUR WAY = ";
 
+    public void printMessage(String message) {
+        System.out.println(message);
+    }
 
+    public String concatenationString(String... message) {
+        StringBuilder concatString = new StringBuilder();
+        for (String v : message) {
+            concatString.append(v);
+        }
+        return new String(concatString);
+    }
 }
