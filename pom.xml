@@ -15,5 +15,6 @@
         <module>task2test</module>
         <module>task2game</module>
         <module>task2gameV2</module>
+        <module>task3inputForm</module>
     </modules>
 </project>
