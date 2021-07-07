@@ -5,6 +5,7 @@ import view.View;
 
 import java.util.Scanner;
 
+import static controller.RegexContainer.REGEX_LOGIN;
 import static controller.RegexContainer.REGEX_NAME;
 import static view.TextConstant.FIRST_NAME;
 import static view.TextConstant.LOGIN_DATA;
@@ -28,7 +29,7 @@ public class InputNoteNoteBook {
         UtilityController utilityController =
                 new UtilityController(sc, view);
         String regexName = View.bundle.getString(REGEX_NAME);
-        String regexLogin = View.bundle.getString(REGEX_NAME);
+        String regexLogin = View.bundle.getString(REGEX_LOGIN);
 
         this.firstName =
                 utilityController.inputStringValueWithScanner

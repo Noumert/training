@@ -9,5 +9,6 @@ public class Main {
         Controller controller = new Controller(new Model(), new View());
         // Run
         controller.processUser();
+        System.out.println("End");
     }
 }
