@@ -25,6 +25,7 @@ public class InputNoteNoteBook {
         this.sc = sc;
     }
 
+
     public void inputNote() {
         UtilityController utilityController =
                 new UtilityController(sc, view);
@@ -37,5 +38,23 @@ public class InputNoteNoteBook {
         this.login =
                 utilityController.inputStringValueWithScanner
                         (LOGIN_DATA, regexLogin);
+    }
+
+    public void inputLogin() {
+        UtilityController utilityController =
+                new UtilityController(sc, view);
+        String regexLogin = View.bundle.getString(REGEX_LOGIN);
+
+        this.login =
+                utilityController.inputStringValueWithScanner
+                        (LOGIN_DATA, regexLogin);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLogin() {
+        return login;
     }
 }

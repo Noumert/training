@@ -1,6 +1,8 @@
 package controller;
 
 import model.Model;
+import model.entity.NotUniqueLoginException;
+import model.entity.NoteBook;
 import view.View;
 
 import java.util.Scanner;
@@ -22,5 +24,24 @@ public class Controller {
         InputNoteNoteBook inputNoteNoteBook =
                 new InputNoteNoteBook(view, sc);
         inputNoteNoteBook.inputNote();
+
+        NoteBook noteBook = getNoteBook(inputNoteNoteBook);
+        System.out.println(noteBook);
+    }
+
+    private NoteBook getNoteBook(InputNoteNoteBook inputNoteNoteBook) {
+        NoteBook noteBook = null;
+        while (true) {
+            try {
+                noteBook = new NoteBook(inputNoteNoteBook.getFirstName(),
+                        inputNoteNoteBook.getLogin());
+                break;
+            } catch (NotUniqueLoginException e) {
+                e.printStackTrace();
+                System.out.println("Not Unique Login " + e.getLoginData());
+                inputNoteNoteBook.inputLogin();
+            }
+        }
+        return noteBook;
     }
 }
