@@ -1,7 +1,7 @@
 package org.vova;
-import controller.Controller;
-import model.Model;
-import view.View;
+import org.vova.controller.Controller;
+import org.vova.model.Model;
+import org.vova.view.View;
 
 public class Main {
     public static void main(String[] args) {

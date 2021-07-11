@@ -1,14 +1,14 @@
-package controller;
+package org.vova.controller;
 
 
-import view.View;
+import org.vova.view.View;
 
 import java.util.Scanner;
 
-import static controller.RegexContainer.REGEX_LOGIN;
-import static controller.RegexContainer.REGEX_NAME;
-import static view.TextConstant.FIRST_NAME;
-import static view.TextConstant.LOGIN_DATA;
+import static org.vova.controller.RegexContainer.REGEX_LOGIN;
+import static org.vova.controller.RegexContainer.REGEX_NAME;
+import static org.vova.view.TextConstant.FIRST_NAME;
+import static org.vova.view.TextConstant.LOGIN_DATA;
 
 /**
  * Created by student on 26.09.2017.

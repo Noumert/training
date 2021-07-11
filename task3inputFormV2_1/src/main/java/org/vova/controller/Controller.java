@@ -1,9 +1,9 @@
-package controller;
+package org.vova.controller;
 
-import model.Model;
-import model.entity.NotUniqueLoginException;
-import model.entity.NoteBook;
-import view.View;
+import org.vova.model.Model;
+import org.vova.model.entity.NotUniqueLoginException;
+import org.vova.model.entity.NoteBook;
+import org.vova.view.View;
 
 import java.util.Scanner;
 
