@@ -18,6 +18,7 @@
         <module>task3inputForm</module>
         <module>task3inputFormV2_1</module>
         <module>ExceptionsGolovach</module>
+        <module>ImmutableAndEqualsHashcode</module>
     </modules>
 
     <properties>
