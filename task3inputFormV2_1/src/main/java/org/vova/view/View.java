@@ -1,10 +1,10 @@
-package view;
+package org.vova.view;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static view.TextConstant.INPUT_STRING_DATA;
-import static view.TextConstant.WRONG_INPUT_DATA;
+import static org.vova.view.TextConstant.INPUT_STRING_DATA;
+import static org.vova.view.TextConstant.WRONG_INPUT_DATA;
 
 
 /**
@@ -17,8 +17,8 @@ public class View {
     public static final ResourceBundle bundle =
             ResourceBundle.getBundle(
                     MESSAGES_BUNDLE_NAME,
-//                    new Locale("ua", "UA"));  // Ukrainian
-                    new Locale("en"));        // English
+                    new Locale("ua", "UA"));  // Ukrainian
+//                    new Locale("en"));        // English
 
     //Utilities methods
 

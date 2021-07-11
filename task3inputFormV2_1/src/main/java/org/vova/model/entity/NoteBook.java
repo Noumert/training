@@ -1,4 +1,4 @@
-package model.entity;
+package org.vova.model.entity;
 
 /**
  * Created by Noumert on 08.07.2021.

@@ -1,8 +1,8 @@
-package controller;
+package org.vova.controller;
 
 
 
-import view.View;
+import org.vova.view.View;
 
 import java.util.Scanner;
 
