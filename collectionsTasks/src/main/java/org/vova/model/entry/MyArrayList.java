@@ -56,5 +56,5 @@ public class MyArrayList<E> extends ArrayList<E> {
     public void replaceAll(UnaryOperator<E> operator) {
         System.out.println("sorry this method was turned off");
     }
-    
+
 }
