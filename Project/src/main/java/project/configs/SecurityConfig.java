@@ -22,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .hasRole("USER")
                 .and()
                 .formLogin()
+                .usernameParameter("email")
                 .loginPage("/login")
                 .failureUrl("/login-error")
                 .and()

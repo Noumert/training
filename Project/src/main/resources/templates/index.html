@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title th:utext="#{label.title}"></title>
@@ -12,5 +12,8 @@
     <a th:href="@{/main?lang=ua}">UA</a>
 </div>
 <h1 th:utext="#{label.greeting}"></h1>
+<div sec:authorize="hasRole('ROLE_USER')">
+    Authenticated as <span sec:authentication="name">USER</span></div>
 </body>
+
 </html>

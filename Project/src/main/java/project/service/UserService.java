@@ -1,5 +1,6 @@
 package project.service;
 
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,4 +35,10 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+    public Optional<User> findByUserLogin (String email){
+        //TODO check for user availability. password check
+        return userRepository.findByEmail(email);
+    }
+
 }

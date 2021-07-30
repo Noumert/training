@@ -13,11 +13,7 @@ import project.service.UserService;
 
 @Controller
 public class LoginController {
-//    @Autowired
-//    UserService userService;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+
 
     @RequestMapping("/login")
     public String loginPage(){
