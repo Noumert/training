@@ -14,7 +14,6 @@ import project.service.UserService;
 @Controller
 public class LoginController {
 
-
     @RequestMapping("/login")
     public String loginPage(){
 //        userService.saveNewUser(User.builder()

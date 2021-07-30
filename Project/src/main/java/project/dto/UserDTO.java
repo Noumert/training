@@ -15,7 +15,10 @@ import java.util.stream.Collectors;
 @Builder
 @ToString
 public class UserDTO {
-    private String email;
+    private String firstName;
+    private String lastName;
     private String password;
+    private String matchingPassword;
+    private String email;
 }
 
