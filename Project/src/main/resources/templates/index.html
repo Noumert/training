@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:utext="#{label.title}"></title>
+</head>
+<body>
+<div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
+    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
+    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
+    <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
+    </span>
+</div>
+<h1 th:utext="#{label.greeting}"></h1>
+<div sec:authorize="hasRole('ROLE_USER')">
+    Authenticated as <span sec:authentication="name">USER</span></div>
+</body>
+
+</html>

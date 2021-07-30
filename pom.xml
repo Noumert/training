@@ -21,6 +21,7 @@
         <module>ImmutableAndEqualsHashcode</module>
         <module>collectionsTasks</module>
         <module>streamsTask</module>
+        <module>Project</module>
     </modules>
 
     <properties>
