@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration","/login")
                 .permitAll()
                 .antMatchers("/","/main")
-                .hasRole("USER")
+                .hasAnyRole ("USER","ADMIN")
                 .and()
                 .formLogin()
                 .usernameParameter("email")
@@ -30,7 +30,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/login-error")
                 .and()
                 .logout()
-                .logoutSuccessUrl("/");
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login");
     }
 
     @Autowired

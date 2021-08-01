@@ -32,9 +32,11 @@ public class RegistrationController {
     }
 
     @PostMapping(value = {"/registration"})
-    public String registerUserAccount(UserDTO userDto) {
+    public String registerUserAccount(Model model,UserDTO userDto) {
         //TODO check userDto correct
         userService.saveNewUser(userDto);
-        return "regDone";
+        model.addAttribute("user", userDto);
+        model.addAttribute("success",true);
+        return "registration";
     }
 }
