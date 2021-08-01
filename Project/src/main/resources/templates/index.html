@@ -6,8 +6,16 @@
 </head>
 <body>
 <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
+    <span sec:authorize="isAuthenticated()">
+    <a href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
+    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <input hidden type="submit" value="Sign Out"/>
+    </form>
+    </span>
+    <span sec:authorize="!isAuthenticated()">
     <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
     <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
+    </span>
     <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>

@@ -1,8 +1,10 @@
 package project.entity;
 
 import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 
 @Data
@@ -14,9 +16,9 @@ import javax.persistence.*;
 @Entity
 @Table( name="user",
         uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
-public class User {
+public class User{
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(name = "first_name", nullable = false)
@@ -28,5 +30,12 @@ public class User {
     @Column(nullable = false)
     private String password;
     @Column(name = "roles")
-    private String roles;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 }
