@@ -14,9 +14,11 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import project.dto.UserDTO;
 import project.entity.User;
+import project.exceptions.DublicatedEmailException;
 import project.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @Controller
@@ -32,11 +34,19 @@ public class RegistrationController {
     }
 
     @PostMapping(value = {"/registration"})
-    public String registerUserAccount(Model model,UserDTO userDto) {
+    public String registerUserAccount(@Valid UserDTO userDto,
+                                      HttpServletRequest request,
+                                      Model model,
+                                      Errors errors){
         //TODO check userDto correct
-        userService.saveNewUser(userDto);
+        try {
+            userService.saveNewUser(userDto);
+            model.addAttribute("success",true);
+        } catch (DublicatedEmailException e) {
+            model.addAttribute("error",true);
+            model.addAttribute("success",false);
+        }
         model.addAttribute("user", userDto);
-        model.addAttribute("success",true);
         return "registration";
     }
 }

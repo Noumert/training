@@ -13,6 +13,7 @@ import project.dto.UserDTO;
 import project.entity.Role;
 import project.entity.RoleType;
 import project.entity.User;
+import project.exceptions.DublicatedEmailException;
 import project.repository.UserRepository;
 //import org.springframework.security.core.userdetails.User;
 
@@ -38,7 +39,7 @@ public class UserService implements UserDetailsService {
         return userDetails;
     }
 
-    public void saveNewUser(UserDTO userDto) {
+    public void saveNewUser(UserDTO userDto) throws DublicatedEmailException {
         //TODO inform the user about the replay email
         // TODO exception to endpoint
         try {
@@ -54,7 +55,7 @@ public class UserService implements UserDetailsService {
                             .build()))
                     .build());
         } catch (Exception ex) {
-            log.info("{Почтовый адрес уже существует}");
+            throw new DublicatedEmailException("Same email exist");
         }
 
     }
