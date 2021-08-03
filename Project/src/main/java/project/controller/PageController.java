@@ -3,6 +3,7 @@ package project.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,7 @@ public class PageController {
     UserService userService;
 
     @RequestMapping(value = { "/", "/main" })
-    public String mainPage(Authentication authentication){
-        String email = authentication.getName();
-        Optional<User> name = userService.findByUserLogin(email);
-        log.info(name.isPresent() ? name.get().toString() : "No such user");
+    public String mainPage(){
         return "index";
     }
 

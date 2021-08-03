@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration","/login")
                 .permitAll()
                 .antMatchers("/","/main")
-                .hasAnyRole ("USER","ADMIN")
+                .permitAll()
                 .and()
                 .formLogin()
                 .usernameParameter("email")

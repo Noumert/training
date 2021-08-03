@@ -9,13 +9,6 @@ public class LoginController {
 
     @RequestMapping("/login")
     public String loginPage(){
-//        userService.saveNewUser(User.builder()
-//                .email("vova@gmail.com")
-//                .password(passwordEncoder.encode("qwer1234"))
-//                .firstName("Vova")
-//                .lastName("Pavl")
-//                .roles(Role.ROLE_USER.name())
-//                .build());
         return "login";
     }
 

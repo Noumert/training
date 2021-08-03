@@ -1,32 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Registration form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-
-<div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
-    <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-        <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-    <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
-    <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
-    </span>
+<div th:replace="headerTemplete :: panelTopMain">
 </div>
-
 <br>
 <br>
 <!-- Create HTML registration form -->
