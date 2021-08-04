@@ -11,11 +11,8 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-
 @Entity
-@Table( name="user",
-        uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
+@Table( name="user")
 public class User{
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@
 <div th:replace="headerTemplete :: panelTopMain">
 </div>
 <h1 th:utext="#{label.greeting}"></h1>
-<form name="logoutForm" th:action="@{/user/creditCards/add}" method="post" th:hidden="true">
+<form name="addForm" th:action="@{/user/creditCards/add}" method="post">
     <input type="submit" value="add"/>
 </form>
 </body>

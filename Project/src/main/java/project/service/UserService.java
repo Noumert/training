@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -57,7 +58,11 @@ public class UserService implements UserDetailsService {
     }
 
     public Optional<User> findByUserLogin(String email) {
-        //TODO check for user availability. password check
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> getCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(email);
     }
 

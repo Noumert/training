@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
 
-        @RequestMapping("/")
+        @RequestMapping()
         public String creditCardsPage(){
             return "user/creditCards";
         }
 
         @PostMapping("/add")
         public String addCreditCard(){
-            return "user/creditCards";
+            return "redirect:/user/creditCards";
         }
 }
