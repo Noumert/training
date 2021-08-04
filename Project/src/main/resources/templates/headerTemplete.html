@@ -56,7 +56,7 @@
 <div class="panelTop" th:fragment="panelTopGuest">
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
-        <span sec:authorize="isAuthenticated()">
+    <span sec:authorize="isAuthenticated()">
     <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
     <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
         <input hidden type="submit" value="Sign Out"/>

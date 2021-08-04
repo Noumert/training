@@ -10,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.dto.UserDTO;
-import project.entity.Role;
 import project.entity.RoleType;
 import project.entity.User;
 import project.exceptions.DublicatedEmailException;
@@ -49,10 +48,7 @@ public class UserService implements UserDetailsService {
                     .lastName(userDto.getLastName())
                     .email(userDto.getEmail())
                     .password(passwordEncoder.encode(userDto.getPassword()))
-                    .roles(Collections.singletonList(Role
-                            .builder()
-                            .name(RoleType.ROLE_ADMIN.name())
-                            .build()))
+                    .role(RoleType.ROLE_USER)
                     .build());
         } catch (Exception ex) {
             throw new DublicatedEmailException("Same email exist");
@@ -65,15 +61,15 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(RoleType role) {
+        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
     public UserDetails mapUserToUserDetails(User user) {
         return new UserDetails() {
             @Override
             public Collection<? extends GrantedAuthority> getAuthorities() {
-                return mapRolesToAuthorities(user.getRoles());
+                return mapRolesToAuthorities(user.getRole());
             }
 
             @Override

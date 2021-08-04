@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+<h1 th:utext="#{label.greeting}"></h1>
+<form name="logoutForm" th:action="@{/user/creditCards/add}" method="post" th:hidden="true">
+    <input type="submit" value="add"/>
+</form>
+</body>
+</html>

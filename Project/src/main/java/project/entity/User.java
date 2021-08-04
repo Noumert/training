@@ -29,13 +29,7 @@ public class User{
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(name = "roles")
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "id"))
-    private Collection<Role> roles;
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
 }
