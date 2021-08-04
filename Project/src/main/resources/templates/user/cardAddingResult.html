@@ -3,9 +3,6 @@
 <head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-<div th:replace="headerTemplete :: panelTopMain">
-</div>
-<h1 th:utext="#{label.greeting}"></h1>
 <span th:if="${success}">
             <div class="alert alert-info"
                  th:utext="#{label.add.card.success}">
@@ -18,9 +15,6 @@
                 error
             </div>
             </span>
-
-<form name="addForm" th:action="@{/user/creditCards/add}" method="post">
-    <input type="submit" value="add"/>
-</form>
+<a href="/" th:href="@{/user/creditCards}" th:utext="#{label.back.to.cards.page}">Back to Cards Page</a>
 </body>
 </html>

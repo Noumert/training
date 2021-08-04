@@ -13,12 +13,11 @@ import org.springframework.stereotype.Service;
 import project.dto.UserDTO;
 import project.entity.RoleType;
 import project.entity.User;
-import project.exceptions.DublicatedEmailException;
+import project.exceptions.DuplicatedEmailException;
 import project.repository.UserRepository;
 //import org.springframework.security.core.userdetails.User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,9 +38,7 @@ public class UserService implements UserDetailsService {
         return userDetails;
     }
 
-    public void saveNewUser(UserDTO userDto) throws DublicatedEmailException {
-        //TODO inform the user about the replay email
-        // TODO exception to endpoint
+    public void saveNewUser(UserDTO userDto) throws DuplicatedEmailException {
         try {
             userRepository.save(User
                     .builder()
@@ -52,7 +49,7 @@ public class UserService implements UserDetailsService {
                     .role(RoleType.ROLE_USER)
                     .build());
         } catch (Exception ex) {
-            throw new DublicatedEmailException("Same email exist");
+            throw new DuplicatedEmailException("Same email exist");
         }
 
     }

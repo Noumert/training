@@ -2,18 +2,15 @@ package project.service;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.web.client.HttpClientErrorException;
-import project.dto.UserDTO;
+import org.springframework.stereotype.Service;
 import project.entity.CreditCard;
-import project.entity.RoleType;
 import project.entity.User;
-import project.exceptions.DublicatedEmailException;
+import project.exceptions.DuplicatedNumberException;
 import project.repository.CreditCardRepository;
-import project.repository.UserRepository;
 
 import java.time.LocalDate;
 
+@Service
 public class CreditCardService {
     final static int EXPIRED_DURATION = 5;
 
@@ -23,7 +20,7 @@ public class CreditCardService {
     @Autowired
     UserService userService;
 
-    public void saveNewCard() throws NotFoundException {
+    public void saveNewCard() throws NotFoundException, DuplicatedNumberException {
         User user = userService.getCurrentUser().orElseThrow(()-> new NotFoundException("no such user"));
         try {
             creditCardRepository.save(CreditCard.builder()
@@ -32,7 +29,7 @@ public class CreditCardService {
                     .user(user)
                     .build());
         } catch (Exception e){
-
+            throw new DuplicatedNumberException("same number exist");
         }
     }
 }
