@@ -16,7 +16,6 @@ public class UserCardDTO {
     private String lastName;
     private Long id;
     private String cardNumber;
-    private boolean active;
     private Long money;
     private LocalDate expirationDate;
 }

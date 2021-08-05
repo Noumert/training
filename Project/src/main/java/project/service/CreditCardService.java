@@ -3,6 +3,8 @@ package project.service;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.dto.AccountDto;
+import project.entity.Account;
 import project.entity.CreditCard;
 import project.entity.User;
 import project.exceptions.DuplicatedNumberException;
@@ -17,7 +19,6 @@ import java.util.stream.Collectors;
 public class CreditCardService {
     final static int MIN_RANDOM = 1000;
     final static int MAX_RANDOM = 9999;
-    final static long START_MONEY_VALUE = 0L;
     final static int EXPIRED_DURATION = 5;
 
     @Autowired
@@ -26,15 +27,18 @@ public class CreditCardService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AccountService accountService;
+
     @Transactional
-    public void saveNewCard() throws NotFoundException, DuplicatedNumberException {
-        User user = userService.getCurrentUser().orElseThrow(() -> new NotFoundException("no such user"));
+    public void saveNewCard(Long accountId) throws NotFoundException, DuplicatedNumberException {
+        User user = userService.getCurrentUser();
+        Account account = accountService.findById(accountId);
         try {
             creditCardRepository.save(CreditCard.builder()
                     .cardNumber(generateCardNumber())
                     .expirationDate(LocalDate.now().plusYears(EXPIRED_DURATION))
-                    .money(START_MONEY_VALUE)
-                    .active(false)
+                    .account(account)
                     .user(user)
                     .build());
         } catch (Exception e) {
@@ -52,14 +56,15 @@ public class CreditCardService {
     }
 
     private String randomCardNumber() {
-        return random(MIN_RANDOM, MAX_RANDOM)
-                + "-" + random(MIN_RANDOM, MAX_RANDOM)
-                + "-" + random(MIN_RANDOM, MAX_RANDOM)
-                + "-" + random(MIN_RANDOM, MAX_RANDOM);
+        return random()
+                + "-" + random()
+                + "-" + random()
+                + "-" + random();
     }
 
-    private int random(int min, int max) {
-        return (int) Math.floor(Math.random() * (max - min + 1) + min);
+    private String random() {
+        return String.valueOf((int) Math.floor(Math.random()
+                * (CreditCardService.MAX_RANDOM - CreditCardService.MIN_RANDOM + 1) + CreditCardService.MIN_RANDOM));
     }
 
 
@@ -67,7 +72,6 @@ public class CreditCardService {
     public List<CreditCard> findCurrentUserCards() throws NotFoundException {
         return creditCardRepository
                 .findByUserId(userService.getCurrentUser()
-                        .orElseThrow(() -> new NotFoundException("no such user"))
                         .getId());
     }
 

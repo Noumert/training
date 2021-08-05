@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.dto.UserCardDTO;
+import project.entity.Account;
 import project.entity.CreditCard;
 import project.entity.User;
 import project.service.CreditCardService;
@@ -30,12 +31,12 @@ public class CreditCardsAdministrationController {
 
         model.addAttribute("userCards", userCardDTOS);
 
-        log.info("{}", userCardDTOS);
         return "admin/creditCardsAdministration";
     }
 
     private UserCardDTO convertCardToDto(CreditCard creditCard) {
         User user = creditCard.getUser();
+        Account account = creditCard.getAccount();
         return UserCardDTO.builder()
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
@@ -43,8 +44,7 @@ public class CreditCardsAdministrationController {
                 .id(creditCard.getId())
                 .cardNumber(creditCard.getCardNumber())
                 .expirationDate(creditCard.getExpirationDate())
-                .active(creditCard.isActive())
-                .money(creditCard.getMoney())
+                .money(account.getMoney())
                 .build();
     }
 

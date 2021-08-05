@@ -3,18 +3,13 @@
 <head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-<span th:if="${success}">
-            <div class="alert alert-info"
-                 th:utext="#{label.add.card.success}">
-                success
-            </div>
-            </span>
+
 <span th:if="${error}">
-            <div class="alert alert-info"
-                 th:utext="#{label.add.card.error}">
-                error
-            </div>
-            </span>
+    <div class="alert alert-info"
+        th:utext="#{label.add.card.error}">
+        error
+    </div>
+</span>
 <a href="/" th:href="@{/user/creditCards}" th:utext="#{label.back.to.cards.page}">Back to Cards Page</a>
 </body>
 </html>

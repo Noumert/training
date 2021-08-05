@@ -1,5 +1,6 @@
 package project.service;
 
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -55,9 +56,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public Optional<User> getCurrentUser() {
+    public User getCurrentUser() throws NotFoundException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("no such user"));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(RoleType role) {
