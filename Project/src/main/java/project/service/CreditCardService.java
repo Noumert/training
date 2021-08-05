@@ -3,6 +3,7 @@ package project.service;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.dto.UserCardDTO;
 import project.entity.CreditCard;
 import project.entity.User;
 import project.exceptions.DuplicatedNumberException;
@@ -71,4 +72,12 @@ public class CreditCardService {
                         .orElseThrow(() -> new NotFoundException("no such user"))
                         .getId());
     }
+
+    public List<CreditCard> findAll() {
+        return creditCardRepository.findAll();
+    }
+
+//    public List<UserCardDTO> findAllUserCard() {
+//        return creditCardRepository.findAllUserCard();
+//    }
 }

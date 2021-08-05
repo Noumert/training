@@ -25,7 +25,7 @@ public class CreditCard {
     private Long money;
     @Column(nullable = false)
     private boolean active;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

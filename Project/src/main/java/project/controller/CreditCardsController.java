@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import project.exceptions.DuplicatedNumberException;
 import project.service.CreditCardService;
 
-@Slf4j
+
 @Controller
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {

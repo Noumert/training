@@ -43,6 +43,7 @@ public class UserService implements UserDetailsService {
                     .lastName(userDto.getLastName())
                     .email(userDto.getEmail())
                     .password(passwordEncoder.encode(userDto.getPassword()))
+                    .accountNonLocked(true)
                     .role(RoleType.ROLE_USER)
                     .build());
         } catch (Exception ex) {
@@ -88,7 +89,7 @@ public class UserService implements UserDetailsService {
 
             @Override
             public boolean isAccountNonLocked() {
-                return true;
+                return user.isAccountNonLocked();
             }
 
             @Override
