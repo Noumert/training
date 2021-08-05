@@ -17,16 +17,10 @@
 <div class="panelTop" th:fragment="panelTopAdmin">
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
-        <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
+        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
         <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-        <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
+        </form>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
@@ -38,16 +32,10 @@
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
         <a th:href="@{/user/creditCards}" th:utext="#{label.credit.cards}">Credit cards</a>
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
-        <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
+        <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
+        <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
         <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-        <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
+        </form>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
@@ -58,16 +46,8 @@
 <div class="panelTop" th:fragment="panelTopGuest">
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
-    <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-        <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-        <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
+        <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
+        <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
         <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>

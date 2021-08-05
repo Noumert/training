@@ -1,15 +1,17 @@
 package project.controller;
 
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.exceptions.DuplicatedNumberException;
 import project.service.CreditCardService;
 
-
+@Slf4j
 @Controller
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
@@ -18,6 +20,11 @@ public class CreditCardsController {
 
         @RequestMapping()
         public String creditCardsPage(Model model){
+            try {
+                model.addAttribute("userCards",creditCardService.findCurrentUserCards());
+            } catch (NotFoundException | UnexpectedRollbackException e) {
+                model.addAttribute("error",true);
+            }
             return "user/creditCards";
         }
 
@@ -26,9 +33,8 @@ public class CreditCardsController {
             try {
                 creditCardService.saveNewCard();
                 model.addAttribute("success",true);
-            } catch (NotFoundException | DuplicatedNumberException e) {
+            } catch (NotFoundException | DuplicatedNumberException | UnexpectedRollbackException e) {
                 model.addAttribute("error",true);
-                model.addAttribute("success",false);
             }
             return "/user/cardAddingResult";
         }

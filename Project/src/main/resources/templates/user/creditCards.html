@@ -6,18 +6,35 @@
 <div th:replace="headerTemplete :: panelTopMain">
 </div>
 <h1 th:utext="#{label.greeting}"></h1>
-<span th:if="${success}">
-            <div class="alert alert-info"
-                 th:utext="#{label.add.card.success}">
-                success
-            </div>
-            </span>
+
 <span th:if="${error}">
-            <div class="alert alert-info"
-                 th:utext="#{label.add.card.error}">
-                error
-            </div>
-            </span>
+    <div class="alert alert-info"
+         th:utext="#{label.add.card.error}">
+            error
+    </div>
+</span>
+
+<table>
+    <thead>
+    <tr>
+        <th> Card number </th>
+        <th> Expiration date </th>
+        <th> Money </th>
+        <th> Active </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${userCards.empty}">
+        <td colspan="4" th:utext="#{label.no.card}"> no cards </td>
+    </tr>
+    <tr th:each="userCard : ${userCards}">
+        <td><span th:text="${userCard.cardNumber}"> Card number </span></td>
+        <td><span th:text="${userCard.expirationDate}"> Expiration date </span></td>
+        <td><span th:text="${userCard.money}"> Money </span></td>
+        <td><span th:text="${userCard.active}"> Active </span></td>
+    </tr>
+    </tbody>
+</table>
 
 <form name="addForm" th:action="@{/user/creditCards/add}" method="post">
     <input type="submit" value="add"/>

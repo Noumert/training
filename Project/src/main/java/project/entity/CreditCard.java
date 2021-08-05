@@ -21,6 +21,10 @@ public class CreditCard {
     private String cardNumber;
     @Column(nullable = false)
     private LocalDate expirationDate;
+    @Column(nullable = false)
+    private Long money;
+    @Column(nullable = false)
+    private boolean active;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
