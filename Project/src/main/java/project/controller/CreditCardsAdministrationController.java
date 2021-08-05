@@ -1,18 +1,13 @@
 package project.controller;
 
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.dto.UserCardDTO;
 import project.entity.CreditCard;
 import project.entity.User;
-import project.exceptions.DuplicatedNumberException;
 import project.service.CreditCardService;
 
 import java.util.List;

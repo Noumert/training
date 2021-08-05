@@ -2,9 +2,7 @@ package project.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import project.dto.UserCardDTO;
 import project.entity.CreditCard;
 
 import java.util.List;

@@ -3,7 +3,6 @@ package project.service;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.dto.UserCardDTO;
 import project.entity.CreditCard;
 import project.entity.User;
 import project.exceptions.DuplicatedNumberException;
@@ -12,7 +11,6 @@ import project.repository.CreditCardRepository;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +45,7 @@ public class CreditCardService {
     private String generateCardNumber() {
         List<String> cardsNumbers = creditCardRepository.findAll().stream().map(CreditCard::getCardNumber).collect(Collectors.toList());
         String cardNumber = randomCardNumber();
-        while (cardsNumbers.contains(cardNumber)){
+        while (cardsNumbers.contains(cardNumber)) {
             cardNumber = randomCardNumber();
         }
         return cardNumber;
