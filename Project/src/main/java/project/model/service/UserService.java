@@ -15,6 +15,7 @@ import project.model.entity.User;
 import project.exceptions.DuplicatedEmailException;
 import project.model.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Slf4j
@@ -89,6 +90,20 @@ public class UserService implements UserDetailsService {
                 return true;
             }
         };
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public List<User> findByRole(RoleType roleType) {
+        return userRepository.findByRole(roleType);
+    }
+
+    @Transactional
+    public void setBanById(boolean accountNonLocked, Long userId) {
+        log.info("accountNonLocked {} userId {}",accountNonLocked,userId);
+        userRepository.setBanById(accountNonLocked,userId);
     }
 }
 

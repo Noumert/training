@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+
+<span th:if="${error}">
+    <div class="alert alert-info"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+  <thead>
+  <tr>
+    <th th:utext="#{label.email}"> email </th>
+    <th th:utext="#{label.first.name}"> first name </th>
+    <th th:utext="#{label.last.name}"> last name </th>
+    <th th:utext="#{label.banned}"> Banned </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${users.empty}">
+    <td colspan="4" th:utext="#{label.no.accounts}"> no accounts </td>
+  </tr>
+  <tr th:each="user : ${users}">
+    <td><span th:text="${user.email}"> email </span></td>
+    <td><span th:text="${user.firstName}"> First name </span></td>
+    <td><span th:text="${user.lastName}"> Last name </span></td>
+    <td><span th:text="${user.accountNonLocked} ? #{label.unbanned.account} : #{label.banned.account}"> Enable </span></td>
+    <td>
+      <form name="banForm" th:action="@{/admin/users/ban}" method="post">
+        <input type = "hidden" name = "userId" th:value = "${user.id}" />
+        <button type="submit" th:text="#{label.ban}"></button>
+      </form>
+    </td>
+    <td>
+      <form name="unbanForm" th:action="@{/admin/users/unban}" method="post">
+        <input type = "hidden" name = "userId" th:value = "${user.id}" />
+        <button type="submit" th:text="#{label.unban}"></button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

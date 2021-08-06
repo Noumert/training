@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @ToString
-public class CreditCardDto {
+public class CreditCardDTO {
     private Long id;
     private String cardNumber;
     private LocalDate expirationDate;

@@ -38,7 +38,10 @@ public class RegistrationController {
                                       Model model,
                                       Errors errors) {
         try {
-            userService.saveNewUser(entityDtoConverter.convertUserDtoToUser(userDto));
+            User user = entityDtoConverter.convertUserDtoToUser(userDto);
+            user.setRole(RoleType.ROLE_USER);
+            user.setAccountNonLocked(true);
+            userService.saveNewUser(user);
             model.addAttribute("success", true);
         } catch (DuplicatedEmailException e) {
             model.addAttribute("error", true);

@@ -8,55 +8,54 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
 import project.model.dto.UserAccountDTO;
-import project.model.entity.Account;
-import project.model.entity.User;
+import project.model.dto.UserDTO;
+import project.model.entity.RoleType;
 import project.model.service.AccountService;
+import project.model.service.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/accounts")
-public class AccountsAdministrationController {
+@RequestMapping("/admin/users")
+public class UsersAdministrationController {
     @Autowired
-    AccountService accountService;
+    UserService userService;
 
     @Autowired
     EntityDtoConverter entityDtoConverter;
 
     @RequestMapping()
-    public String accountsPage(Model model) {
+    public String usersPage(Model model) {
 
-        List<UserAccountDTO> userCardDTOS = entityDtoConverter.convertAccountsToDto(accountService.findAll());
-        model.addAttribute("userAccounts", userCardDTOS);
-
-        return "admin/accountsAdministration";
+        List<UserDTO> userDTOS = entityDtoConverter.convertUserListToUserDto(userService.findByRole(RoleType.ROLE_USER));
+        model.addAttribute("users", userDTOS);
+        return "admin/usersAdministration";
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
+    public String banAccount(@Valid @NotNull @NotEmpty Long userId, Model model){
         try {
-            accountService.setBanById(true,accountId);
-            return "redirect:/admin/accounts";
+            userService.setBanById(false,userId);
+            return "redirect:/admin/users";
         } catch (RuntimeException e) {
             model.addAttribute("error",true);
-            return "/admin/accountBanResult";
+            return "/admin/userBlockResult";
         }
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
+    public String unbanAccount(@Valid @NotNull @NotEmpty Long userId, Model model){
         try {
-            accountService.setBanById(false,accountId);
-            return "redirect:/admin/accounts";
+            userService.setBanById(true,userId);
+            return "redirect:/admin/users";
         } catch (RuntimeException e) {
             model.addAttribute("error",true);
-            return "/admin/accountBanResult";
+            return "/admin/userBlockResult";
         }
     }
-}
 
+}

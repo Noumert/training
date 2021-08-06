@@ -104,13 +104,8 @@ public class AccountService {
     }
 
     @Transactional
-    public void setBanById(boolean ban,Long accountId){
-        try {
-            log.info("id {} ban {}",accountId,ban);
-            accountRepository.setBanById(ban,accountId);
-        } catch (Exception e){
-            throw new RuntimeException();
-        }
-
+    public void setBanById(boolean ban, Long accountId) {
+        log.info("ban {} accountId {}",ban,accountId);
+        accountRepository.setBanById(ban, accountId);
     }
 }

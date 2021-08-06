@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import project.model.dto.AccountDTO;
-import project.model.dto.CreditCardDto;
+import project.model.dto.CreditCardDTO;
 import project.model.dto.UserAccountDTO;
 import project.model.dto.UserDTO;
 import project.model.entity.Account;
@@ -31,9 +31,9 @@ public class EntityDtoConverter {
                         .build()).collect(Collectors.toList());
     }
 
-    public List<CreditCardDto> convertFromCardsListToDto(List<CreditCard> currentUserCards) {
+    public List<CreditCardDTO> convertFromCardsListToDto(List<CreditCard> currentUserCards) {
         return currentUserCards.stream()
-                .map(card->CreditCardDto.builder()
+                .map(card-> CreditCardDTO.builder()
                         .id(card.getId())
                         .expirationDate(card.getExpirationDate())
                         .cardNumber(card.getCardNumber())
@@ -44,12 +44,24 @@ public class EntityDtoConverter {
     public User convertUserDtoToUser(UserDTO userDto) {
         return User
                 .builder()
+                .id(userDto.getId())
                 .firstName(userDto.getFirstName())
                 .lastName(userDto.getLastName())
                 .email(userDto.getEmail())
                 .password(passwordEncoder.encode(userDto.getPassword()))
-                .accountNonLocked(true)
-                .role(RoleType.ROLE_USER)
+                .accountNonLocked(userDto.isAccountNonLocked())
+                .build();
+    }
+
+    public UserDTO convertUserToUserDto(User user) {
+        return UserDTO
+                .builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .accountNonLocked(user.isAccountNonLocked())
                 .build();
     }
 
@@ -70,5 +82,9 @@ public class EntityDtoConverter {
                             .build();
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> convertUserListToUserDto(List<User> users) {
+        return users.stream().map(this::convertUserToUserDto).collect(Collectors.toList());
     }
 }

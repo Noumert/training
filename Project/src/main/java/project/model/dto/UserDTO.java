@@ -11,6 +11,8 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @ToString
 public class UserDTO {
+    private Long id;
+    private boolean accountNonLocked;
     @NotNull
     @NotEmpty
     private String firstName;
