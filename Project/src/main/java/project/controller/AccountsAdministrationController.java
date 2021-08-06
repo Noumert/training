@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
-@RequestMapping("/admin/creditCards")
-public class CreditCardsAdministrationController {
+@RequestMapping("/admin/accounts")
+public class AccountsAdministrationController {
     @Autowired
     CreditCardService creditCardService;
 

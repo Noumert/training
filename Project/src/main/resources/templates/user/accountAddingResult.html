@@ -4,9 +4,9 @@
 </head>
 <body>
 
-<span th:if="${error}">
+<span th:if="${label.add.account.error}">
     <div class="alert alert-danger"
-        th:utext="#{label.add.card.error}">
+         th:utext="#{label.add.card.error}">
         error
     </div>
 </span>

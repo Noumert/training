@@ -25,20 +25,19 @@ public class AccountService {
     @Autowired
     private UserService userService;
 
-    @Transactional
-    public void saveNewAccount() throws NotFoundException, DuplicatedNumberException {
-        User user = userService.getCurrentUser();
+    @Autowired
+    private CreditCardService creditCardService;
 
+
+    public void saveNewAccount(Account account) throws NotFoundException {
+        account.setMoney(START_MONEY_VALUE);
+        account.setAccountName(generateAccountName());
+        account.setAccountNumber(generateAccountNumber());
+        account.setBan(false);
         try {
-            accountRepository.save(Account.builder()
-                    .money(START_MONEY_VALUE)
-                    .accountName(generateAccountName())
-                    .accountName(generateAccountNumber())
-                    .ban(false)
-                    .user(user)
-                    .build());
+            accountRepository.save(account);
         } catch (Exception e) {
-            throw new DuplicatedNumberException("same number exist");
+            throw new RuntimeException("problem with save");
         }
     }
 
@@ -52,7 +51,7 @@ public class AccountService {
     }
 
     private String randomAccountNumber() {
-        return  random()
+        return random()
                 + random()
                 + random()
                 + random();
@@ -60,7 +59,7 @@ public class AccountService {
 
     private String generateAccountName() {
         List<String> accountNames = accountRepository.findAll().stream().map(Account::getAccountName).collect(Collectors.toList());
-        String accountName = randomAccountNumber();
+        String accountName = randomAccountName();
         while (accountNames.contains(accountName)) {
             accountName = randomAccountNumber();
         }
@@ -79,8 +78,6 @@ public class AccountService {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
-
-    @Transactional
     public List<Account> findCurrentUserAccounts() throws NotFoundException {
         return accountRepository
                 .findByUserId(userService.getCurrentUser()
@@ -88,7 +85,7 @@ public class AccountService {
     }
 
     Account findByAccountName(String accountName) throws NotFoundException {
-        return accountRepository.findByAccountName(accountName).orElseThrow(()->new NotFoundException("no such account"));
+        return accountRepository.findByAccountName(accountName).orElseThrow(() -> new NotFoundException("no such account"));
     }
 
     public List<Account> findAll() {
@@ -96,6 +93,14 @@ public class AccountService {
     }
 
     public Account findById(Long accountId) throws NotFoundException {
-        return accountRepository.findById(accountId).orElseThrow(()-> new NotFoundException("no such account"));
+        return accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+    }
+
+    public List<Account> findFreeCurrentUserAccounts() throws NotFoundException {
+        return accountRepository
+                .findByUserId(userService.getCurrentUser().getId())
+                .stream()
+                .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
+                .collect(Collectors.toList());
     }
 }

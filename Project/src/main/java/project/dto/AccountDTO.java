@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Builder
 @ToString
-public class AccountDto {
+public class AccountDTO {
     @NotNull
     @NotEmpty
     private Long id;
@@ -21,7 +21,7 @@ public class AccountDto {
     private String accountName;
     @NotNull
     @NotEmpty
-    private String money;
+    private Long money;
     @NotNull
     @NotEmpty
     private String accountNumber;

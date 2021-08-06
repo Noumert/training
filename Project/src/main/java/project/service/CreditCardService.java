@@ -3,16 +3,13 @@ package project.service;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.dto.AccountDto;
-import project.entity.Account;
 import project.entity.CreditCard;
-import project.entity.User;
-import project.exceptions.DuplicatedNumberException;
 import project.repository.CreditCardRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,19 +27,13 @@ public class CreditCardService {
     @Autowired
     private AccountService accountService;
 
-    @Transactional
-    public void saveNewCard(Long accountId) throws NotFoundException, DuplicatedNumberException {
-        User user = userService.getCurrentUser();
-        Account account = accountService.findById(accountId);
+    public void saveNewCard(CreditCard creditCard) throws NotFoundException {
+        creditCard.setCardNumber(generateCardNumber());
+        creditCard.setExpirationDate(LocalDate.now().plusYears(EXPIRED_DURATION));
         try {
-            creditCardRepository.save(CreditCard.builder()
-                    .cardNumber(generateCardNumber())
-                    .expirationDate(LocalDate.now().plusYears(EXPIRED_DURATION))
-                    .account(account)
-                    .user(user)
-                    .build());
-        } catch (Exception e) {
-            throw new DuplicatedNumberException("same number exist");
+            creditCardRepository.save(creditCard);
+        } catch (Exception e){
+            throw new RuntimeException("problem with save");
         }
     }
 
@@ -79,7 +70,8 @@ public class CreditCardService {
         return creditCardRepository.findAll();
     }
 
-//    public List<UserCardDTO> findAllUserCard() {
-//        return creditCardRepository.findAllUserCard();
-//    }
+    public Optional<CreditCard> findByAccountId(Long accountId){
+        return creditCardRepository.findByAccountId(accountId);
+    }
+
 }
