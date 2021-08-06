@@ -3,14 +3,8 @@ package project.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import project.model.dto.AccountDTO;
-import project.model.dto.CreditCardDTO;
-import project.model.dto.UserAccountDTO;
-import project.model.dto.UserDTO;
-import project.model.entity.Account;
-import project.model.entity.CreditCard;
-import project.model.entity.RoleType;
-import project.model.entity.User;
+import project.model.dto.*;
+import project.model.entity.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,25 +14,52 @@ public class EntityDtoConverter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<AccountDTO> convertFromAccountsListToDto(List<Account> currentUserAccounts) {
+    public List<AccountDTO> convertAccountsListToDto(List<Account> currentUserAccounts) {
         return currentUserAccounts.stream()
-                .map(account->AccountDTO.builder()
-                        .id(account.getId())
-                        .accountName(account.getAccountName())
-                        .accountNumber(account.getAccountNumber())
-                        .ban(account.isBan())
-                        .money(account.getMoney())
-                        .build()).collect(Collectors.toList());
+                .map(this::convertAccountsToAccountDto).collect(Collectors.toList());
     }
 
-    public List<CreditCardDTO> convertFromCardsListToDto(List<CreditCard> currentUserCards) {
+    public AccountDTO convertAccountsToAccountDto(Account account) {
+        return AccountDTO.builder()
+                .id(account.getId())
+                .accountName(account.getAccountName())
+                .accountNumber(account.getAccountNumber())
+                .ban(account.isBan())
+                .money(account.getMoney())
+                .build();
+    }
+
+    public List<CreditCardDTO> convertCardsListToDto(List<CreditCard> currentUserCards) {
         return currentUserCards.stream()
-                .map(card-> CreditCardDTO.builder()
-                        .id(card.getId())
-                        .expirationDate(card.getExpirationDate())
-                        .cardNumber(card.getCardNumber())
-                        .money(card.getAccount().getMoney())
-                        .build()).collect(Collectors.toList());
+                .map(this::convertCreditCardsToCreditCardsDto).collect(Collectors.toList());
+    }
+
+    public CreditCardDTO convertCreditCardsToCreditCardsDto(CreditCard currentUserCards) {
+        return CreditCardDTO.builder()
+                        .id(currentUserCards.getId())
+                        .expirationDate(currentUserCards.getExpirationDate())
+                        .cardNumber(currentUserCards.getCardNumber())
+                        .build();
+    }
+
+    public UnbanAccountRequest convertUnbanAccountRequestDTOToUnbanAccountRequest(UnbanAccountRequestDTO unbanAccountRequestDTO) {
+        return UnbanAccountRequest
+                .builder()
+                .id(unbanAccountRequestDTO.getId())
+                .dateTime(unbanAccountRequestDTO.getDateTime())
+                .resolved(unbanAccountRequestDTO.isResolved())
+                .account(unbanAccountRequestDTO.getAccount())
+                .build();
+    }
+
+    public UnbanAccountRequestDTO convertUnbanAccountRequestDTOToUser(UnbanAccountRequest unbanAccountRequest) {
+        return UnbanAccountRequestDTO
+                .builder()
+                .id(unbanAccountRequest.getId())
+                .dateTime(unbanAccountRequest.getDateTime())
+                .resolved(unbanAccountRequest.isResolved())
+                .account(unbanAccountRequest.getAccount())
+                .build();
     }
 
     public User convertUserDtoToUser(UserDTO userDto) {
@@ -52,6 +73,8 @@ public class EntityDtoConverter {
                 .accountNonLocked(userDto.isAccountNonLocked())
                 .build();
     }
+
+
 
     public UserDTO convertUserToUserDto(User user) {
         return UserDTO

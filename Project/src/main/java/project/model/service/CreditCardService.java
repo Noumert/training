@@ -37,6 +37,14 @@ public class CreditCardService {
         }
     }
 
+    public void save(CreditCard creditCard) {
+        try {
+            creditCardRepository.save(creditCard);
+        } catch (Exception e){
+            throw new RuntimeException("problem with save");
+        }
+    }
+
     private String generateCardNumber() {
         List<String> cardsNumbers = creditCardRepository.findAll().stream().map(CreditCard::getCardNumber).collect(Collectors.toList());
         String cardNumber = randomCardNumber();

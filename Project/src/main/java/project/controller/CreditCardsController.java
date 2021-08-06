@@ -40,8 +40,8 @@ public class CreditCardsController {
     @RequestMapping()
     public String creditCardsPage(Model model) {
         try {
-            model.addAttribute("userCards", entityDtoConverter.convertFromCardsListToDto(creditCardService.findCurrentUserCards()));
-            model.addAttribute("accounts",entityDtoConverter.convertFromAccountsListToDto(accountService.findFreeCurrentUserAccounts()));
+            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDto(creditCardService.findCurrentUserCards()));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDto(accountService.findFreeCurrentUserAccounts()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

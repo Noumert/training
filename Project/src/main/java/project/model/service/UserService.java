@@ -40,6 +40,15 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public void save(User user) throws DuplicatedEmailException {
+        try {
+            userRepository.save(user);
+        } catch (Exception ex) {
+            throw new DuplicatedEmailException("Same email exist");
+        }
+
+    }
+
     public Optional<User> findByUserLogin(String email) {
         return userRepository.findByEmail(email);
     }

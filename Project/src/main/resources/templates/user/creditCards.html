@@ -17,7 +17,6 @@
     <tr>
         <th th:utext="#{label.credit.card}"> Card number </th>
         <th th:utext="#{label.expiration.date}"> Expiration date </th>
-        <th th:utext="#{label.money}"> Money </th>
     </tr>
     </thead>
     <tbody>
@@ -27,7 +26,6 @@
     <tr th:each="userCard : ${userCards}">
         <td><span th:text="${userCard.cardNumber}"> Card number </span></td>
         <td><span th:text="${userCard.expirationDate}"> Expiration date </span></td>
-        <td><span th:text="${userCard.money}"> Money </span></td>
     </tr>
     </tbody>
 </table>

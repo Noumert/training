@@ -27,12 +27,18 @@ public class AccountService {
     @Autowired
     private CreditCardService creditCardService;
 
-
     public void saveNewAccount(Account account) throws NotFoundException {
         account.setMoney(START_MONEY_VALUE);
         account.setAccountName(generateAccountName());
         account.setAccountNumber(generateAccountNumber());
-        account.setBan(false);
+        try {
+            accountRepository.save(account);
+        } catch (Exception e) {
+            throw new RuntimeException("problem with save");
+        }
+    }
+
+    public void save(Account account) {
         try {
             accountRepository.save(account);
         } catch (Exception e) {

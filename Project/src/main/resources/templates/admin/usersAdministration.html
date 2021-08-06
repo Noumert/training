@@ -31,13 +31,13 @@
     <td><span th:text="${user.firstName}"> First name </span></td>
     <td><span th:text="${user.lastName}"> Last name </span></td>
     <td><span th:text="${user.accountNonLocked} ? #{label.unbanned.account} : #{label.banned.account}"> Enable </span></td>
-    <td>
+    <td th:if="${user.accountNonLocked}">
       <form name="banForm" th:action="@{/admin/users/ban}" method="post">
         <input type = "hidden" name = "userId" th:value = "${user.id}" />
         <button type="submit" th:text="#{label.ban}"></button>
       </form>
     </td>
-    <td>
+    <td th:if="${!user.accountNonLocked}">
       <form name="unbanForm" th:action="@{/admin/users/unban}" method="post">
         <input type = "hidden" name = "userId" th:value = "${user.id}" />
         <button type="submit" th:text="#{label.unban}"></button>
