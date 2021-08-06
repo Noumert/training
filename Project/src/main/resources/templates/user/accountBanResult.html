@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+        error
+    </div>
+</span>
+<span th:if="${success}">
+    <div class="alert alert-info"
+        th:utext="#{label.request.success}">
+        success
+    </div>
+</span>
+<a href="/" th:href="@{/user/accounts}" th:utext="#{label.back.to.accounts.page}">Back to Accounts Page</a>
+</body>
+</html>

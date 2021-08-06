@@ -1,40 +1,17 @@
 <!DOCTYPE html>
 <html>
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Login page</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-          crossorigin="anonymous">
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-<div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
-    <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-        <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-    <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
-    <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
-    </span>
+<div th:replace="headerTemplete :: panelTopMain">
 </div>
 <br>
 <br>
-<div class = "container">
-    <div class = "row">
-        <div class = "col-md-6 col-md-offset-3">
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
 
             <h1 th:utext="#{label.login.form}"> User Login Page </h1>
             <form th:action="@{/login}" method="post">
@@ -42,32 +19,40 @@
                 <!-- error message -->
                 <div th:if="${loginError}">
                     <div class="alert alert-danger" th:utext="#{label.login.error}">Invalid username or
-                        password.</div>
-                </div>
-
-                <div class = "form-group">
-                    <label for ="email" th:utext="#{label.email}"> Username </label> :
-                    <input type="email" class = "form-control" id ="email" name = "email"
-                           placeholder="Enter Email ID" autofocus="autofocus">
+                        password.
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="password" th:utext="#{label.password}">Password</label>: <input type="password"
-                                                                   id="password" name="password" class="form-control"
-                                                                   placeholder="Enter Password" />
+                    <label for="email" th:utext="#{label.email}"> Username </label> :
+                    <input type="email"
+                           class="form-control"
+                           id="email" name="email"
+                           placeholder="Enter Email ID"
+                           autofocus="autofocus">
+
+                </div>
+
+                <div class="form-group">
+                    <label for="password" th:utext="#{label.password}">Password</label>:
+                    <input type="password"
+                           id="password"
+                           name="password"
+                           class="form-control"
+                           placeholder="Enter Password"/>
                 </div>
 
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">
                             <input type="submit" name="login-submit" id="login-submit"
-                                   class="form-control btn btn-primary" th:value="#{label.form.submit}" />
+                                   class="form-control btn btn-primary" th:value="#{label.form.submit}"/>
                         </div>
                     </div>
                 </div>
             </form>
             <div class="form-group">
-						<span><a href="/" th:utext="#{label.registration}" th:href="@{/registration}">Registration</a></span>
+                <span><a href="/" th:utext="#{label.registration}" th:href="@{/registration}">Registration</a></span>
             </div>
         </div>
     </div>

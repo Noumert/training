@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+<span th:if="${error}">
+    <div class="alert alert-info"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+    <thead>
+    <tr>
+        <th th:utext="#{label.account.number}"> Account number </th>
+        <th th:utext="#{label.account.name}"> Account name </th>
+        <th th:utext="#{label.money}"> Money </th>
+        <th th:utext="#{label.banned}"> Active </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${accounts.empty}">
+        <td colspan="4" th:utext="#{label.no.accounts}"> no cards </td>
+    </tr>
+    <tr th:each="account : ${accounts}">
+        <td><span th:text="${account.accountNumber}"> Card number </span></td>
+        <td><span th:text="${account.accountName}"> Expiration date </span></td>
+        <td><span th:text="${account.money}"> Money </span></td>
+        <td><span th:text="${account.ban} ? #{label.banned.account} : #{label.unbanned.account}"> Enable </span></td>
+        <td th:if="${!account.ban}">
+            <form name="banForm" th:action="@{/user/accounts/ban}" method="post">
+                <input type = "hidden" name = "accountId" th:value = "${account.id}" />
+                <button type="submit" th:text="#{label.ban}"></button>
+            </form>
+        </td>
+        <td th:if="${account.ban}">
+            <form name="unbanForm" th:action="@{/user/accounts/unban}" method="post">
+                <input type = "hidden" name = "accountId" th:value = "${account.id}" />
+                <button type="submit" th:text="#{label.unban}"></button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<form name="addForm" th:action="@{/user/accounts/add}" method="post">
+    <button type="submit" th:text="#{label.add}"></button>
+</form>
+</body>
+</html>

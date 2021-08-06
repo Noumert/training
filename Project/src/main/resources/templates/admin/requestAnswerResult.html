@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+        error
+    </div>
+</span>
+<a href="/" th:href="@{/admin/unbanRequests}" th:utext="#{label.back.to.requests.page}">Back to Request Page</a>
+</body>
+</html>

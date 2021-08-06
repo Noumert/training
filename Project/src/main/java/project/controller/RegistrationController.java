@@ -1,28 +1,28 @@
 package project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-import project.dto.UserDTO;
-import project.entity.User;
-import project.service.UserService;
+import project.model.EntityDtoConverter;
+import project.model.dto.UserDTO;
+import project.model.entity.RoleType;
+import project.model.entity.User;
+import project.exceptions.DuplicatedEmailException;
+import project.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
     @Autowired
-    UserService userService;
+    private UserService userService;
+    @Autowired
+    private EntityDtoConverter entityDtoConverter;
 
     @GetMapping(value = {"/registration"})
     public String showRegistrationForm(Model model) {
@@ -32,11 +32,23 @@ public class RegistrationController {
     }
 
     @PostMapping(value = {"/registration"})
-    public String registerUserAccount(Model model,UserDTO userDto) {
-        //TODO check userDto correct
-        userService.saveNewUser(userDto);
+    public String registerUserAccount(@Valid UserDTO userDto,
+                                      HttpServletRequest request,
+                                      Model model,
+                                      Errors errors) {
+        try {
+            User user = entityDtoConverter.convertUserDTOToUser(userDto);
+            user.setRole(RoleType.ROLE_USER);
+            user.setAccountNonLocked(true);
+            userService.saveNewUser(user);
+            model.addAttribute("success", true);
+        } catch (DuplicatedEmailException e) {
+            model.addAttribute("error", true);
+            model.addAttribute("success", false);
+        }
         model.addAttribute("user", userDto);
-        model.addAttribute("success",true);
         return "registration";
     }
+
+
 }

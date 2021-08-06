@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import project.service.UserService;
+import project.model.service.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +22,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration","/login")
                 .permitAll()
                 .antMatchers("/","/main")
-                .hasAnyRole ("USER","ADMIN")
+                .permitAll()
+                .antMatchers("/admin/**")
+                .hasRole("ADMIN")
+                .antMatchers("/user/**")
+                .hasRole("USER")
                 .and()
                 .formLogin()
                 .usernameParameter("email")

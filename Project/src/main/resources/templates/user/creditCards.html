@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+    <thead>
+    <tr>
+        <th th:utext="#{label.credit.card}"> Card number </th>
+        <th th:utext="#{label.expiration.date}"> Expiration date </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${userCards.empty}">
+        <td colspan="4" th:utext="#{label.no.cards}"> no cards </td>
+    </tr>
+    <tr th:each="userCard : ${userCards}">
+        <td><span th:text="${userCard.cardNumber}"> Card number </span></td>
+        <td><span th:text="${userCard.expirationDate}"> Expiration date </span></td>
+    </tr>
+    </tbody>
+</table>
+
+<form name="addForm" th:action="@{/user/creditCards/add}" method="post">
+    <select required name="accountId">
+        <option th:each="account: ${accounts}"
+                th:value="${account.id}"
+                th:text="${account.accountName + ' ' + account.money}">
+        </option>
+    </select>
+    <button type="submit" th:text="#{label.add}"></button>
+</form>
+</body>
+</html>

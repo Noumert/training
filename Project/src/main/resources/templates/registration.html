@@ -1,32 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>Registration form</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-
-<div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
-    <span sec:authorize="isAuthenticated()">
-    <a href="javascript: document.logoutForm.submit()" role="menuitem"> Logout</a>
-    <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
-        <input hidden type="submit" value="Sign Out"/>
-    </form>
-    </span>
-    <span sec:authorize="!isAuthenticated()">
-    <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
-    <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
-    </span>
-    <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
-    </span>
+<div th:replace="headerTemplete :: panelTopMain">
 </div>
-
 <br>
 <br>
 <!-- Create HTML registration form -->
@@ -35,36 +13,65 @@
         <div class="col-md-6 col-md-offset-3">
 
             <!-- success message -->
-            <div th:if="${success}">
-                <div class="alert alert-info">You've successfully registered
-                    to our awesome app!</div>
+
+            <span th:if="${success}">
+            <div class="alert alert-info"
+                 th:utext="#{label.registration.success}">
+                success
             </div>
+            </span>
+            <span th:if="${error}">
+            <div class="alert alert-info"
+                 th:utext="#{label.registration.error}">
+                error
+            </div>
+            </span>
 
             <h1 th:text="#{label.registration.form}">Registration</h1>
 
             <form th:action="@{/registration}" method="post" th:object="${user}">
                 <div class="form-group">
-                    <label class="control-label" for="firstName" th:text="#{label.firstName}"> First Name </label>
-                    <input id="firstName" class="form-control" th:field="*{firstName}"
-                           required autofocus="autofocus" />
+                    <label class="control-label" for="firstName" th:text="#{label.first.name}"> First Name </label>
+                    <input id="firstName"
+                           class="form-control"
+                           th:field="*{firstName}"
+                           required
+                           autofocus="autofocus"/>
+                    <p th:each="error : ${#fields.errors('firstName')}"
+                       th:utext="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="lastName" th:text="#{label.lastName}"> Last Name </label> <input
-                        id="lastName" class="form-control" th:field="*{lastName}"
-                        required autofocus="autofocus" />
+                    <label class="control-label" for="lastName" th:text="#{label.last.name}"> Last Name </label>
+                    <input id="lastName"
+                           class="form-control"
+                           th:field="*{lastName}"
+                           required autofocus="autofocus"/>
+                    <p th:each="error : ${#fields.errors('lastName')}"
+                       th:utext="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="email" th:text="#{label.email}"> Email </label> <input
-                        id="email" class="form-control" th:field="*{email}" required
-                        autofocus="autofocus" />
+                    <label class="control-label" for="email" th:text="#{label.email}"> Email </label>
+                    <input id="email"
+                           class="form-control"
+                           th:field="*{email}"
+                           required
+                           autofocus="autofocus"/>
+                    <p th:each="error : ${#fields.errors('email')}"
+                       th:utext="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="password" th:text="#{label.password}"> Password </label> <input
-                        id="password" class="form-control" type="password"
-                        th:field="*{password}" required autofocus="autofocus" />
+                    <label class="control-label" for="password" th:text="#{label.password}"> Password </label>
+                    <input id="password"
+                           class="form-control"
+                           type="password"
+                           th:field="*{password}"
+                           required
+                           autofocus="autofocus"/>
+                    <p th:each="error : ${#fields.errors('password')}"
+                       th:utext="${error}">Validation error</p>
                 </div>
 
                 <div class="form-group">
