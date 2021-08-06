@@ -28,20 +28,20 @@ import java.util.stream.Collectors;
 @RequestMapping("/user/accounts")
 public class AccountsController {
     @Autowired
-    CreditCardService creditCardService;
+    private CreditCardService creditCardService;
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
     @Autowired
-    EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter entityDtoConverter;
     @Autowired
-    UnbanAccountRequestService unbanAccountRequestService;
+    private UnbanAccountRequestService unbanAccountRequestService;
 
     @RequestMapping()
     public String accountsPage(Model model){
         try {
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDto(accountService.findCurrentUserAccounts()));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
         } catch (NotFoundException | RuntimeException e) {
             model.addAttribute("error",true);
         }

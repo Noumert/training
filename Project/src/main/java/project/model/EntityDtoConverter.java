@@ -14,12 +14,12 @@ public class EntityDtoConverter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<AccountDTO> convertAccountsListToDto(List<Account> currentUserAccounts) {
+    public List<AccountDTO> convertAccountsListToDTO(List<Account> currentUserAccounts) {
         return currentUserAccounts.stream()
-                .map(this::convertAccountsToAccountDto).collect(Collectors.toList());
+                .map(this::convertAccountsToAccountDTO).collect(Collectors.toList());
     }
 
-    public AccountDTO convertAccountsToAccountDto(Account account) {
+    public AccountDTO convertAccountsToAccountDTO(Account account) {
         return AccountDTO.builder()
                 .id(account.getId())
                 .accountName(account.getAccountName())
@@ -29,17 +29,17 @@ public class EntityDtoConverter {
                 .build();
     }
 
-    public List<CreditCardDTO> convertCardsListToDto(List<CreditCard> currentUserCards) {
+    public List<CreditCardDTO> convertCardsListToDTO(List<CreditCard> currentUserCards) {
         return currentUserCards.stream()
-                .map(this::convertCreditCardsToCreditCardsDto).collect(Collectors.toList());
+                .map(this::convertCreditCardsToCreditCardsDTO).collect(Collectors.toList());
     }
 
-    public CreditCardDTO convertCreditCardsToCreditCardsDto(CreditCard currentUserCards) {
+    public CreditCardDTO convertCreditCardsToCreditCardsDTO(CreditCard currentUserCards) {
         return CreditCardDTO.builder()
-                        .id(currentUserCards.getId())
-                        .expirationDate(currentUserCards.getExpirationDate())
-                        .cardNumber(currentUserCards.getCardNumber())
-                        .build();
+                .id(currentUserCards.getId())
+                .expirationDate(currentUserCards.getExpirationDate())
+                .cardNumber(currentUserCards.getCardNumber())
+                .build();
     }
 
     public UnbanAccountRequest convertUnbanAccountRequestDTOToUnbanAccountRequest(UnbanAccountRequestDTO unbanAccountRequestDTO) {
@@ -48,21 +48,58 @@ public class EntityDtoConverter {
                 .id(unbanAccountRequestDTO.getId())
                 .dateTime(unbanAccountRequestDTO.getDateTime())
                 .resolved(unbanAccountRequestDTO.isResolved())
-                .account(unbanAccountRequestDTO.getAccount())
+                .account(convertAccountDTOToAccount(unbanAccountRequestDTO.getAccount()))
                 .build();
     }
 
-    public UnbanAccountRequestDTO convertUnbanAccountRequestDTOToUser(UnbanAccountRequest unbanAccountRequest) {
+    public UnbanAccountRequestDTO convertUnbanAccountRequestToUnbanAccountRequestDTO(UnbanAccountRequest unbanAccountRequest) {
         return UnbanAccountRequestDTO
                 .builder()
                 .id(unbanAccountRequest.getId())
                 .dateTime(unbanAccountRequest.getDateTime())
                 .resolved(unbanAccountRequest.isResolved())
-                .account(unbanAccountRequest.getAccount())
+                .account(convertAccountToAccountDto(unbanAccountRequest.getAccount()))
                 .build();
     }
 
-    public User convertUserDtoToUser(UserDTO userDto) {
+    private Account convertAccountDTOToAccount(AccountDTO accountDTO) {
+        return Account
+                .builder()
+                .id(accountDTO.getId())
+                .ban(accountDTO.isBan())
+                .accountName(accountDTO.getAccountName())
+                .accountNumber(accountDTO.getAccountNumber())
+                .money(accountDTO.getMoney())
+                .build();
+    }
+
+    private AccountDTO convertAccountToAccountDto(Account account) {
+        return AccountDTO
+                .builder()
+                .id(account.getId())
+                .ban(account.isBan())
+                .accountName(account.getAccountName())
+                .accountNumber(account.getAccountNumber())
+                .money(account.getMoney())
+                .build();
+    }
+
+    public List<UnbanAccountRequest> convertUnbanAccountRequestDTOsToUnbanAccountRequests(List<UnbanAccountRequestDTO>
+                                                                                                 unbanAccountRequestDTOs) {
+        return unbanAccountRequestDTOs.stream()
+                .map(this::convertUnbanAccountRequestDTOToUnbanAccountRequest)
+                .collect(Collectors.toList());
+
+    }
+
+    public List<UnbanAccountRequestDTO> convertUnbanAccountRequestsToUnbanAccountRequestDTOs(List<UnbanAccountRequest>
+                                                                                                    unbanAccountRequests) {
+        return unbanAccountRequests.stream()
+                .map(this::convertUnbanAccountRequestToUnbanAccountRequestDTO)
+                .collect(Collectors.toList());
+    }
+
+    public User convertUserDTOToUser(UserDTO userDto) {
         return User
                 .builder()
                 .id(userDto.getId())
@@ -75,8 +112,7 @@ public class EntityDtoConverter {
     }
 
 
-
-    public UserDTO convertUserToUserDto(User user) {
+    public UserDTO convertUserToUserDTO(User user) {
         return UserDTO
                 .builder()
                 .id(user.getId())
@@ -108,6 +144,6 @@ public class EntityDtoConverter {
     }
 
     public List<UserDTO> convertUserListToUserDto(List<User> users) {
-        return users.stream().map(this::convertUserToUserDto).collect(Collectors.toList());
+        return users.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
     }
 }

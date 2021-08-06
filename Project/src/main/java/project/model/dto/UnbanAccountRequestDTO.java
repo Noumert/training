@@ -15,5 +15,5 @@ public class UnbanAccountRequestDTO {
     private Long id;
     private LocalDateTime dateTime;
     private boolean resolved;
-    private Account account;
+    private AccountDTO account;
 }

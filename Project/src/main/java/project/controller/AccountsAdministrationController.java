@@ -23,10 +23,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired
-    AccountService accountService;
-
+    private AccountService accountService;
     @Autowired
-    EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter entityDtoConverter;
 
     @RequestMapping()
     public String accountsPage(Model model) {

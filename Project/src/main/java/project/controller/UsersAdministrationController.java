@@ -23,10 +23,9 @@ import java.util.List;
 @RequestMapping("/admin/users")
 public class UsersAdministrationController {
     @Autowired
-    UserService userService;
-
+    private UserService userService;
     @Autowired
-    EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter entityDtoConverter;
 
     @RequestMapping()
     public String usersPage(Model model) {

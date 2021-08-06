@@ -26,22 +26,19 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
     @Autowired
-    CreditCardService creditCardService;
-
+    private CreditCardService creditCardService;
     @Autowired
-    UserService userService;
-
+    private UserService userService;
     @Autowired
-    AccountService accountService;
-
+    private AccountService accountService;
     @Autowired
-    EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter entityDtoConverter;
 
     @RequestMapping()
     public String creditCardsPage(Model model) {
         try {
-            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDto(creditCardService.findCurrentUserCards()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDto(accountService.findFreeCurrentUserAccounts()));
+            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findCurrentUserCards()));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findFreeCurrentUserAccounts()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

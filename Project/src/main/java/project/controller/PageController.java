@@ -10,7 +10,7 @@ import project.model.service.UserService;
 @Controller
 public class PageController {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping(value = { "/", "/main" })
     public String mainPage(){

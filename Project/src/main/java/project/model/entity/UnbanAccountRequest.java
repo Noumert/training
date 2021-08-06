@@ -21,7 +21,7 @@ public class UnbanAccountRequest {
     private LocalDateTime dateTime;
     @Column(nullable = false)
     private boolean resolved;
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.model.entity.Account;
+import project.model.entity.UnbanAccountRequest;
 import project.model.repository.AccountRepository;
 
 import javax.transaction.Transactional;
@@ -20,12 +21,12 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private CreditCardService creditCardService;
+    @Autowired
+    private UnbanAccountRequestService unbanAccountRequestService;
 
     public void saveNewAccount(Account account) throws NotFoundException {
         account.setMoney(START_MONEY_VALUE);
@@ -113,5 +114,12 @@ public class AccountService {
     public void setBanById(boolean ban, Long accountId) {
         log.info("ban {} accountId {}",ban,accountId);
         accountRepository.setBanById(ban, accountId);
+    }
+
+    @Transactional
+    public void unbanAndSetResolvedByRequestId(boolean ban, boolean resolved, Long requestId) throws NotFoundException {
+        UnbanAccountRequest unbanAccountRequest = unbanAccountRequestService.findById(requestId);
+        unbanAccountRequestService.setResolvedById(resolved,requestId);
+        this.setBanById(ban,unbanAccountRequest.getAccount().getId());
     }
 }

@@ -18,6 +18,7 @@
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
         <a th:href="@{/admin/accounts}" th:utext="#{label.accounts}">Accounts</a>
         <a th:href="@{/admin/users}" th:utext="#{label.users}">Users</a>
+        <a th:href="@{/admin/unbanRequests}" th:utext="#{label.unban.requests}">Unban requests</a>
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
         <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
         <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">

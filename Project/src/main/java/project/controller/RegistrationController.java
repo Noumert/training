@@ -20,10 +20,9 @@ import javax.validation.Valid;
 @Controller
 public class RegistrationController {
     @Autowired
-    UserService userService;
-
+    private UserService userService;
     @Autowired
-    EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter entityDtoConverter;
 
     @GetMapping(value = {"/registration"})
     public String showRegistrationForm(Model model) {
@@ -38,7 +37,7 @@ public class RegistrationController {
                                       Model model,
                                       Errors errors) {
         try {
-            User user = entityDtoConverter.convertUserDtoToUser(userDto);
+            User user = entityDtoConverter.convertUserDTOToUser(userDto);
             user.setRole(RoleType.ROLE_USER);
             user.setAccountNonLocked(true);
             userService.saveNewUser(user);

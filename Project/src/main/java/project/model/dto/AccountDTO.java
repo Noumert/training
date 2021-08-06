@@ -11,8 +11,6 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @ToString
 public class AccountDTO {
-    @NotNull
-    @NotEmpty
     private Long id;
     @NotNull
     @NotEmpty
