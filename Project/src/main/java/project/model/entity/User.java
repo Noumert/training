@@ -1,10 +1,8 @@
-package project.entity;
+package project.model.entity;
 
 import lombok.*;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 
 @Data

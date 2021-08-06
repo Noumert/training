@@ -1,9 +1,10 @@
-package project.repository;
+package project.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import project.entity.Account;
-import project.entity.CreditCard;
+import project.model.entity.Account;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,5 +15,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByUserId(Long userId);
 
     Optional<Account> findByAccountName(String accountName);
+
+    @Modifying
+    @Query("update Account a set a.ban = ?1 where a.id = ?2")
+    void setBanById(boolean ban, Long id);
 
 }

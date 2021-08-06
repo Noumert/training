@@ -1,4 +1,4 @@
-package project.entity;
+package project.model.entity;
 
 public enum RoleType {
     ROLE_ADMIN,

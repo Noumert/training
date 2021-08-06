@@ -1,8 +1,6 @@
-package project.dto;
+package project.model.dto;
 
 import lombok.*;
-
-import java.time.LocalDate;
 
 
 @Data
@@ -10,12 +8,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @ToString
-public class UserCardDTO {
+public class UserAccountDTO {
     private String email;
     private String firstName;
     private String lastName;
     private Long id;
-    private String cardNumber;
+    private String accountNumber;
+    private String accountName;
+    private boolean ban;
     private Long money;
-    private LocalDate expirationDate;
 }

@@ -4,12 +4,12 @@
 </head>
 <body>
 
-<span th:if="${label.add.account.error}">
+<span th:if="${error}">
     <div class="alert alert-danger"
          th:utext="#{label.error}">
         error
     </div>
 </span>
-<a href="/" th:href="@{/user/accounts}" th:utext="#{label.back.to.accounts.page}">Back to Cards Page</a>
+<a href="/" th:href="@{/admin/accounts}" th:utext="#{label.back.to.accounts.page}">Back to Cards Page</a>
 </body>
 </html>

@@ -4,13 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import project.dto.UserCardDTO;
-import project.entity.Account;
-import project.entity.CreditCard;
-import project.entity.User;
-import project.service.CreditCardService;
+import project.model.EntityDtoConverter;
+import project.model.dto.UserAccountDTO;
+import project.model.entity.Account;
+import project.model.entity.User;
+import project.model.service.AccountService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,33 +23,40 @@ import java.util.stream.Collectors;
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired
-    CreditCardService creditCardService;
+    AccountService accountService;
+
+    @Autowired
+    EntityDtoConverter entityDtoConverter;
 
     @RequestMapping()
-    public String creditCardsPage(Model model) {
-        List<CreditCard> allCards = creditCardService.findAll();
+    public String accountsPage(Model model) {
 
-        List<UserCardDTO> userCardDTOS = allCards
-                .stream().map(this::convertCardToDto)
-                .collect(Collectors.toList());
+        List<UserAccountDTO> userCardDTOS = entityDtoConverter.convertAccountsToDto(accountService.findAll());
+        model.addAttribute("userAccounts", userCardDTOS);
 
-        model.addAttribute("userCards", userCardDTOS);
-
-        return "admin/creditCardsAdministration";
+        return "admin/accountsAdministration";
     }
 
-    private UserCardDTO convertCardToDto(CreditCard creditCard) {
-        User user = creditCard.getUser();
-        Account account = creditCard.getAccount();
-        return UserCardDTO.builder()
-                .email(user.getEmail())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .id(creditCard.getId())
-                .cardNumber(creditCard.getCardNumber())
-                .expirationDate(creditCard.getExpirationDate())
-                .money(account.getMoney())
-                .build();
+    @PostMapping("/ban")
+    public String banAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
+        try {
+            accountService.setBanById(true,accountId);
+            return "redirect:/admin/accounts";
+        } catch (RuntimeException e) {
+            model.addAttribute("error",true);
+            return "/admin/accountBanResult";
+        }
+    }
+
+    @PostMapping("/unban")
+    public String unbanAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
+        try {
+            accountService.setBanById(false,accountId);
+            return "redirect:/admin/accounts";
+        } catch (RuntimeException e) {
+            model.addAttribute("error",true);
+            return "/admin/accountBanResult";
+        }
     }
 
 

@@ -1,4 +1,4 @@
-package project.service;
+package project.model.service;
 
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,13 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import project.dto.UserDTO;
-import project.entity.RoleType;
-import project.entity.User;
+import project.model.entity.RoleType;
+import project.model.entity.User;
 import project.exceptions.DuplicatedEmailException;
-import project.repository.UserRepository;
+import project.model.repository.UserRepository;
 
 import java.util.*;
 
@@ -25,9 +23,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
@@ -35,17 +30,9 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password.")));
     }
 
-    public void saveNewUser(UserDTO userDto) throws DuplicatedEmailException {
+    public void saveNewUser(User user) throws DuplicatedEmailException {
         try {
-            userRepository.save(User
-                    .builder()
-                    .firstName(userDto.getFirstName())
-                    .lastName(userDto.getLastName())
-                    .email(userDto.getEmail())
-                    .password(passwordEncoder.encode(userDto.getPassword()))
-                    .accountNonLocked(true)
-                    .role(RoleType.ROLE_USER)
-                    .build());
+            userRepository.save(user);
         } catch (Exception ex) {
             throw new DuplicatedEmailException("Same email exist");
         }

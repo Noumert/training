@@ -1,10 +1,10 @@
-package project.service;
+package project.model.service;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.entity.CreditCard;
-import project.repository.CreditCardRepository;
+import project.model.entity.CreditCard;
+import project.model.repository.CreditCardRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;

@@ -1,18 +1,17 @@
-package project.service;
+package project.model.service;
 
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.entity.Account;
-import project.entity.User;
-import project.exceptions.DuplicatedNumberException;
-import project.repository.AccountRepository;
+import project.model.entity.Account;
+import project.model.repository.AccountRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AccountService {
     final static long START_MONEY_VALUE = 0L;
@@ -102,5 +101,16 @@ public class AccountService {
                 .stream()
                 .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void setBanById(boolean ban,Long accountId){
+        try {
+            log.info("id {} ban {}",accountId,ban);
+            accountRepository.setBanById(ban,accountId);
+        } catch (Exception e){
+            throw new RuntimeException();
+        }
+
     }
 }

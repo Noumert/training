@@ -1,4 +1,4 @@
-package project.dto;
+package project.model.dto;
 
 import com.sun.istack.NotNull;
 import lombok.*;
@@ -10,18 +10,20 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Builder
 @ToString
-public class UserDTO {
+public class AccountDTO {
     @NotNull
     @NotEmpty
-    private String firstName;
+    private Long id;
     @NotNull
     @NotEmpty
-    private String lastName;
+    private String accountName;
     @NotNull
     @NotEmpty
-    private String email;
+    private Long money;
     @NotNull
     @NotEmpty
-    private String password;
+    private String accountNumber;
+    @NotNull
+    @NotEmpty
+    private boolean ban;
 }
-

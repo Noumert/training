@@ -1,14 +1,18 @@
 package project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import project.dto.UserDTO;
+import project.model.EntityDtoConverter;
+import project.model.dto.UserDTO;
+import project.model.entity.RoleType;
+import project.model.entity.User;
 import project.exceptions.DuplicatedEmailException;
-import project.service.UserService;
+import project.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -17,6 +21,9 @@ import javax.validation.Valid;
 public class RegistrationController {
     @Autowired
     UserService userService;
+
+    @Autowired
+    EntityDtoConverter entityDtoConverter;
 
     @GetMapping(value = {"/registration"})
     public String showRegistrationForm(Model model) {
@@ -29,16 +36,17 @@ public class RegistrationController {
     public String registerUserAccount(@Valid UserDTO userDto,
                                       HttpServletRequest request,
                                       Model model,
-                                      Errors errors){
-        //TODO check userDto correct
+                                      Errors errors) {
         try {
-            userService.saveNewUser(userDto);
-            model.addAttribute("success",true);
+            userService.saveNewUser(entityDtoConverter.convertUserDtoToUser(userDto));
+            model.addAttribute("success", true);
         } catch (DuplicatedEmailException e) {
-            model.addAttribute("error",true);
-            model.addAttribute("success",false);
+            model.addAttribute("error", true);
+            model.addAttribute("success", false);
         }
         model.addAttribute("user", userDto);
         return "registration";
     }
+
+
 }
