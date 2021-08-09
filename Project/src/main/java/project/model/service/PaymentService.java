@@ -1,5 +1,6 @@
 package project.model.service;
 
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import project.model.entity.Account;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 public class PaymentService {
     @Autowired
     PaymentRepository paymentRepository;
+    @Autowired
+    AccountService accountService;
 
     public List<Payment> findAll(){
         return paymentRepository.findAll();
@@ -22,6 +25,14 @@ public class PaymentService {
     public void saveNewPayment(Payment payment){
         payment.setPaymentNumber(generatePaymentNumber());
         paymentRepository.save(payment);
+    }
+
+    public List<Payment> findCurrentUserPayments() throws NotFoundException {
+        return paymentRepository.findByAccountIdIn(accountService
+                .findCurrentUserAccounts()
+                .stream()
+                .map(Account::getId)
+                .collect(Collectors.toList()));
     }
 
     private String generatePaymentNumber() {

@@ -7,9 +7,12 @@ import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
+import project.model.PaymentsAndAccountsSorter;
 import project.model.service.AccountService;
 import project.model.service.PaymentService;
 import project.model.service.UserService;
+
+import javax.validation.constraints.NotNull;
 
 @Controller
 @RequestMapping("user/profile")
@@ -22,24 +25,43 @@ public class ProfileController {
     private AccountService accountService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private PaymentsAndAccountsSorter paymentsAndAccountsSorter;
 
 
     @RequestMapping()
     public String paymentsPage(Model model) {
         try {
-            model.addAttribute("user",entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
         return "user/profile";
     }
 
+//    @RequestMapping("/send")
+//    public String send(@NotNull Long paymentId, Model model) {
+////        try {
+////            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+////            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+////            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+////        } catch (NotFoundException | UnexpectedRollbackException e) {
+////            model.addAttribute("error", true);
+////        }
+//        return "user/profile";
+//    }
+
     @RequestMapping("/sortAccountsByMoney")
     public String sortAccountsByMoney(Model model) {
         try {
-            model.addAttribute("user",entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts",
+                    entityDtoConverter.convertAccountsListToDTO(
+                            paymentsAndAccountsSorter.sortAccountsByMoney(
+                                    accountService.findCurrentUserAccounts())));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -49,8 +71,12 @@ public class ProfileController {
     @RequestMapping("/sortAccountsByName")
     public String sortAccountsByName(Model model) {
         try {
-            model.addAttribute("user",entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts",
+                    entityDtoConverter.convertAccountsListToDTO(
+                            paymentsAndAccountsSorter.sortAccountsByName(
+                                    accountService.findCurrentUserAccounts())));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -60,8 +86,54 @@ public class ProfileController {
     @RequestMapping("/sortAccountsByNumber")
     public String sortAccountsByNumber(Model model) {
         try {
-            model.addAttribute("user",entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts",
+                    entityDtoConverter.convertAccountsListToDTO(
+                            paymentsAndAccountsSorter.sortAccountsByNumber(
+                                    accountService.findCurrentUserAccounts())));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+        } catch (NotFoundException | UnexpectedRollbackException e) {
+            model.addAttribute("error", true);
+        }
+        return "user/profile";
+    }
+
+    @RequestMapping("/sortPaymentsByNumber")
+    public String sortPaymentsByNumber(Model model) {
+        try {
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("payments",
+                    entityDtoConverter.convertPaymentsListToDTO(
+                            paymentsAndAccountsSorter.sortPaymentsByNumber(paymentService.findCurrentUserPayments())));
+        } catch (NotFoundException | UnexpectedRollbackException e) {
+            model.addAttribute("error", true);
+        }
+        return "user/profile";
+    }
+
+    @RequestMapping("/sortPaymentsByDataDESC")
+    public String sortPaymentsByDataDESC(Model model) {
+        try {
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("payments",
+                    entityDtoConverter.convertPaymentsListToDTO(
+                            paymentsAndAccountsSorter.sortPaymentsByDataDESC(paymentService.findCurrentUserPayments())));
+        } catch (NotFoundException | UnexpectedRollbackException e) {
+            model.addAttribute("error", true);
+        }
+        return "user/profile";
+    }
+
+    @RequestMapping("/sortPaymentsByDataASC")
+    public String sortPaymentsByDataASC(Model model) {
+        try {
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("payments",
+                    entityDtoConverter.convertPaymentsListToDTO(
+                            paymentsAndAccountsSorter.sortPaymentsByDataASC(paymentService.findCurrentUserPayments())));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

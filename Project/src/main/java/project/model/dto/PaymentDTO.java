@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class PaymentDto {
+public class PaymentDTO {
     private Long id;
     private String PaymentNumber;
     private Long money;
     private LocalDateTime dateTime;
-    private StatusType status;
-    private Account account;
+    private String status;
+    private AccountDTO account;
     private String recipient;
 }

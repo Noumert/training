@@ -14,17 +14,34 @@ public class EntityDtoConverter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<AccountDTO> convertAccountsListToDTO(List<Account> currentUserAccounts) {
-        return currentUserAccounts.stream()
-                .map(this::convertAccountsToAccountDTO).collect(Collectors.toList());
+    public List<AccountDTO> convertAccountsListToDTO(List<Account> accounts) {
+        return accounts.stream()
+                .map(this::convertAccountToAccountDTO).collect(Collectors.toList());
     }
 
-    public AccountDTO convertAccountsToAccountDTO(Account account) {
-        return AccountDTO.builder()
+    public List<Account> convertAccountDTOsListToAccounts(List<AccountDTO> accountDTOS) {
+        return accountDTOS.stream()
+                .map(this::convertAccountDTOToAccount).collect(Collectors.toList());
+    }
+
+    private Account convertAccountDTOToAccount(AccountDTO accountDTO) {
+        return Account
+                .builder()
+                .id(accountDTO.getId())
+                .ban(accountDTO.isBan())
+                .accountName(accountDTO.getAccountName())
+                .accountNumber(accountDTO.getAccountNumber())
+                .money(accountDTO.getMoney())
+                .build();
+    }
+
+    private AccountDTO convertAccountToAccountDTO(Account account) {
+        return AccountDTO
+                .builder()
                 .id(account.getId())
+                .ban(account.isBan())
                 .accountName(account.getAccountName())
                 .accountNumber(account.getAccountNumber())
-                .ban(account.isBan())
                 .money(account.getMoney())
                 .build();
     }
@@ -58,31 +75,11 @@ public class EntityDtoConverter {
                 .id(unbanAccountRequest.getId())
                 .dateTime(unbanAccountRequest.getDateTime())
                 .resolved(unbanAccountRequest.isResolved())
-                .account(convertAccountToAccountDto(unbanAccountRequest.getAccount()))
+                .account(convertAccountToAccountDTO(unbanAccountRequest.getAccount()))
                 .build();
     }
 
-    private Account convertAccountDTOToAccount(AccountDTO accountDTO) {
-        return Account
-                .builder()
-                .id(accountDTO.getId())
-                .ban(accountDTO.isBan())
-                .accountName(accountDTO.getAccountName())
-                .accountNumber(accountDTO.getAccountNumber())
-                .money(accountDTO.getMoney())
-                .build();
-    }
 
-    private AccountDTO convertAccountToAccountDto(Account account) {
-        return AccountDTO
-                .builder()
-                .id(account.getId())
-                .ban(account.isBan())
-                .accountName(account.getAccountName())
-                .accountNumber(account.getAccountNumber())
-                .money(account.getMoney())
-                .build();
-    }
 
     public List<UnbanAccountRequest> convertUnbanAccountRequestDTOsToUnbanAccountRequests(List<UnbanAccountRequestDTO>
                                                                                                  unbanAccountRequestDTOs) {
@@ -145,5 +142,43 @@ public class EntityDtoConverter {
 
     public List<UserDTO> convertUserListToUserDto(List<User> users) {
         return users.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
+    }
+
+    public List<PaymentDTO> convertPaymentsListToDTO(List<Payment> payments) {
+        return payments.stream()
+                .map(this::convertPaymentToPaymentDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<Payment> convertPaymentDTOsListToPayments(List<PaymentDTO> paymentDTOS) {
+        return paymentDTOS.stream()
+                .map(this::convertPaymentDTOToPayment)
+                .collect(Collectors.toList());
+    }
+
+    public PaymentDTO convertPaymentToPaymentDTO(Payment payment) {
+        return PaymentDTO
+                .builder()
+                .account(convertAccountToAccountDTO(payment.getAccount()))
+                .id(payment.getId())
+                .dateTime(payment.getDateTime())
+                .PaymentNumber(payment.getPaymentNumber())
+                .recipient(payment.getRecipient())
+                .status(payment.getStatus().name())
+                .money(payment.getMoney())
+                .build();
+    }
+
+    public Payment convertPaymentDTOToPayment(PaymentDTO paymentDTO) {
+        return Payment
+                .builder()
+                .account(convertAccountDTOToAccount(paymentDTO.getAccount()))
+                .id(paymentDTO.getId())
+                .dateTime(paymentDTO.getDateTime())
+                .PaymentNumber(paymentDTO.getPaymentNumber())
+                .recipient(paymentDTO.getRecipient())
+                .status(StatusType.valueOf(paymentDTO.getStatus()))
+                .money(paymentDTO.getMoney())
+                .build();
     }
 }
