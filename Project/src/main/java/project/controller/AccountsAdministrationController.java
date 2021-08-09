@@ -39,7 +39,7 @@ public class AccountsAdministrationController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull Long accountId, Model model){
+    public String banAccount(@NotNull Long accountId, Model model){
         try {
             accountService.setBanById(true,accountId);
             return "redirect:/admin/accounts";
@@ -50,7 +50,7 @@ public class AccountsAdministrationController {
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull Long accountId, Model model){
+    public String unbanAccount(@NotNull Long accountId, Model model){
         try {
             accountService.setBanById(false,accountId);
             return "redirect:/admin/accounts";
