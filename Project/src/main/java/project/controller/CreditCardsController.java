@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
+@Validated
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
     @Autowired
@@ -46,7 +48,7 @@ public class CreditCardsController {
     }
 
     @PostMapping("/add")
-    public String addCreditCard(@Valid @NotNull @NotEmpty Long accountId, Model model) {
+    public String addCreditCard(@Valid @NotNull Long accountId, Model model) {
         try {
             creditCardService.saveNewCard(createCreditCard(accountId));
             return "redirect:/user/creditCards";

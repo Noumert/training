@@ -18,6 +18,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Modifying
     @Query("update Account a set a.ban = ?1 where a.id = ?2")
-    void setBanById(boolean ban, Long id);
+    void setBanById(boolean ban, Long accountId);
 
+    @Modifying
+    @Query("update Account a set a.money = a.money+?1 where a.id = ?2")
+    void addMoneyById(Long money, Long accountId);
 }

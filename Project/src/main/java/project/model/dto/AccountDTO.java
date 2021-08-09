@@ -16,12 +16,10 @@ public class AccountDTO {
     @NotEmpty
     private String accountName;
     @NotNull
-    @NotEmpty
     private Long money;
     @NotNull
     @NotEmpty
     private String accountNumber;
     @NotNull
-    @NotEmpty
     private boolean ban;
 }

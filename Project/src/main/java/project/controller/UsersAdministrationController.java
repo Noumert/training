@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@Validated
 @RequestMapping("/admin/users")
 public class UsersAdministrationController {
     @Autowired
@@ -36,7 +38,7 @@ public class UsersAdministrationController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull @NotEmpty Long userId, Model model){
+    public String banAccount(@Valid @NotNull Long userId, Model model){
         try {
             userService.setBanById(false,userId);
             return "redirect:/admin/users";
@@ -47,7 +49,7 @@ public class UsersAdministrationController {
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull @NotEmpty Long userId, Model model){
+    public String unbanAccount(@Valid @NotNull Long userId, Model model){
         try {
             userService.setBanById(true,userId);
             return "redirect:/admin/users";

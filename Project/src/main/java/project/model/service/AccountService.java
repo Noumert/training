@@ -122,4 +122,10 @@ public class AccountService {
         unbanAccountRequestService.setResolvedById(resolved,requestId);
         this.setBanById(ban,unbanAccountRequest.getAccount().getId());
     }
+
+    @Transactional
+    public void addMoneyById(Long money,Long accountId) {
+        log.info("accountId {} money {}",accountId,money);
+        accountRepository.addMoneyById(money,accountId);
+    }
 }

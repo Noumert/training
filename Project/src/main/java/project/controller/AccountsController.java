@@ -4,27 +4,27 @@ import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
-import project.model.dto.AccountDTO;
 import project.model.entity.Account;
 import project.model.entity.UnbanAccountRequest;
 import project.model.entity.User;
-import project.model.repository.UnbanAccountRequestRepository;
 import project.model.service.AccountService;
 import project.model.service.CreditCardService;
 import project.model.service.UnbanAccountRequestService;
 import project.model.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
+@Validated
 @RequestMapping("/user/accounts")
 public class AccountsController {
     @Autowired
@@ -65,7 +65,7 @@ public class AccountsController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
+    public String banAccount(@Valid @NotNull Long accountId, Model model){
         try {
             accountService.setBanById(true,accountId);
             return "redirect:/user/accounts";
@@ -76,8 +76,7 @@ public class AccountsController {
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull @NotEmpty Long accountId, Model model){
-        //TODO request to admin
+    public String unbanAccount(@Valid @NotNull Long accountId, Model model){
         try {
             UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest
                     .builder()
@@ -94,4 +93,19 @@ public class AccountsController {
         }
     }
 
+    @PostMapping("/topUp")
+    public String topUpAccount(@Valid @NotNull Long accountId,
+                               @Valid @NotNull @Min(value = 1L, message = "min top up is 1")
+                               @Max(value = 99999L, message = "min top up is 1") Long money,
+                               Model model){
+        try {
+            //TODO check banned card or not
+            accountService.addMoneyById(money,accountId);
+            model.addAttribute("success",true);
+            return "redirect:/user/accounts";
+        } catch (RuntimeException e) {
+            model.addAttribute("error",true);
+            return "/user/accountTopUpResult";
+        }
+    }
 }

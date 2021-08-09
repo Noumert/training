@@ -42,6 +42,13 @@
                 <button type="submit" th:text="#{label.unban}"></button>
             </form>
         </td>
+        <td>
+            <form name="unbanForm" th:action="@{/user/accounts/topUp}" method="post">
+                <input type = "number" name = "money"/>
+                <input type = "hidden" name = "accountId" th:value = "${account.id}" />
+                <button type="submit" th:text="#{label.top.up}" th:disabled="${account.ban}"></button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
