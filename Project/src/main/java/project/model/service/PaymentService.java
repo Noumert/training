@@ -1,15 +1,20 @@
 package project.model.service;
 
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.exceptions.NotEnoughMoneyException;
 import project.model.entity.Account;
 import project.model.entity.Payment;
+import project.model.entity.StatusType;
 import project.model.repository.PaymentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PaymentService {
     @Autowired
@@ -54,5 +59,22 @@ public class PaymentService {
 
     private String random() {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
+    }
+
+    public Payment findById(Long paymentId) throws NotFoundException {
+        return paymentRepository.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment"));
+    }
+
+    @Transactional
+    public  void setStatusById(StatusType status, Long paymentId){
+        log.info("status {} paymentId {}",status,paymentId);
+        paymentRepository.setStatusById(status,paymentId);
+    }
+
+    @Transactional
+    public void sendPaymentById(Long paymentId) throws NotFoundException, NotEnoughMoneyException {
+        Payment payment = this.findById(paymentId);
+        setStatusById(StatusType.SENT,paymentId);
+        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
     }
 }

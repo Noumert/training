@@ -4,6 +4,7 @@ import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import project.exceptions.NotEnoughMoneyException;
 import project.model.entity.Account;
 import project.model.entity.UnbanAccountRequest;
 import project.model.repository.AccountRepository;
@@ -124,8 +125,20 @@ public class AccountService {
     }
 
     @Transactional
-    public void addMoneyById(Long money,Long accountId) {
+    public void addMoneyById(Long money,Long accountId) throws NotEnoughMoneyException, NotFoundException {
         log.info("accountId {} money {}",accountId,money);
         accountRepository.addMoneyById(money,accountId);
+        if(accountRepository.findById(accountId).orElseThrow(()->new NotFoundException("no such account")).getMoney()<0){
+            throw new NotEnoughMoneyException("money can't be negative");
+        }
+    }
+
+    @Transactional
+    public void decreaseMoneyById(Long money, Long accountId) throws NotEnoughMoneyException, NotFoundException {
+        log.info("accountId {} money {}",accountId,money);
+        accountRepository.decreaseMoneyById(money,accountId);
+        if(accountRepository.findById(accountId).orElseThrow(()->new NotFoundException("no such account")).getMoney()<0){
+            throw new NotEnoughMoneyException("money can't be negative");
+        }
     }
 }

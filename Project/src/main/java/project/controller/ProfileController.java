@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.model.PaymentsAndAccountsSorter;
+import project.model.entity.Account;
+import project.model.entity.Payment;
 import project.model.service.AccountService;
 import project.model.service.PaymentService;
 import project.model.service.UserService;
@@ -41,17 +44,21 @@ public class ProfileController {
         return "user/profile";
     }
 
-//    @RequestMapping("/send")
-//    public String send(@NotNull Long paymentId, Model model) {
-////        try {
-////            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
-////            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
-////            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
-////        } catch (NotFoundException | UnexpectedRollbackException e) {
-////            model.addAttribute("error", true);
-////        }
-//        return "user/profile";
-//    }
+    @RequestMapping("/send")
+    public String send(@NotNull Long paymentId, Model model) {
+        try {
+            Payment payment = paymentService.findById(paymentId);
+            Account account = payment.getAccount();
+            if(account.getMoney()<payment.getMoney()){
+                throw new NotEnoughMoneyException("not enough money");
+            }
+            paymentService.sendPaymentById(paymentId);
+            return "redirect:/user/profile";
+        } catch (NotFoundException | NotEnoughMoneyException | UnexpectedRollbackException e) {
+            model.addAttribute("error", true);
+            return "user/paymentSendResult";
+        }
+    }
 
     @RequestMapping("/sortAccountsByMoney")
     public String sortAccountsByMoney(Model model) {

@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.model.entity.Account;
 import project.model.entity.UnbanAccountRequest;
@@ -103,8 +104,8 @@ public class AccountsController {
             accountService.addMoneyById(money,accountId);
             model.addAttribute("success",true);
             return "redirect:/user/accounts";
-        } catch (RuntimeException e) {
-            model.addAttribute("error",true);
+        } catch (NotEnoughMoneyException | RuntimeException | NotFoundException e) {
+            model.addAttribute("error", true);
             return "/user/accountTopUpResult";
         }
     }

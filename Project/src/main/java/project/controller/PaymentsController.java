@@ -55,32 +55,12 @@ public class PaymentsController {
                     .build();
             paymentService.saveNewPayment(payment);
             model.addAttribute("success", true);
-            return "/user/paymentResult";
+            return "/user/paymentPrepareResult";
         } catch (NotFoundException | RuntimeException e) {
             model.addAttribute("error", true);
-            return "/user/paymentResult";
+            return "/user/paymentPrepareResult";
         }
     }
 
-//    @PostMapping(value="/create",params="action=send")
-//    public String send(@NotNull Long accountId, @NotNull @Min(value = 1L, message = "min top up is 1")
-//    @Max(value = 99999L, message = "max top up is 99999") Long money, @NotEmpty @NotNull String recipient, Model model) {
-//        try {
-//            Payment payment = Payment
-//                    .builder()
-//                    .dateTime(LocalDateTime.now())
-//                    .money(money)
-//                    .account(accountService.findById(accountId))
-//                    .recipient(recipient)
-//                    .status(StatusType.PREPARED)
-//                    .build();
-//            paymentService.saveNewPayment(payment);
-//            model.addAttribute("success", true);
-//            return "/user/paymentResult";
-//        } catch (NotFoundException | RuntimeException e) {
-//            model.addAttribute("error", true);
-//            return "/user/paymentResult";
-//        }
-//    }
 
 }
