@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+<span th:if="${error}">
+    <div class="alert alert-info"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+<h3>
+<span th:utext="#{label.email}"> email </span>:
+<span th:text="${user.email}"> email </span>
+</h3>
+<h3>
+<span th:utext="#{label.first.name}"> first name </span>:
+<span th:text="${user.firstName}"> First name </span>
+</h3>
+<h3>
+<span th:utext="#{label.last.name}"> last name </span>:
+<span th:text="${user.lastName}"> Last name </span>
+</h3>
+
+
+
+
+
+
+
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+  <thead>
+  <tr>
+    <th th:utext="#{label.account.number}"> Account number </th>
+    <th th:utext="#{label.account.name}"> Account name </th>
+    <th th:utext="#{label.money}"> Money </th>
+    <th th:utext="#{label.banned}"> Active </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${accounts.empty}">
+    <td colspan="4" th:utext="#{label.no.accounts}"> no cards </td>
+  </tr>
+  <tr th:each="account : ${accounts}">
+    <td><span th:text="${account.accountNumber}"> Account number </span></td>
+    <td><span th:text="${account.accountName}"> Account name </span></td>
+    <td><span th:text="${account.money}"> Money </span></td>
+    <td><span th:text="${account.ban} ? #{label.banned.account} : #{label.unbanned.account}"> Enable </span></td>
+  </tr>
+  <tr>
+    <td>
+      <form name="sortAccountsByNumberForm" th:action="@{/user/profile/sortAccountsByNumber}" method="post">
+        <button type="submit" th:text="#{label.sort}"></button>
+      </form>
+    </td>
+    <td>
+      <form name="sortAccountsByNameForm" th:action="@{/user/profile/sortAccountsByName}" method="post">
+        <button type="submit" th:text="#{label.sort}"></button>
+      </form>
+    </td>
+    <td>
+      <form name="sortAccountsByMoneyForm" th:action="@{/user/profile/sortAccountsByMoney}" method="post">
+        <button type="submit" th:text="#{label.sort}"></button>
+      </form>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

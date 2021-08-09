@@ -11,7 +11,8 @@
             error
     </div>
 </span>
-
+<h1 th:utext="#{label.payment}">
+</h1>
 <form name="paymentForm" th:action="@{/user/payments/prepare}" method="post">
     <div class="form-group">
     <label class="control-label" for="payment" th:text="#{label.payment}"> payment </label>
