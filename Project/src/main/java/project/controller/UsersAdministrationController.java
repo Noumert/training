@@ -38,7 +38,7 @@ public class UsersAdministrationController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull Long userId, Model model){
+    public String banAccount(@NotNull Long userId, Model model){
         try {
             userService.setBanById(false,userId);
             return "redirect:/admin/users";
@@ -49,7 +49,7 @@ public class UsersAdministrationController {
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull Long userId, Model model){
+    public String unbanAccount(@NotNull Long userId, Model model){
         try {
             userService.setBanById(true,userId);
             return "redirect:/admin/users";

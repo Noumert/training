@@ -65,7 +65,7 @@ public class AccountsController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@Valid @NotNull Long accountId, Model model){
+    public String banAccount(@NotNull Long accountId, Model model){
         try {
             accountService.setBanById(true,accountId);
             return "redirect:/user/accounts";
@@ -76,7 +76,7 @@ public class AccountsController {
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@Valid @NotNull Long accountId, Model model){
+    public String unbanAccount(@NotNull Long accountId, Model model){
         try {
             UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest
                     .builder()
@@ -94,9 +94,9 @@ public class AccountsController {
     }
 
     @PostMapping("/topUp")
-    public String topUpAccount(@Valid @NotNull Long accountId,
-                               @Valid @NotNull @Min(value = 1L, message = "min top up is 1")
-                               @Max(value = 99999L, message = "min top up is 1") Long money,
+    public String topUpAccount(@NotNull Long accountId,
+                               @NotNull @Min(value = 1L, message = "min top up is 1")
+                               @Max(value = 99999L, message = "max top up is 99999") Long money,
                                Model model){
         try {
             //TODO check banned card or not

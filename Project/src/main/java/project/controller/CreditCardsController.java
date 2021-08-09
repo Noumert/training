@@ -48,7 +48,7 @@ public class CreditCardsController {
     }
 
     @PostMapping("/add")
-    public String addCreditCard(@Valid @NotNull Long accountId, Model model) {
+    public String addCreditCard(@NotNull Long accountId, Model model) {
         try {
             creditCardService.saveNewCard(createCreditCard(accountId));
             return "redirect:/user/creditCards";

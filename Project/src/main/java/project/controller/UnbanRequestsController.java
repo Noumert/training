@@ -42,7 +42,7 @@ public class UnbanRequestsController {
     }
 
     @PostMapping("/refuse")
-    public String refuseRequest(@Valid @NotNull Long requestId, Model model){
+    public String refuseRequest(@NotNull Long requestId, Model model){
         try {
             unbanAccountRequestService.setResolvedById(true,requestId);
             return "redirect:/admin/unbanRequests";
@@ -53,7 +53,7 @@ public class UnbanRequestsController {
     }
 
     @PostMapping("/unban")
-    public String unbanRequest(@Valid @NotNull Long requestId, Model model){
+    public String unbanRequest(@NotNull Long requestId, Model model){
         try {
             accountService.unbanAndSetResolvedByRequestId(false,true,requestId);
             return "redirect:/admin/unbanRequests";
