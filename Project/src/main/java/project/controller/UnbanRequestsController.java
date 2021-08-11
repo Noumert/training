@@ -10,12 +10,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
-import project.model.dto.UnbanAccountRequestDTO;
-import project.model.service.AccountService;
-import project.model.service.UnbanAccountRequestService;
+import project.dto.UnbanAccountRequestDTO;
+import project.service.AccountService;
+import project.service.UnbanAccountRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

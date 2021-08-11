@@ -1,23 +1,20 @@
-package project.model.service;
+package project.service;
 
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.exceptions.NotEnoughMoneyException;
-import project.model.entity.Account;
-import project.model.entity.UnbanAccountRequest;
-import project.model.repository.AccountRepository;
+import project.entity.Account;
+import project.entity.UnbanAccountRequest;
+import project.repository.AccountRepository;
 
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
 
 @Slf4j
 @Transactional

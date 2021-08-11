@@ -11,19 +11,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
-import project.model.entity.Account;
-import project.model.entity.MyUserDetails;
-import project.model.entity.UnbanAccountRequest;
-import project.model.entity.User;
-import project.model.service.AccountService;
-import project.model.service.CreditCardService;
-import project.model.service.UnbanAccountRequestService;
-import project.model.service.UserService;
+import project.entity.Account;
+import project.entity.MyUserDetails;
+import project.entity.UnbanAccountRequest;
+import project.entity.User;
+import project.service.AccountService;
+import project.service.CreditCardService;
+import project.service.UnbanAccountRequestService;
+import project.service.UserService;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 

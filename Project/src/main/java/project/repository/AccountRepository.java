@@ -1,10 +1,10 @@
-package project.model.repository;
+package project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import project.model.entity.Account;
+import project.entity.Account;
 
 import javax.transaction.Transactional;
 import java.util.List;

@@ -10,14 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
-import project.model.PaymentsAndAccountsSorter;
-import project.model.entity.Account;
-import project.model.entity.MyUserDetails;
-import project.model.entity.Payment;
-import project.model.entity.User;
-import project.model.service.AccountService;
-import project.model.service.PaymentService;
-import project.model.service.UserService;
+import project.entity.MyUserDetails;
+import project.service.AccountService;
+import project.service.PaymentService;
+import project.service.UserService;
 
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
@@ -42,8 +38,6 @@ public class ProfileController {
     private AccountService accountService;
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private PaymentsAndAccountsSorter paymentsAndAccountsSorter;
 
 
     @RequestMapping()

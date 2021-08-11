@@ -8,14 +8,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
-import project.model.dto.UserAccountDTO;
-import project.model.dto.UserDTO;
-import project.model.entity.RoleType;
-import project.model.service.AccountService;
-import project.model.service.UserService;
+import project.dto.UserDTO;
+import project.entity.RoleType;
+import project.service.UserService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 

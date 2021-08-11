@@ -1,9 +1,7 @@
-package project.model.dto;
+package project.dto;
 
 import lombok.*;
-import project.model.entity.Account;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data

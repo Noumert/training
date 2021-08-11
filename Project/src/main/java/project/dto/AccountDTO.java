@@ -1,4 +1,4 @@
-package project.model.dto;
+package project.dto;
 
 import lombok.*;
 

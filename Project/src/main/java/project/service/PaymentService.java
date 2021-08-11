@@ -1,4 +1,4 @@
-package project.model.service;
+package project.service;
 
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.exceptions.NotEnoughMoneyException;
-import project.model.entity.Account;
-import project.model.entity.Payment;
-import project.model.entity.StatusType;
-import project.model.repository.PaymentRepository;
+import project.entity.Account;
+import project.entity.Payment;
+import project.entity.StatusType;
+import project.repository.PaymentRepository;
 
 
 import java.util.List;
