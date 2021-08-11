@@ -86,6 +86,7 @@ public class AccountService {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
+    @Transactional
     public List<Account> findCurrentUserAccounts() throws NotFoundException {
         return accountRepository
                 .findByUserId(userService

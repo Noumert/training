@@ -67,7 +67,6 @@ public class PaymentService {
 
 
     public  void setStatusById(StatusType status, Long paymentId){
-        log.info("status {} paymentId {}",status,paymentId);
         paymentRepository.setStatusById(status,paymentId);
     }
 

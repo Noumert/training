@@ -29,9 +29,7 @@ public class UnbanAccountRequestService {
         return unbanAccountRequestRepository.findByResolved(resolved);
     }
 
-    @Transactional
     public void setResolvedById(boolean resolved, Long requestId) {
-        log.info("resolved {} requestId {}",resolved,requestId);
         unbanAccountRequestRepository.setResolvedById(resolved, requestId);
     }
 
