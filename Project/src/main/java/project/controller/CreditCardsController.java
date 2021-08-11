@@ -3,14 +3,17 @@ package project.controller;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
 import project.model.entity.Account;
 import project.model.entity.CreditCard;
+import project.model.entity.MyUserDetails;
 import project.model.entity.User;
 import project.model.service.AccountService;
 import project.model.service.CreditCardService;
@@ -23,6 +26,7 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
+@Validated
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
     @Autowired
@@ -36,9 +40,11 @@ public class CreditCardsController {
 
     @RequestMapping()
     public String creditCardsPage(Model model) {
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findCurrentUserCards()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findFreeCurrentUserAccounts()));
+            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findUserCards(currentUserId)));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(
+                    accountService.findFreeUserAccountsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -46,7 +52,7 @@ public class CreditCardsController {
     }
 
     @PostMapping("/add")
-    public String addCreditCard(@Valid @NotNull @NotEmpty Long accountId, Model model) {
+    public String addCreditCard(@NotNull Long accountId, Model model) {
         try {
             creditCardService.saveNewCard(createCreditCard(accountId));
             return "redirect:/user/creditCards";
@@ -57,11 +63,11 @@ public class CreditCardsController {
     }
 
     private CreditCard createCreditCard(Long accountId) throws NotFoundException {
-        User user = userService.getCurrentUser();
+        User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         Account account = accountService.findById(accountId);
         return CreditCard.builder()
                 .account(account)
-                .user(user)
+                .user(currentUser)
                 .build();
     }
 }

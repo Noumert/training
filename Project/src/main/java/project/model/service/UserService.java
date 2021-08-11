@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import project.model.entity.MyUserDetails;
 import project.model.entity.RoleType;
 import project.model.entity.User;
 import project.exceptions.DuplicatedEmailException;
@@ -53,52 +54,24 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User getCurrentUser() throws NotFoundException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public User getUserByEmail(String email) throws NotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("no such user"));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(RoleType role) {
+    private Collection<GrantedAuthority> mapRolesToAuthorities(RoleType role) {
         return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
 
-    public UserDetails mapUserToUserDetails(User user) {
-        return new UserDetails() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return mapRolesToAuthorities(user.getRole());
-            }
-
-            @Override
-            public String getPassword() {
-                return user.getPassword();
-            }
-
-            @Override
-            public String getUsername() {
-                return user.getEmail();
-            }
-
-            @Override
-            public boolean isAccountNonExpired() {
-                return true;
-            }
-
-            @Override
-            public boolean isAccountNonLocked() {
-                return user.isAccountNonLocked();
-            }
-
-            @Override
-            public boolean isCredentialsNonExpired() {
-                return true;
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return true;
-            }
-        };
+    private MyUserDetails mapUserToUserDetails(User user) {
+        return MyUserDetails.builder()
+                .authorities(mapRolesToAuthorities(user.getRole()))
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .accountNonLocked(user.isAccountNonLocked())
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .build();
     }
 
     public List<User> findAll() {
@@ -109,9 +82,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByRole(roleType);
     }
 
-    @Transactional
-    public void setBanById(boolean accountNonLocked, Long userId) {
-        log.info("accountNonLocked {} userId {}",accountNonLocked,userId);
+    public void setAccountNonLockedById(boolean accountNonLocked, Long userId) {
         userRepository.setBanById(accountNonLocked,userId);
     }
 }

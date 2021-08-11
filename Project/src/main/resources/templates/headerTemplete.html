@@ -33,8 +33,10 @@
 
 <div class="panelTop" th:fragment="panelTopUser">
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
+        <a th:href="@{/user/profile}" th:utext="#{label.profile}">Profile</a>
         <a th:href="@{/user/accounts}" th:utext="#{label.accounts}">Accounts</a>
         <a th:href="@{/user/creditCards}" th:utext="#{label.credit.cards}">Credit cards</a>
+        <a th:href="@{/user/payments}" th:utext="#{label.payment}">pay</a>
         <a th:href="@{/main}" th:utext="#{label.main}">Login</a>
         <a href="javascript: document.logoutForm.submit()" role="menuitem" th:utext="#{label.logout}"> Logout</a>
         <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">

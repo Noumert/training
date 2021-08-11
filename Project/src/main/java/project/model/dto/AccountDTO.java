@@ -1,9 +1,7 @@
 package project.model.dto;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
@@ -12,16 +10,8 @@ import javax.validation.constraints.NotEmpty;
 @ToString
 public class AccountDTO {
     private Long id;
-    @NotNull
-    @NotEmpty
     private String accountName;
-    @NotNull
-    @NotEmpty
     private Long money;
-    @NotNull
-    @NotEmpty
     private String accountNumber;
-    @NotNull
-    @NotEmpty
     private boolean ban;
 }

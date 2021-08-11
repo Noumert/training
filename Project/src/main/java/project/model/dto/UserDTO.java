@@ -3,6 +3,7 @@ package project.model.dto;
 import com.sun.istack.NotNull;
 import lombok.*;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -19,6 +20,7 @@ public class UserDTO {
     @NotNull
     @NotEmpty
     private String lastName;
+    @Email
     @NotNull
     @NotEmpty
     private String email;

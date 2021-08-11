@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import project.model.entity.Account;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,14 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByAccountName(String accountName);
 
-    @Modifying
+    @Transactional
+    @Modifying(flushAutomatically = true)
     @Query("update Account a set a.ban = ?1 where a.id = ?2")
-    void setBanById(boolean ban, Long id);
+    void setBanById(boolean ban, Long accountId);
 
+    List<Account> findByUserIdOrderByAccountName(Long userId);
+
+    List<Account> findByUserIdOrderByAccountNumber(Long userId);
+
+    List<Account> findByUserIdOrderByMoney(Long userId);
 }

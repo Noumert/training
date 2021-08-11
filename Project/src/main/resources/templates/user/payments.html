@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+
+<h1 th:utext="#{label.payment}">
+</h1>
+
+<form name="paymentForm" th:action="@{/user/payments/prepare}" method="post">
+    <div class="form-group">
+    <label class="control-label" for="account" th:text="#{label.account}"> account </label><br>
+        <select id="account" required name="accountId">
+            <option th:each="account: ${accounts}"
+                    th:value="${account.id}"
+                    th:text="${account.accountName + ' ' + account.money}">
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="money" th:text="#{label.money}"> money </label><br>
+        <input id="money" type = "number" name = "money" required/>
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="recipient" th:text="#{label.recipient}"> payment </label><br>
+        <input id="recipient" type = "text" name = "recipient" required/>
+    </div>
+    <button type="submit" th:text="#{label.prepare}"></button>
+</form>
+</body>
+</html>

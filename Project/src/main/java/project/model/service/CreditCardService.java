@@ -2,6 +2,7 @@ package project.model.service;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import project.model.entity.CreditCard;
 import project.model.repository.CreditCardRepository;
@@ -55,23 +56,20 @@ public class CreditCardService {
     }
 
     private String randomCardNumber() {
-        return random()
-                + "-" + random()
-                + "-" + random()
-                + "-" + random();
+        return randomFourDigits()
+                + "-" + randomFourDigits()
+                + "-" + randomFourDigits()
+                + "-" + randomFourDigits();
     }
 
-    private String random() {
+    private String randomFourDigits() {
         return String.valueOf((int) Math.floor(Math.random()
                 * (CreditCardService.MAX_RANDOM - CreditCardService.MIN_RANDOM + 1) + CreditCardService.MIN_RANDOM));
     }
 
-
-    @Transactional
-    public List<CreditCard> findCurrentUserCards() throws NotFoundException {
+    public List<CreditCard> findUserCards(Long userId) throws NotFoundException {
         return creditCardRepository
-                .findByUserId(userService.getCurrentUser()
-                        .getId());
+                .findByUserId(userId);
     }
 
     public List<CreditCard> findAll() {
