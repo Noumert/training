@@ -32,9 +32,9 @@ public class PaymentService {
         paymentRepository.save(payment);
     }
 
-    public List<Payment> findCurrentUserPayments() throws NotFoundException {
+    public List<Payment> findUserPaymentsByUserId(Long userId) throws NotFoundException {
         return paymentRepository.findByAccountIdIn(accountService
-                .findCurrentUserAccounts()
+                .findUserAccountsByUserId(userId)
                 .stream()
                 .map(Account::getId)
                 .collect(Collectors.toList()));

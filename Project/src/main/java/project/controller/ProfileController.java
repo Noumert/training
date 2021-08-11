@@ -11,6 +11,7 @@ import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.model.PaymentsAndAccountsSorter;
 import project.model.entity.Account;
+import project.model.entity.MyUserDetails;
 import project.model.entity.Payment;
 import project.model.entity.User;
 import project.model.service.AccountService;
@@ -36,11 +37,14 @@ public class ProfileController {
 
     @RequestMapping()
     public String paymentsPage(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
-            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
+                    .findUserAccountsByUserId(currentUserId)));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
+                    .findUserPaymentsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -60,14 +64,15 @@ public class ProfileController {
 
     @RequestMapping("/sortAccountsByMoney")
     public String sortAccountsByMoney(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByMoney(
-                                    accountService.findCurrentUserAccounts())));
-            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+                                    accountService.findUserAccountsByUserId(currentUserId))));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findUserPaymentsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -76,14 +81,16 @@ public class ProfileController {
 
     @RequestMapping("/sortAccountsByName")
     public String sortAccountsByName(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByName(
-                                    accountService.findCurrentUserAccounts())));
-            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+                                    accountService.findUserAccountsByUserId(currentUserId))));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
+                    .findUserPaymentsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -92,14 +99,16 @@ public class ProfileController {
 
     @RequestMapping("/sortAccountsByNumber")
     public String sortAccountsByNumber(Model model) {
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByNumber(
-                                    accountService.findCurrentUserAccounts())));
-            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
+                                    accountService.findUserAccountsByUserId(currentUserId))));
+            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(
+                    paymentService.findUserPaymentsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -108,13 +117,14 @@ public class ProfileController {
 
     @RequestMapping("/sortPaymentsByNumber")
     public String sortPaymentsByNumber(Model model) {
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(
-                            paymentsAndAccountsSorter.sortPaymentsByNumber(paymentService.findCurrentUserPayments())));
+                            paymentsAndAccountsSorter.sortPaymentsByNumber(paymentService.findUserPaymentsByUserId(currentUserId))));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -123,13 +133,16 @@ public class ProfileController {
 
     @RequestMapping("/sortPaymentsByDataDESC")
     public String sortPaymentsByDataDESC(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
+                    accountService.findUserAccountsByUserId(currentUserId)));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(
-                            paymentsAndAccountsSorter.sortPaymentsByDataDESC(paymentService.findCurrentUserPayments())));
+                            paymentsAndAccountsSorter.sortPaymentsByDataDESC(
+                                    paymentService.findUserPaymentsByUserId(currentUserId))));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
@@ -138,13 +151,16 @@ public class ProfileController {
 
     @RequestMapping("/sortPaymentsByDataASC")
     public String sortPaymentsByDataASC(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
                     .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
+                    accountService.findUserAccountsByUserId(currentUserId)));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(
-                            paymentsAndAccountsSorter.sortPaymentsByDataASC(paymentService.findCurrentUserPayments())));
+                            paymentsAndAccountsSorter.sortPaymentsByDataASC(
+                                    paymentService.findUserPaymentsByUserId(currentUserId))));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

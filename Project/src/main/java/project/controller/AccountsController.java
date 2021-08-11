@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.model.entity.Account;
+import project.model.entity.MyUserDetails;
 import project.model.entity.UnbanAccountRequest;
 import project.model.entity.User;
 import project.model.service.AccountService;
@@ -45,7 +46,8 @@ public class AccountsController {
     @RequestMapping()
     public String accountsPage(Model model){
         try {
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
         } catch (NotFoundException | RuntimeException e) {
             model.addAttribute("error",true);
         }
@@ -54,6 +56,7 @@ public class AccountsController {
 
     @PostMapping("/add")
     public String addAccountCard(Model model){
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
             Account account = Account.builder()

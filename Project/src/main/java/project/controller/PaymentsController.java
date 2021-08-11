@@ -2,16 +2,19 @@ package project.controller;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
+import project.model.entity.MyUserDetails;
 import project.model.entity.Payment;
 import project.model.entity.StatusType;
 import project.model.service.AccountService;
 import project.model.service.PaymentService;
+import project.model.service.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -29,12 +32,15 @@ public class PaymentsController {
     private AccountService accountService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private UserService userService;
 
 
     @RequestMapping()
     public String paymentsPage(Model model) {
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

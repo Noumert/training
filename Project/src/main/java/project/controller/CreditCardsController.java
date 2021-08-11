@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import project.model.EntityDtoConverter;
 import project.model.entity.Account;
 import project.model.entity.CreditCard;
+import project.model.entity.MyUserDetails;
 import project.model.entity.User;
 import project.model.service.AccountService;
 import project.model.service.CreditCardService;
@@ -39,9 +40,11 @@ public class CreditCardsController {
 
     @RequestMapping()
     public String creditCardsPage(Model model) {
+        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findCurrentUserCards()));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findFreeCurrentUserAccounts()));
+            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findUserCards(currentUserId)));
+            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(
+                    accountService.findFreeUserAccountsByUserId(currentUserId)));
         } catch (NotFoundException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }

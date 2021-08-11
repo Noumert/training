@@ -86,12 +86,9 @@ public class AccountService {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
-    @Transactional
-    public List<Account> findCurrentUserAccounts() throws NotFoundException {
+    public List<Account> findUserAccountsByUserId(Long userId) throws NotFoundException {
         return accountRepository
-                .findByUserId(userService
-                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                        .getId());
+                .findByUserId(userId);
     }
 
     Account findByAccountName(String accountName) throws NotFoundException {
@@ -107,10 +104,9 @@ public class AccountService {
     }
 
     @Transactional
-    public List<Account> findFreeCurrentUserAccounts() throws NotFoundException {
+    public List<Account> findFreeUserAccountsByUserId(Long userId) throws NotFoundException {
         return accountRepository
-                .findByUserId(userService
-                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())
+                .findByUserId(userId)
                 .stream()
                 .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
                 .collect(Collectors.toList());

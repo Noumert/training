@@ -67,13 +67,9 @@ public class CreditCardService {
                 * (CreditCardService.MAX_RANDOM - CreditCardService.MIN_RANDOM + 1) + CreditCardService.MIN_RANDOM));
     }
 
-
-    @Transactional
-    public List<CreditCard> findCurrentUserCards() throws NotFoundException {
+    public List<CreditCard> findUserCards(Long userId) throws NotFoundException {
         return creditCardRepository
-                .findByUserId(userService
-                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
-                        .getId());
+                .findByUserId(userId);
     }
 
     public List<CreditCard> findAll() {
