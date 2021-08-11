@@ -22,13 +22,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("update Account a set a.ban = ?1 where a.id = ?2")
     void setBanById(boolean ban, Long accountId);
 
-    @Transactional
-    @Modifying(flushAutomatically = true)
-    @Query("update Account a set a.money = a.money+?1 where a.id = ?2")
-    void addMoneyById(Long money, Long accountId);
+    List<Account> findByUserIdOrderByAccountName(Long userId);
 
-    @Transactional
-    @Modifying(flushAutomatically = true)
-    @Query("update Account a set a.money = a.money-?1 where a.id = ?2")
-    void decreaseMoneyById(Long money, Long accountId);
+    List<Account> findByUserIdOrderByAccountNumber(Long userId);
+
+    List<Account> findByUserIdOrderByMoney(Long userId);
 }

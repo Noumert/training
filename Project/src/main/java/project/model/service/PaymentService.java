@@ -4,13 +4,15 @@ import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.entity.Account;
 import project.model.entity.Payment;
 import project.model.entity.StatusType;
 import project.model.repository.PaymentRepository;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,36 @@ public class PaymentService {
         paymentRepository.save(payment);
     }
 
+    @Transactional
     public List<Payment> findUserPaymentsByUserId(Long userId) throws NotFoundException {
         return paymentRepository.findByAccountIdIn(accountService
+                .findUserAccountsByUserId(userId)
+                .stream()
+                .map(Account::getId)
+                .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public List<Payment> findUserPaymentsByUserIdOrderByPaymentNumber(Long userId) throws NotFoundException {
+        return paymentRepository.findByAccountIdInOrderByPaymentNumber(accountService
+                .findUserAccountsByUserId(userId)
+                .stream()
+                .map(Account::getId)
+                .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeDesc(Long userId) throws NotFoundException {
+        return paymentRepository.findByAccountIdInOrderByDateTimeDesc(accountService
+                .findUserAccountsByUserId(userId)
+                .stream()
+                .map(Account::getId)
+                .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeAsc(Long userId) throws NotFoundException {
+        return paymentRepository.findByAccountIdInOrderByDateTimeAsc(accountService
                 .findUserAccountsByUserId(userId)
                 .stream()
                 .map(Account::getId)
@@ -50,14 +80,14 @@ public class PaymentService {
     }
 
     private String randomPaymentNumber() {
-        return  random()
-                + random()
-                + random()
-                + random()
-                + random();
+        return  randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits();
     }
 
-    private String random() {
+    private String randomFourDigits() {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
@@ -70,7 +100,7 @@ public class PaymentService {
         paymentRepository.setStatusById(status,paymentId);
     }
 
-    @Transactional
+    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = NotEnoughMoneyException.class)
     public void sendPayment(Payment payment) throws NotFoundException, NotEnoughMoneyException {
         setStatusById(StatusType.SENT,payment.getId());
         accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());

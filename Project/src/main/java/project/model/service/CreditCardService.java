@@ -56,13 +56,13 @@ public class CreditCardService {
     }
 
     private String randomCardNumber() {
-        return random()
-                + "-" + random()
-                + "-" + random()
-                + "-" + random();
+        return randomFourDigits()
+                + "-" + randomFourDigits()
+                + "-" + randomFourDigits()
+                + "-" + randomFourDigits();
     }
 
-    private String random() {
+    private String randomFourDigits() {
         return String.valueOf((int) Math.floor(Math.random()
                 * (CreditCardService.MAX_RANDOM - CreditCardService.MIN_RANDOM + 1) + CreditCardService.MIN_RANDOM));
     }

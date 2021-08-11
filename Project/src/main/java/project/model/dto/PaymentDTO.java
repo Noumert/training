@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 public class PaymentDTO {
     private Long id;
-    private String PaymentNumber;
+    private String paymentNumber;
     private Long money;
     private LocalDateTime dateTime;
     private String status;

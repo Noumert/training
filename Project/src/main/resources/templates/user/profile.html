@@ -48,17 +48,20 @@
   </tr>
   <tr th:if="${!accounts.empty}">
     <td>
-      <form name="sortAccountsByNumberForm" th:action="@{/user/profile/sortAccountsByNumber}" method="post">
+      <form name="sortAccountsByNumberForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_NUMBER" />
         <button type="submit" th:text="#{label.sort}"></button>
       </form>
     </td>
     <td>
-      <form name="sortAccountsByNameForm" th:action="@{/user/profile/sortAccountsByName}" method="post">
+      <form name="sortAccountsByNameForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_NAME" />
         <button type="submit" th:text="#{label.sort}"></button>
       </form>
     </td>
     <td>
-      <form name="sortAccountsByMoneyForm" th:action="@{/user/profile/sortAccountsByMoney}" method="post">
+      <form name="sortAccountsByMoneyForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_MONEY" />
         <button type="submit" th:text="#{label.sort}"></button>
       </form>
     </td>
@@ -105,15 +108,18 @@
     <td>
     </td>
     <td>
-      <form name="sortPaymentsByNumberForm" th:action="@{/user/profile/sortPaymentsByNumber}" method="post">
+      <form name="sortPaymentsByNumberForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_NUMBER" />
         <button type="submit" th:text="#{label.sort}"></button>
       </form>
     </td>
     <td>
-      <form name="sortPaymentsByDataASCForm" th:action="@{/user/profile/sortPaymentsByDataASC}" method="post">
+      <form name="sortPaymentsByDataASCForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_DATE_ASC" />
         <button type="submit" th:text="#{label.sort.asc}"></button>
       </form>
-      <form name="sortPaymentsByDataDESCForm" th:action="@{/user/profile/sortPaymentsByDataDESC}" method="post">
+      <form name="sortPaymentsByDataDESCForm" th:action="@{/user/profile}" method="post">
+        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_DATE_DESC" />
         <button type="submit" th:text="#{label.sort.desc}"></button>
       </form>
     </td>

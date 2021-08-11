@@ -17,7 +17,7 @@ public class Payment {
     @Column(name = "id", nullable = false)
     private Long id;
     @Column(nullable = false)
-    private String PaymentNumber;
+    private String paymentNumber;
     @Column(nullable = false)
     private Long money;
     @Column(nullable = false)

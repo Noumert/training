@@ -5,16 +5,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.entity.Account;
 import project.model.entity.UnbanAccountRequest;
 import project.model.repository.AccountRepository;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static javax.transaction.Transactional.TxType.REQUIRES_NEW;
+
 @Slf4j
+@Transactional
 @Service
 public class AccountService {
     final static long START_MONEY_VALUE = 0L;
@@ -59,10 +65,10 @@ public class AccountService {
     }
 
     private String randomAccountNumber() {
-        return random()
-                + random()
-                + random()
-                + random();
+        return randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits();
     }
 
     private String generateAccountName() {
@@ -76,19 +82,34 @@ public class AccountService {
 
     private String randomAccountName() {
         return "U"
-                + random()
-                + random()
-                + random()
-                + random();
+                + randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits()
+                + randomFourDigits();
     }
 
-    private String random() {
+    private String randomFourDigits() {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
     public List<Account> findUserAccountsByUserId(Long userId) throws NotFoundException {
         return accountRepository
                 .findByUserId(userId);
+    }
+
+    public List<Account> findUserAccountsByUserIdOrderByAccountName(Long userId) throws NotFoundException {
+        return accountRepository
+                .findByUserIdOrderByAccountName(userId);
+    }
+
+    public List<Account> findUserAccountsByUserIdOrderByAccountNumber(Long userId) throws NotFoundException {
+        return accountRepository
+                .findByUserIdOrderByAccountNumber(userId);
+    }
+
+    public List<Account> findUserAccountsByUserIdOrderByMoney(Long userId) throws NotFoundException {
+        return accountRepository
+                .findByUserIdOrderByMoney(userId);
     }
 
     Account findByAccountName(String accountName) throws NotFoundException {
@@ -122,18 +143,25 @@ public class AccountService {
         this.setBanById(ban, unbanAccountRequest.getAccount().getId());
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW,
+            isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
     public void addMoneyById(Long money, Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        accountRepository.addMoneyById(money, accountId);
-        if (accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account")).getMoney() < 0) {
+        Account account = this.findById(accountId);
+        account.setMoney(account.getMoney() + money);
+        save(account);
+        if (this.findById(accountId).getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
     }
 
-    @Transactional
-    public void decreaseMoneyById(Long money, Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        accountRepository.decreaseMoneyById(money, accountId);
-        if (accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account")).getMoney() < 0) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW,
+            isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
+    public void decreaseMoneyById(Long money, Long accountId) throws NotEnoughMoneyException,
+            NotFoundException {
+        Account account = this.findById(accountId);
+        account.setMoney(account.getMoney() - money);
+        save(account);
+        if (this.findById(accountId).getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
     }

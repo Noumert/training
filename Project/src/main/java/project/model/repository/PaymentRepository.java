@@ -19,4 +19,10 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
     @Modifying(flushAutomatically = true)
     @Query("update Payment p set p.status = ?1 where p.id = ?2")
     void setStatusById(StatusType status, Long paymentId);
+
+    List<Payment> findByAccountIdInOrderByPaymentNumber(List<Long> accountIds);
+
+    List<Payment> findByAccountIdInOrderByDateTimeAsc(List<Long> accountIds);
+
+    List<Payment> findByAccountIdInOrderByDateTimeDesc(List<Long> accountIds);
 }
