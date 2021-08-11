@@ -53,8 +53,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User getCurrentUser() throws NotFoundException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public User getUserByEmail(String email) throws NotFoundException {
         return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("no such user"));
     }
 
@@ -109,9 +108,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByRole(roleType);
     }
 
-    @Transactional
-    public void setBanById(boolean accountNonLocked, Long userId) {
-        log.info("accountNonLocked {} userId {}",accountNonLocked,userId);
+    public void setAccountNonLockedById(boolean accountNonLocked, Long userId) {
         userRepository.setBanById(accountNonLocked,userId);
     }
 }

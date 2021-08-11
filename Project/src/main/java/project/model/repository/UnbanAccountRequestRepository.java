@@ -6,13 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import project.model.entity.UnbanAccountRequest;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
 public interface UnbanAccountRequestRepository extends JpaRepository<UnbanAccountRequest, Long> {
     List<UnbanAccountRequest> findByResolved(boolean resolved);
 
-    @Modifying
+    @Transactional
+    @Modifying(flushAutomatically = true)
     @Query("update UnbanAccountRequest u set u.resolved = ?1 where u.id = ?2")
     void setResolvedById(boolean resolved, Long requestId);
 }

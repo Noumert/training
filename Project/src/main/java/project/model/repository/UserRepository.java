@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import project.model.entity.RoleType;
 import project.model.entity.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRole(RoleType roleType);
 
-    @Modifying
+    @Transactional
+    @Modifying(flushAutomatically = true)
     @Query("update User u set u.accountNonLocked = ?1 where u.id = ?2")
     void setBanById(boolean accountNonLocked, Long userId);
 }

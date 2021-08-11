@@ -1,7 +1,9 @@
 package project.controller;
 
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +26,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+@Slf4j
 @Controller
 @Validated
 @RequestMapping("/user/accounts")
@@ -52,9 +55,9 @@ public class AccountsController {
     @PostMapping("/add")
     public String addAccountCard(Model model){
         try {
-            User user = userService.getCurrentUser();
+            User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
             Account account = Account.builder()
-                    .user(user)
+                    .user(currentUser)
                     .ban(false)
                     .build();
             accountService.saveNewAccount(account);
@@ -68,6 +71,7 @@ public class AccountsController {
     @PostMapping("/ban")
     public String banAccount(@NotNull Long accountId, Model model){
         try {
+            log.info("unban account from user ban {} accountId {}", true, accountId);
             accountService.setBanById(true,accountId);
             return "redirect:/user/accounts";
         } catch (RuntimeException e) {
@@ -100,7 +104,7 @@ public class AccountsController {
                                @Max(value = 99999L, message = "max top up is 99999") Long money,
                                Model model){
         try {
-            //TODO check banned card or not
+            log.info("add money accountId {} money {}",accountId,money);
             accountService.addMoneyById(money,accountId);
             model.addAttribute("success",true);
             return "redirect:/user/accounts";

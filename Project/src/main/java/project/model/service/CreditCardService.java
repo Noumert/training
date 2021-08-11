@@ -2,6 +2,7 @@ package project.model.service;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import project.model.entity.CreditCard;
 import project.model.repository.CreditCardRepository;
@@ -70,7 +71,8 @@ public class CreditCardService {
     @Transactional
     public List<CreditCard> findCurrentUserCards() throws NotFoundException {
         return creditCardRepository
-                .findByUserId(userService.getCurrentUser()
+                .findByUserId(userService
+                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                         .getId());
     }
 

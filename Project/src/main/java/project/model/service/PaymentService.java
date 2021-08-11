@@ -65,16 +65,15 @@ public class PaymentService {
         return paymentRepository.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment"));
     }
 
-    @Transactional
+
     public  void setStatusById(StatusType status, Long paymentId){
         log.info("status {} paymentId {}",status,paymentId);
         paymentRepository.setStatusById(status,paymentId);
     }
 
     @Transactional
-    public void sendPaymentById(Long paymentId) throws NotFoundException, NotEnoughMoneyException {
-        Payment payment = this.findById(paymentId);
-        setStatusById(StatusType.SENT,paymentId);
+    public void sendPayment(Payment payment) throws NotFoundException, NotEnoughMoneyException {
+        setStatusById(StatusType.SENT,payment.getId());
         accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
     }
 }

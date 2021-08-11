@@ -3,6 +3,7 @@ package project.controller;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
@@ -59,11 +60,11 @@ public class CreditCardsController {
     }
 
     private CreditCard createCreditCard(Long accountId) throws NotFoundException {
-        User user = userService.getCurrentUser();
+        User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         Account account = accountService.findById(accountId);
         return CreditCard.builder()
                 .account(account)
-                .user(user)
+                .user(currentUser)
                 .build();
     }
 }

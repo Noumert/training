@@ -41,6 +41,7 @@ public class AccountsAdministrationController {
     @PostMapping("/ban")
     public String banAccount(@NotNull Long accountId, Model model){
         try {
+            log.info("ban account ban {} accountId {}", true, accountId);
             accountService.setBanById(true,accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {
@@ -52,6 +53,7 @@ public class AccountsAdministrationController {
     @PostMapping("/unban")
     public String unbanAccount(@NotNull Long accountId, Model model){
         try {
+            log.info("unban account ban {} accountId {}", false, accountId);
             accountService.setBanById(false,accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {

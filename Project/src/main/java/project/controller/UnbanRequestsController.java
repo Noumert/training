@@ -55,7 +55,7 @@ public class UnbanRequestsController {
     @PostMapping("/unban")
     public String unbanRequest(@NotNull Long requestId, Model model){
         try {
-            accountService.unbanAndSetResolvedByRequestId(false,true,requestId);
+            accountService.unbanAndSetResolvedByRequest(false,true,unbanAccountRequestService.findById(requestId));
             return "redirect:/admin/unbanRequests";
         } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error",true);

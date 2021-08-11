@@ -3,6 +3,7 @@ package project.model.service;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.entity.Account;
@@ -87,7 +88,8 @@ public class AccountService {
 
     public List<Account> findCurrentUserAccounts() throws NotFoundException {
         return accountRepository
-                .findByUserId(userService.getCurrentUser()
+                .findByUserId(userService
+                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())
                         .getId());
     }
 
@@ -103,41 +105,38 @@ public class AccountService {
         return accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
     }
 
+    @Transactional
     public List<Account> findFreeCurrentUserAccounts() throws NotFoundException {
         return accountRepository
-                .findByUserId(userService.getCurrentUser().getId())
+                .findByUserId(userService
+                        .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).getId())
                 .stream()
                 .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public void setBanById(boolean ban, Long accountId) {
-        log.info("ban {} accountId {}",ban,accountId);
         accountRepository.setBanById(ban, accountId);
     }
 
     @Transactional
-    public void unbanAndSetResolvedByRequestId(boolean ban, boolean resolved, Long requestId) throws NotFoundException {
-        UnbanAccountRequest unbanAccountRequest = unbanAccountRequestService.findById(requestId);
-        unbanAccountRequestService.setResolvedById(resolved,requestId);
-        this.setBanById(ban,unbanAccountRequest.getAccount().getId());
+    public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest) throws NotFoundException {
+        unbanAccountRequestService.setResolvedById(resolved, unbanAccountRequest.getId());
+        this.setBanById(ban, unbanAccountRequest.getAccount().getId());
     }
 
     @Transactional
-    public void addMoneyById(Long money,Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        log.info("accountId {} money {}",accountId,money);
-        accountRepository.addMoneyById(money,accountId);
-        if(accountRepository.findById(accountId).orElseThrow(()->new NotFoundException("no such account")).getMoney()<0){
+    public void addMoneyById(Long money, Long accountId) throws NotEnoughMoneyException, NotFoundException {
+        accountRepository.addMoneyById(money, accountId);
+        if (accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account")).getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
     }
 
     @Transactional
     public void decreaseMoneyById(Long money, Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        log.info("accountId {} money {}",accountId,money);
-        accountRepository.decreaseMoneyById(money,accountId);
-        if(accountRepository.findById(accountId).orElseThrow(()->new NotFoundException("no such account")).getMoney()<0){
+        accountRepository.decreaseMoneyById(money, accountId);
+        if (accountRepository.findById(accountId).orElseThrow(() -> new NotFoundException("no such account")).getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
     }

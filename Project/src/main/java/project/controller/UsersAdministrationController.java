@@ -40,7 +40,8 @@ public class UsersAdministrationController {
     @PostMapping("/ban")
     public String banAccount(@NotNull Long userId, Model model){
         try {
-            userService.setBanById(false,userId);
+            log.info("lock user accountNonLocked {} userId {}",false,userId);
+            userService.setAccountNonLockedById(false,userId);
             return "redirect:/admin/users";
         } catch (RuntimeException e) {
             model.addAttribute("error",true);
@@ -51,7 +52,8 @@ public class UsersAdministrationController {
     @PostMapping("/unban")
     public String unbanAccount(@NotNull Long userId, Model model){
         try {
-            userService.setBanById(true,userId);
+            log.info("unlock user accountNonLocked {} userId {}",true,userId);
+            userService.setAccountNonLockedById(true,userId);
             return "redirect:/admin/users";
         } catch (RuntimeException e) {
             model.addAttribute("error",true);

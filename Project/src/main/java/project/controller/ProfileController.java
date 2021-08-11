@@ -2,6 +2,7 @@ package project.controller;
 
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import project.model.EntityDtoConverter;
 import project.model.PaymentsAndAccountsSorter;
 import project.model.entity.Account;
 import project.model.entity.Payment;
+import project.model.entity.User;
 import project.model.service.AccountService;
 import project.model.service.PaymentService;
 import project.model.service.UserService;
@@ -35,7 +37,8 @@ public class ProfileController {
     @RequestMapping()
     public String paymentsPage(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
             model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService.findCurrentUserPayments()));
         } catch (NotFoundException | UnexpectedRollbackException e) {
@@ -47,12 +50,7 @@ public class ProfileController {
     @RequestMapping("/send")
     public String send(@NotNull Long paymentId, Model model) {
         try {
-            Payment payment = paymentService.findById(paymentId);
-            Account account = payment.getAccount();
-            if(account.getMoney()<payment.getMoney()){
-                throw new NotEnoughMoneyException("not enough money");
-            }
-            paymentService.sendPaymentById(paymentId);
+            paymentService.sendPayment(paymentService.findById(paymentId));
             return "redirect:/user/profile";
         } catch (NotFoundException | NotEnoughMoneyException | UnexpectedRollbackException e) {
             model.addAttribute("error", true);
@@ -63,7 +61,8 @@ public class ProfileController {
     @RequestMapping("/sortAccountsByMoney")
     public String sortAccountsByMoney(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByMoney(
@@ -78,7 +77,8 @@ public class ProfileController {
     @RequestMapping("/sortAccountsByName")
     public String sortAccountsByName(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByName(
@@ -93,7 +93,8 @@ public class ProfileController {
     @RequestMapping("/sortAccountsByNumber")
     public String sortAccountsByNumber(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts",
                     entityDtoConverter.convertAccountsListToDTO(
                             paymentsAndAccountsSorter.sortAccountsByNumber(
@@ -108,7 +109,8 @@ public class ProfileController {
     @RequestMapping("/sortPaymentsByNumber")
     public String sortPaymentsByNumber(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(
@@ -122,7 +124,8 @@ public class ProfileController {
     @RequestMapping("/sortPaymentsByDataDESC")
     public String sortPaymentsByDataDESC(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(
@@ -136,7 +139,8 @@ public class ProfileController {
     @RequestMapping("/sortPaymentsByDataASC")
     public String sortPaymentsByDataASC(Model model) {
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService.getCurrentUser()));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
+                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findCurrentUserAccounts()));
             model.addAttribute("payments",
                     entityDtoConverter.convertPaymentsListToDTO(

@@ -8,13 +8,15 @@ import project.model.entity.Account;
 import project.model.entity.Payment;
 import project.model.entity.StatusType;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment,Long> {
     List<Payment> findByAccountIdIn(List<Long> accountIds);
 
-    @Modifying
+    @Transactional
+    @Modifying(flushAutomatically = true)
     @Query("update Payment p set p.status = ?1 where p.id = ?2")
     void setStatusById(StatusType status, Long paymentId);
 }
