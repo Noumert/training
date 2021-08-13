@@ -3,8 +3,8 @@ package project.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import project.model.dto.*;
-import project.model.entity.*;
+import project.dto.*;
+import project.entity.*;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,7 +1,6 @@
 package project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -9,11 +8,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import project.model.EntityDtoConverter;
-import project.model.dto.UserDTO;
-import project.model.entity.RoleType;
-import project.model.entity.User;
+import project.dto.UserDTO;
+import project.entity.RoleType;
+import project.entity.User;
 import project.exceptions.DuplicatedEmailException;
-import project.model.service.UserService;
+import project.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

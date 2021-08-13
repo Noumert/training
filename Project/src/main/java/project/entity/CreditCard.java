@@ -1,9 +1,9 @@
-package project.model.entity;
+package project.entity;
 
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,15 +11,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-public class UnbanAccountRequest {
+public class CreditCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false,unique = true)
+    private String cardNumber;
     @Column(nullable = false)
-    private LocalDateTime dateTime;
-    @Column(nullable = false)
-    private boolean resolved;
+    private LocalDate expirationDate;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @OneToOne(optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

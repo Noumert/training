@@ -1,11 +1,7 @@
-package project.model.dto;
+package project.dto;
 
 import lombok.*;
-import project.model.entity.Account;
-import project.model.entity.StatusType;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data

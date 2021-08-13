@@ -1,14 +1,12 @@
-package project.model.service;
+package project.service;
 
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import project.model.dto.UnbanAccountRequestDTO;
-import project.model.entity.UnbanAccountRequest;
-import project.model.repository.UnbanAccountRequestRepository;
+import project.entity.UnbanAccountRequest;
+import project.repository.UnbanAccountRequestRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
