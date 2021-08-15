@@ -20,7 +20,6 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@Validated
 @RequestMapping("/admin/unbanRequests")
 public class UnbanRequestsController {
     @Autowired

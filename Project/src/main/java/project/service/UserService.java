@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
     public void saveNewUser(User user) throws DuplicatedEmailException {
         try {
             userRepository.save(user);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             throw new DuplicatedEmailException("Same email exist");
         }
 

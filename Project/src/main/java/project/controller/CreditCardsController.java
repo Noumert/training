@@ -24,7 +24,6 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @Controller
-@Validated
 @RequestMapping("/user/creditCards")
 public class CreditCardsController {
     @Autowired
