@@ -1,16 +1,22 @@
 package project.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import project.dto.*;
 import project.entity.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class EntityDtoConverter {
+    private static final DateTimeFormatter formatter = DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.MEDIUM);
     @Autowired
     MoneyParser moneyParser;
     @Autowired
@@ -56,7 +62,7 @@ public class EntityDtoConverter {
     public CreditCardDTO convertCreditCardsToCreditCardsDTO(CreditCard currentUserCards) {
         return CreditCardDTO.builder()
                 .id(currentUserCards.getId())
-                .expirationDate(currentUserCards.getExpirationDate())
+                .expirationDate(currentUserCards.getExpirationDate().format(formatter.withLocale(LocaleContextHolder.getLocale())))
                 .cardNumber(currentUserCards.getCardNumber())
                 .build();
     }
@@ -65,7 +71,7 @@ public class EntityDtoConverter {
         return UnbanAccountRequest
                 .builder()
                 .id(unbanAccountRequestDTO.getId())
-                .dateTime(unbanAccountRequestDTO.getDateTime())
+                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
                 .resolved(unbanAccountRequestDTO.isResolved())
                 .account(convertAccountDTOToAccount(unbanAccountRequestDTO.getAccount()))
                 .build();
@@ -75,7 +81,7 @@ public class EntityDtoConverter {
         return UnbanAccountRequestDTO
                 .builder()
                 .id(unbanAccountRequest.getId())
-                .dateTime(unbanAccountRequest.getDateTime())
+                .dateTime(unbanAccountRequest.getDateTime().format(formatter.withLocale(LocaleContextHolder.getLocale())))
                 .resolved(unbanAccountRequest.isResolved())
                 .account(convertAccountToAccountDTO(unbanAccountRequest.getAccount()))
                 .build();
@@ -163,7 +169,7 @@ public class EntityDtoConverter {
                 .builder()
                 .account(convertAccountToAccountDTO(payment.getAccount()))
                 .id(payment.getId())
-                .dateTime(payment.getDateTime())
+                .dateTime(payment.getDateTime().format(formatter.withLocale(LocaleContextHolder.getLocale())))
                 .paymentNumber(payment.getPaymentNumber())
                 .recipient(payment.getRecipient())
                 .status(payment.getStatus().name())
@@ -176,7 +182,7 @@ public class EntityDtoConverter {
                 .builder()
                 .account(convertAccountDTOToAccount(paymentDTO.getAccount()))
                 .id(paymentDTO.getId())
-                .dateTime(paymentDTO.getDateTime())
+                .dateTime(LocalDateTime.parse(paymentDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
                 .paymentNumber(paymentDTO.getPaymentNumber())
                 .recipient(paymentDTO.getRecipient())
                 .status(StatusType.valueOf(paymentDTO.getStatus()))

@@ -13,7 +13,7 @@ public class PaymentDTO {
     private Long id;
     private String paymentNumber;
     private String money;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private String status;
     private AccountDTO account;
     private String recipient;

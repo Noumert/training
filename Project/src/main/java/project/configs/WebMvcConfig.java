@@ -1,8 +1,10 @@
 package project.configs;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -16,7 +18,6 @@ import java.util.Locale;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-
 
     @Bean
     public LocaleResolver localeResolver() {
@@ -33,13 +34,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return messageResource;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
         LocaleChangeInterceptor localeInterceptor = new LocaleChangeInterceptor();
         localeInterceptor.setParamName("lang");
+        return localeInterceptor;
+    }
 
-
-        registry.addInterceptor(localeInterceptor).addPathPatterns("/**");
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
     }
 
     @Bean

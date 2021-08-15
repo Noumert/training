@@ -25,8 +25,8 @@
         <input hidden type="submit" value="Sign Out"/>
         </form>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en-US').toUriString()}}">ENG</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'uk-UA').toUriString()}}">UA</a>
     </span>
     </div>
 </div>
@@ -43,8 +43,8 @@
         <input hidden type="submit" value="Sign Out"/>
         </form>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en-US').toUriString()}}">ENG</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'uk-UA').toUriString()}}">UA</a>
     </span>
     </div>
 </div>
@@ -55,8 +55,8 @@
         <a th:href="@{/login}" th:utext="#{label.login}">Login</a>
         <a th:href="@{/registration}" th:utext="#{label.registration}">Registration</a>
         <span th:with="urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder)}">
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en').toUriString()}}">ENG</a>
-        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'ua').toUriString()}}">UA</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'en-US').toUriString()}}">ENG</a>
+        <a th:href="@{${urlBuilder.fromCurrentRequest().replaceQueryParam('lang', 'uk-UA').toUriString()}}">UA</a>
     </span>
     </div>
 </div>

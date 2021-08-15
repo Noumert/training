@@ -13,5 +13,5 @@ import java.time.LocalDate;
 public class CreditCardDTO {
     private Long id;
     private String cardNumber;
-    private LocalDate expirationDate;
+    private String expirationDate;
 }
