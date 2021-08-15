@@ -14,6 +14,7 @@ import project.repository.PaymentRepository;
 
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,12 +31,16 @@ public class PaymentService {
 
 
     public void saveNewPayment(Payment payment){
-        payment.setPaymentNumber(generatePaymentNumber());
-        paymentRepository.save(payment);
+        payment.setPaymentNumber(randomPaymentNumber());
+        try {
+            paymentRepository.save(payment);
+        }catch (RuntimeException e){
+            throw new RuntimeException("something went wrong");
+        }
     }
 
     @Transactional
-    public List<Payment> findUserPaymentsByUserId(Long userId) throws NotFoundException {
+    public List<Payment> findUserPaymentsByUserId(Long userId){
         return paymentRepository.findByAccountIdIn(accountService
                 .findUserAccountsByUserId(userId)
                 .stream()
@@ -70,26 +75,11 @@ public class PaymentService {
                 .collect(Collectors.toList()));
     }
 
-    private String generatePaymentNumber() {
-        List<String> paymentNumbers = paymentRepository.findAll().stream().map(Payment::getPaymentNumber).collect(Collectors.toList());
-        String paymentNumber = randomPaymentNumber();
-        while (paymentNumbers.contains(paymentNumber)) {
-            paymentNumber = randomPaymentNumber();
-        }
-        return paymentNumber;
-    }
 
     private String randomPaymentNumber() {
-        return  randomFourDigits()
-                + randomFourDigits()
-                + randomFourDigits()
-                + randomFourDigits()
-                + randomFourDigits();
+        return UUID.randomUUID().toString();
     }
 
-    private String randomFourDigits() {
-        return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
-    }
 
     public Payment findById(Long paymentId) throws NotFoundException {
         return paymentRepository.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment"));
@@ -103,6 +93,6 @@ public class PaymentService {
     @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = NotEnoughMoneyException.class)
     public void sendPayment(Payment payment) throws NotFoundException, NotEnoughMoneyException {
         setStatusById(StatusType.SENT,payment.getId());
-        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
+        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount());
     }
 }

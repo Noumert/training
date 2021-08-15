@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class EntityDtoConverter {
     private static final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
+    private static final DateTimeFormatter formatterWithoutTime = DateTimeFormatter
+            .ofLocalizedDate(FormatStyle.MEDIUM);
     @Autowired
     MoneyParser moneyParser;
     @Autowired
@@ -62,7 +64,7 @@ public class EntityDtoConverter {
     public CreditCardDTO convertCreditCardsToCreditCardsDTO(CreditCard currentUserCards) {
         return CreditCardDTO.builder()
                 .id(currentUserCards.getId())
-                .expirationDate(currentUserCards.getExpirationDate().format(formatter.withLocale(LocaleContextHolder.getLocale())))
+                .expirationDate(currentUserCards.getExpirationDate().format(formatterWithoutTime.withLocale(LocaleContextHolder.getLocale())))
                 .cardNumber(currentUserCards.getCardNumber())
                 .build();
     }

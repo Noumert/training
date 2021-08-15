@@ -3,6 +3,7 @@ package project.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Getter
@@ -30,4 +31,8 @@ public class User{
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private RoleType role;
+    @OneToMany
+    private List<Account> accounts;
+    @OneToMany
+    private List<CreditCard> creditCards;
 }

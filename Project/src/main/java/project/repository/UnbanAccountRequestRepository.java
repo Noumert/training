@@ -12,9 +12,4 @@ import java.util.List;
 @Repository
 public interface UnbanAccountRequestRepository extends JpaRepository<UnbanAccountRequest, Long> {
     List<UnbanAccountRequest> findByResolved(boolean resolved);
-
-    @Transactional
-    @Modifying(flushAutomatically = true)
-    @Query("update UnbanAccountRequest u set u.resolved = ?1 where u.id = ?2")
-    void setResolvedById(boolean resolved, Long requestId);
 }

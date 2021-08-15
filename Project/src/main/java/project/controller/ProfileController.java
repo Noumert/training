@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.entity.User;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
@@ -50,8 +51,8 @@ public class ProfileController {
         Optional<String> sortPaymentsOpt = Optional.ofNullable(sortPayments);
         log.info("sortAccounts {},sortPayments {}", sortAccountsOpt, sortPaymentsOpt);
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
-                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
+            User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
 
             switch (sortAccountsOpt.orElse(SORT_DEFAULT)) {
                 case SORT_ACCOUNTS_BY_MONEY:

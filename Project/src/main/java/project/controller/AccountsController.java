@@ -51,7 +51,7 @@ public class AccountsController {
         try {
             Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
-        } catch (NotFoundException | RuntimeException e) {
+        } catch (RuntimeException e) {
             model.addAttribute("error", true);
         }
         return "user/accounts";
@@ -61,7 +61,7 @@ public class AccountsController {
     public String addAccountCard(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+            User currentUser = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
             Account account = Account.builder()
                     .user(currentUser)
                     .ban(false)
@@ -78,9 +78,10 @@ public class AccountsController {
     public String banAccount(@NotNull Long accountId, Model model) {
         try {
             log.info("unban account from user ban {} accountId {}", true, accountId);
-            accountService.setBanById(true, accountId);
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+            accountService.setBanById(true,account);
             return "redirect:/user/accounts";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error", true);
             return "/user/accountBanResult";
         }
@@ -92,7 +93,7 @@ public class AccountsController {
             UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest
                     .builder()
                     .dateTime(LocalDateTime.now())
-                    .account(accountService.findById(accountId))
+                    .account(accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account")))
                     .resolved(false)
                     .build();
             unbanAccountRequestService.save(unbanAccountRequest);
@@ -111,8 +112,9 @@ public class AccountsController {
                                Model model) {
         long moneyValue = moneyParser.getMoneyValue(money);
         try {
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
             log.info("add moneyValue accountId {} money {}", accountId, moneyValue);
-            accountService.addMoneyById(moneyValue, accountId);
+            accountService.addMoneyById(moneyValue, account);
             model.addAttribute("success", true);
             return "redirect:/user/accounts";
         } catch (NotEnoughMoneyException | RuntimeException | NotFoundException e) {

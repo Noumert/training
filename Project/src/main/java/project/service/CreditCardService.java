@@ -9,6 +9,7 @@ import project.repository.CreditCardRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +27,8 @@ public class CreditCardService {
     @Autowired
     private AccountService accountService;
 
-    public void saveNewCard(CreditCard creditCard) throws NotFoundException {
-        creditCard.setCardNumber(generateCardNumber());
+    public void saveNewCard(CreditCard creditCard) {
+        creditCard.setCardNumber(randomCardNumber());
         creditCard.setExpirationDate(LocalDate.now().plusYears(EXPIRED_DURATION));
         try {
             creditCardRepository.save(creditCard);
@@ -44,26 +45,10 @@ public class CreditCardService {
         }
     }
 
-    private String generateCardNumber() {
-        List<String> cardsNumbers = creditCardRepository.findAll().stream().map(CreditCard::getCardNumber).collect(Collectors.toList());
-        String cardNumber = randomCardNumber();
-        while (cardsNumbers.contains(cardNumber)) {
-            cardNumber = randomCardNumber();
-        }
-        return cardNumber;
-    }
-
     private String randomCardNumber() {
-        return randomFourDigits()
-                + "-" + randomFourDigits()
-                + "-" + randomFourDigits()
-                + "-" + randomFourDigits();
+        return UUID.randomUUID().toString();
     }
 
-    private String randomFourDigits() {
-        return String.valueOf((int) Math.floor(Math.random()
-                * (CreditCardService.MAX_RANDOM - CreditCardService.MIN_RANDOM + 1) + CreditCardService.MIN_RANDOM));
-    }
 
     public List<CreditCard> findUserCards(Long userId) throws NotFoundException {
         return creditCardRepository

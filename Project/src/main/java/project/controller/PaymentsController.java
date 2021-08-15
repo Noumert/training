@@ -10,6 +10,7 @@ import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.entity.Account;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
 import project.entity.Payment;
@@ -49,7 +50,7 @@ public class PaymentsController {
         try {
             model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(
                     accountService.findUserAccountsByUserId(currentUserId)));
-        } catch (NotFoundException | UnexpectedRollbackException e) {
+        } catch (UnexpectedRollbackException e) {
             model.addAttribute("error", true);
         }
         return "user/payments";
@@ -61,11 +62,12 @@ public class PaymentsController {
         long moneyValue = moneyParser.getMoneyValue(money);
         log.info("prepare payment accountId : {} moneyUAHValue : {}",accountId,moneyValue);
         try {
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
             Payment payment = Payment
                     .builder()
                     .dateTime(LocalDateTime.now())
                     .money(moneyValue)
-                    .account(accountService.findById(accountId))
+                    .account(account)
                     .recipient(recipient)
                     .status(StatusType.PREPARED)
                     .build();

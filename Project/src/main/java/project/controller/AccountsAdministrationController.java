@@ -1,5 +1,6 @@
 package project.controller;
 
+import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.entity.Account;
 import project.model.EntityDtoConverter;
 import project.dto.UserAccountDTO;
 import project.service.AccountService;
@@ -37,9 +39,10 @@ public class AccountsAdministrationController {
     public String banAccount(@NotNull Long accountId, Model model){
         try {
             log.info("ban account ban {} accountId {}", true, accountId);
-            accountService.setBanById(true,accountId);
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+            accountService.setBanById(true,account);
             return "redirect:/admin/accounts";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error",true);
             return "/admin/accountBanResult";
         }
@@ -49,9 +52,10 @@ public class AccountsAdministrationController {
     public String unbanAccount(@NotNull Long accountId, Model model){
         try {
             log.info("unban account ban {} accountId {}", false, accountId);
-            accountService.setBanById(false,accountId);
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+            accountService.setBanById(true,account);
             return "redirect:/admin/accounts";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error",true);
             return "/admin/accountBanResult";
         }
