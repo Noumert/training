@@ -1,16 +1,26 @@
 package project.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import project.dto.*;
 import project.entity.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class EntityDtoConverter {
+    private static final DateTimeFormatter formatter = DateTimeFormatter
+            .ofLocalizedDateTime(FormatStyle.MEDIUM);
+    private static final DateTimeFormatter formatterWithoutTime = DateTimeFormatter
+            .ofLocalizedDate(FormatStyle.MEDIUM);
+    @Autowired
+    MoneyParser moneyParser;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -31,7 +41,7 @@ public class EntityDtoConverter {
                 .ban(accountDTO.isBan())
                 .accountName(accountDTO.getAccountName())
                 .accountNumber(accountDTO.getAccountNumber())
-                .money(accountDTO.getMoney())
+                .money(moneyParser.getMoneyValue(accountDTO.getMoney()))
                 .build();
     }
 
@@ -42,7 +52,7 @@ public class EntityDtoConverter {
                 .ban(account.isBan())
                 .accountName(account.getAccountName())
                 .accountNumber(account.getAccountNumber())
-                .money(account.getMoney())
+                .money(moneyParser.getStringMoneyFromMoneyValue(account.getMoney()))
                 .build();
     }
 
@@ -54,7 +64,7 @@ public class EntityDtoConverter {
     public CreditCardDTO convertCreditCardsToCreditCardsDTO(CreditCard currentUserCards) {
         return CreditCardDTO.builder()
                 .id(currentUserCards.getId())
-                .expirationDate(currentUserCards.getExpirationDate())
+                .expirationDate(currentUserCards.getExpirationDate().format(formatterWithoutTime.withLocale(LocaleContextHolder.getLocale())))
                 .cardNumber(currentUserCards.getCardNumber())
                 .build();
     }
@@ -63,7 +73,7 @@ public class EntityDtoConverter {
         return UnbanAccountRequest
                 .builder()
                 .id(unbanAccountRequestDTO.getId())
-                .dateTime(unbanAccountRequestDTO.getDateTime())
+                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
                 .resolved(unbanAccountRequestDTO.isResolved())
                 .account(convertAccountDTOToAccount(unbanAccountRequestDTO.getAccount()))
                 .build();
@@ -73,7 +83,7 @@ public class EntityDtoConverter {
         return UnbanAccountRequestDTO
                 .builder()
                 .id(unbanAccountRequest.getId())
-                .dateTime(unbanAccountRequest.getDateTime())
+                .dateTime(unbanAccountRequest.getDateTime().format(formatter.withLocale(LocaleContextHolder.getLocale())))
                 .resolved(unbanAccountRequest.isResolved())
                 .account(convertAccountToAccountDTO(unbanAccountRequest.getAccount()))
                 .build();
@@ -161,11 +171,11 @@ public class EntityDtoConverter {
                 .builder()
                 .account(convertAccountToAccountDTO(payment.getAccount()))
                 .id(payment.getId())
-                .dateTime(payment.getDateTime())
+                .dateTime(payment.getDateTime().format(formatter.withLocale(LocaleContextHolder.getLocale())))
                 .paymentNumber(payment.getPaymentNumber())
                 .recipient(payment.getRecipient())
                 .status(payment.getStatus().name())
-                .money(payment.getMoney())
+                .money(moneyParser.getStringMoneyFromMoneyValue(payment.getMoney()))
                 .build();
     }
 
@@ -174,11 +184,11 @@ public class EntityDtoConverter {
                 .builder()
                 .account(convertAccountDTOToAccount(paymentDTO.getAccount()))
                 .id(paymentDTO.getId())
-                .dateTime(paymentDTO.getDateTime())
+                .dateTime(LocalDateTime.parse(paymentDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
                 .paymentNumber(paymentDTO.getPaymentNumber())
                 .recipient(paymentDTO.getRecipient())
                 .status(StatusType.valueOf(paymentDTO.getStatus()))
-                .money(paymentDTO.getMoney())
+                .money(moneyParser.getMoneyValue(paymentDTO.getMoney()))
                 .build();
     }
 }

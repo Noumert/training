@@ -17,11 +17,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByAccountName(String accountName);
 
-    @Transactional
-    @Modifying(flushAutomatically = true)
-    @Query("update Account a set a.ban = ?1 where a.id = ?2")
-    void setBanById(boolean ban, Long accountId);
-
     List<Account> findByUserIdOrderByAccountName(Long userId);
 
     List<Account> findByUserIdOrderByAccountNumber(Long userId);

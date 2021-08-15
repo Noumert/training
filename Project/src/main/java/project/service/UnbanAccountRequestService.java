@@ -8,6 +8,7 @@ import project.entity.UnbanAccountRequest;
 import project.repository.UnbanAccountRequestRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -27,11 +28,12 @@ public class UnbanAccountRequestService {
         return unbanAccountRequestRepository.findByResolved(resolved);
     }
 
-    public void setResolvedById(boolean resolved, Long requestId) {
-        unbanAccountRequestRepository.setResolvedById(resolved, requestId);
+    public void setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest) {
+        unbanAccountRequest.setResolved(resolved);
+        save(unbanAccountRequest);
     }
 
-    public UnbanAccountRequest findById(Long requestId) throws NotFoundException {
-        return unbanAccountRequestRepository.findById(requestId).orElseThrow(()-> new NotFoundException("no such request"));
+    public Optional<UnbanAccountRequest> findById(Long requestId) throws NotFoundException {
+        return unbanAccountRequestRepository.findById(requestId);
     }
 }

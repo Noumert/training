@@ -52,7 +52,13 @@ public class CreditCardsController {
     @PostMapping("/add")
     public String addCreditCard(@NotNull Long accountId, Model model) {
         try {
-            creditCardService.saveNewCard(createCreditCard(accountId));
+            Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such account"));
+            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+            creditCardService.saveNewCard(CreditCard.builder()
+                    .account(account)
+                    .user(user)
+                    .build());
             return "redirect:/user/creditCards";
         } catch (NotFoundException | RuntimeException e) {
             model.addAttribute("error", true);
@@ -60,12 +66,4 @@ public class CreditCardsController {
         }
     }
 
-    private CreditCard createCreditCard(Long accountId) throws NotFoundException {
-        User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        Account account = accountService.findById(accountId);
-        return CreditCard.builder()
-                .account(account)
-                .user(currentUser)
-                .build();
-    }
 }

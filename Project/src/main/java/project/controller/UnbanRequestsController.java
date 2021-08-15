@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.entity.UnbanAccountRequest;
 import project.model.EntityDtoConverter;
 import project.dto.UnbanAccountRequestDTO;
 import project.service.AccountService;
@@ -42,9 +43,11 @@ public class UnbanRequestsController {
     @PostMapping("/refuse")
     public String refuseRequest(@NotNull Long requestId, Model model){
         try {
-            unbanAccountRequestService.setResolvedById(true,requestId);
+            UnbanAccountRequest request = unbanAccountRequestService.findById(requestId)
+                    .orElseThrow(() -> new NotFoundException("no such request"));
+            unbanAccountRequestService.setResolvedByRequest(true,request);
             return "redirect:/admin/unbanRequests";
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error",true);
             return "/admin/requestAnswerResult";
         }
@@ -53,7 +56,9 @@ public class UnbanRequestsController {
     @PostMapping("/unban")
     public String unbanRequest(@NotNull Long requestId, Model model){
         try {
-            accountService.unbanAndSetResolvedByRequest(false,true,unbanAccountRequestService.findById(requestId));
+            UnbanAccountRequest request = unbanAccountRequestService.findById(requestId)
+                    .orElseThrow(() -> new NotFoundException("no such request"));
+            accountService.unbanAndSetResolvedByRequest(false,true, request);
             return "redirect:/admin/unbanRequests";
         } catch (RuntimeException | NotFoundException e) {
             model.addAttribute("error",true);

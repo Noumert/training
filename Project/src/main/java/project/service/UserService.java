@@ -52,10 +52,6 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User getUserByEmail(String email) throws NotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("no such user"));
-    }
-
     private Collection<GrantedAuthority> mapRolesToAuthorities(RoleType role) {
         return Collections.singleton(new SimpleGrantedAuthority(role.name()));
     }
@@ -82,6 +78,10 @@ public class UserService implements UserDetailsService {
 
     public void setAccountNonLockedById(boolean accountNonLocked, Long userId) {
         userRepository.setBanById(accountNonLocked,userId);
+    }
+
+    public Optional<User> findById(Long currentUserId) {
+        return userRepository.findById(currentUserId);
     }
 }
 

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @ToString
 public class UnbanAccountRequestDTO {
     private Long id;
-    private LocalDateTime dateTime;
+    private String dateTime;
     private boolean resolved;
     private AccountDTO account;
 }

@@ -3,11 +3,13 @@ package project.controller;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import project.entity.User;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
@@ -16,6 +18,7 @@ import project.service.PaymentService;
 import project.service.UserService;
 
 import javax.validation.constraints.NotNull;
+import java.util.Locale;
 import java.util.Optional;
 
 @Slf4j
@@ -43,12 +46,13 @@ public class ProfileController {
     @RequestMapping()
     public String paymentsPage(Model model, String sortAccounts, String sortPayments) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        log.info("local {}", LocaleContextHolder.getLocale());
         Optional<String> sortAccountsOpt = Optional.ofNullable(sortAccounts);
         Optional<String> sortPaymentsOpt = Optional.ofNullable(sortPayments);
         log.info("sortAccounts {},sortPayments {}", sortAccountsOpt, sortPaymentsOpt);
         try {
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(userService
-                    .getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName())));
+            User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
+            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
 
             switch (sortAccountsOpt.orElse(SORT_DEFAULT)) {
                 case SORT_ACCOUNTS_BY_MONEY:
