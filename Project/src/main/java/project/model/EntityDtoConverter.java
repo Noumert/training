@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 @Component
 public class EntityDtoConverter {
     @Autowired
+    MoneyParser moneyParser;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public List<AccountDTO> convertAccountsListToDTO(List<Account> accounts) {
@@ -31,7 +33,7 @@ public class EntityDtoConverter {
                 .ban(accountDTO.isBan())
                 .accountName(accountDTO.getAccountName())
                 .accountNumber(accountDTO.getAccountNumber())
-                .money(accountDTO.getMoney())
+                .money(moneyParser.getMoneyValue(accountDTO.getMoney()))
                 .build();
     }
 
@@ -42,7 +44,7 @@ public class EntityDtoConverter {
                 .ban(account.isBan())
                 .accountName(account.getAccountName())
                 .accountNumber(account.getAccountNumber())
-                .money(account.getMoney())
+                .money(moneyParser.getStringMoneyFromMoneyValue(account.getMoney()))
                 .build();
     }
 
@@ -165,7 +167,7 @@ public class EntityDtoConverter {
                 .paymentNumber(payment.getPaymentNumber())
                 .recipient(payment.getRecipient())
                 .status(payment.getStatus().name())
-                .money(payment.getMoney())
+                .money(moneyParser.getStringMoneyFromMoneyValue(payment.getMoney()))
                 .build();
     }
 
@@ -178,7 +180,7 @@ public class EntityDtoConverter {
                 .paymentNumber(paymentDTO.getPaymentNumber())
                 .recipient(paymentDTO.getRecipient())
                 .status(StatusType.valueOf(paymentDTO.getStatus()))
-                .money(paymentDTO.getMoney())
+                .money(moneyParser.getMoneyValue(paymentDTO.getMoney()))
                 .build();
     }
 }

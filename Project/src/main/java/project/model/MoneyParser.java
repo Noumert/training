@@ -8,14 +8,19 @@ import java.util.Locale;
 
 @Component
 public class MoneyParser {
-    public long getMoneyValue(double money) {
-        long moneyValue;
-        Locale locale = LocaleContextHolder.getLocale();
-        if (GlobalConstants.UA_LOCALE.equals(locale)) {
-            moneyValue = (long) (money * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);
-        } else {
-            moneyValue = (long) (money * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT * GlobalConstants.DOLLAR_COEFFICIENT);
+    public long getMoneyValue(String money) {
+        try {
+            return (long) (Double.parseDouble(money) * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);
+        }catch (NumberFormatException e){
+            return 0;
         }
-        return moneyValue;
+    }
+
+    public String getStringMoneyFromMoneyValue(Long moneyValue) {
+        return String.format("%.2f",(double)moneyValue/100);
+    }
+
+    public long getMoneyValue(double money) {
+        return (long) (money * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);
     }
 }

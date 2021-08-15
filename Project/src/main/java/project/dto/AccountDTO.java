@@ -11,7 +11,7 @@ import lombok.*;
 public class AccountDTO {
     private Long id;
     private String accountName;
-    private Long money;
+    private String money;
     private String accountNumber;
     private boolean ban;
 }
