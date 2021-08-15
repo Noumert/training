@@ -3,6 +3,7 @@ package project.controller;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
 import project.entity.User;
+import project.model.MoneyParser;
 import project.service.AccountService;
 import project.service.CreditCardService;
 import project.service.UnbanAccountRequestService;
@@ -24,6 +26,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Slf4j
 @Controller
@@ -40,21 +43,23 @@ public class AccountsController {
     private EntityDtoConverter entityDtoConverter;
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
+    @Autowired
+    private MoneyParser moneyParser;
 
     @RequestMapping()
-    public String accountsPage(Model model){
+    public String accountsPage(Model model) {
         try {
-            Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
+            Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
         } catch (NotFoundException | RuntimeException e) {
-            model.addAttribute("error",true);
+            model.addAttribute("error", true);
         }
         return "user/accounts";
     }
 
     @PostMapping("/add")
-    public String addAccountCard(Model model){
-        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+    public String addAccountCard(Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             User currentUser = userService.getUserByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
             Account account = Account.builder()
@@ -64,25 +69,25 @@ public class AccountsController {
             accountService.saveNewAccount(account);
             return "redirect:/user/accounts";
         } catch (NotFoundException | RuntimeException e) {
-            model.addAttribute("error",true);
+            model.addAttribute("error", true);
             return "/user/accountAddingResult";
         }
     }
 
     @PostMapping("/ban")
-    public String banAccount(@NotNull Long accountId, Model model){
+    public String banAccount(@NotNull Long accountId, Model model) {
         try {
             log.info("unban account from user ban {} accountId {}", true, accountId);
-            accountService.setBanById(true,accountId);
+            accountService.setBanById(true, accountId);
             return "redirect:/user/accounts";
         } catch (RuntimeException e) {
-            model.addAttribute("error",true);
+            model.addAttribute("error", true);
             return "/user/accountBanResult";
         }
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@NotNull Long accountId, Model model){
+    public String unbanAccount(@NotNull Long accountId, Model model) {
         try {
             UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest
                     .builder()
@@ -91,27 +96,29 @@ public class AccountsController {
                     .resolved(false)
                     .build();
             unbanAccountRequestService.save(unbanAccountRequest);
-            model.addAttribute("success",true);
+            model.addAttribute("success", true);
             return "/user/accountBanResult";
         } catch (NotFoundException | RuntimeException e) {
-            model.addAttribute("error",true);
+            model.addAttribute("error", true);
             return "/user/accountBanResult";
         }
     }
 
     @PostMapping("/topUp")
     public String topUpAccount(@NotNull Long accountId,
-                               @NotNull @Min(value = 1L, message = "min top up is 1")
-                               @Max(value = 99999L, message = "max top up is 99999") Long money,
-                               Model model){
+                               @NotNull @Min(value = 1, message = "min top up is 1")
+                               @Max(value = 99999, message = "max top up is 99999") double money,
+                               Model model) {
+        long moneyValue = moneyParser.getMoneyValue(money);
         try {
-            log.info("add money accountId {} money {}",accountId,money);
-            accountService.addMoneyById(money,accountId);
-            model.addAttribute("success",true);
+            log.info("add moneyValue accountId {} money {}", accountId, moneyValue);
+            accountService.addMoneyById(moneyValue, accountId);
+            model.addAttribute("success", true);
             return "redirect:/user/accounts";
         } catch (NotEnoughMoneyException | RuntimeException | NotFoundException e) {
             model.addAttribute("error", true);
             return "/user/accountTopUpResult";
         }
     }
+
 }
