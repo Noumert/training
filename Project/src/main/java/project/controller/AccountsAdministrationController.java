@@ -18,7 +18,6 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@Validated
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired

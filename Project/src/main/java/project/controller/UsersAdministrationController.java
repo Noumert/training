@@ -17,7 +17,6 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@Validated
 @RequestMapping("/admin/users")
 public class UsersAdministrationController {
     @Autowired

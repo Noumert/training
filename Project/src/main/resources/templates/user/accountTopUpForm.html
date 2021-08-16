@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<span th:if="${error}">
+    <div class="alert alert-info"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+<h1 th:utext="#{label.accounts.topUp}">
+</h1>
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+    <tbody>
+    <tr>
+        <th th:utext="#{label.account.number}"> Account number </th><td><span th:text="${account.accountNumber}"> Account number </span></td>
+    </tr>
+    <tr>
+        <th th:utext="#{label.account.name}"> Account name </th><td><span th:text="${account.accountName}"> Account name </span></td>
+    </tr>
+    <tr>
+        <th th:utext="#{label.money}"> Money </th><td><span th:text="${account.money}"> Money </span></td>
+    </tr>
+    <tr>
+        <td>
+            <form name="topUpForm" th:action="@{/user/accounts/topUpForm/topUp}" th:object="${topUp}" method="post">
+                <input id="topUpMoney" type = "number" pattern="[0-9]+([\.,][0-9]+)?"
+                       step="0.01" name = "topUpMoney" th:field="*{topUpMoney}" required/>
+                <p th:each="error : ${#fields.errors('topUpMoney')}"
+                   th:utext="${error}" class="alert alert-danger">Validation error</p>
+                <input type = "hidden" name = "accountId" th:value = "${account.id}"  />
+                <button type="submit" th:text="#{label.top.up}" th:disabled="${account.ban}"></button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

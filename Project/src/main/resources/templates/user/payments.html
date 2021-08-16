@@ -15,23 +15,29 @@
 <h1 th:utext="#{label.payment}">
 </h1>
 
-<form name="paymentForm" th:action="@{/user/payments/prepare}" method="post">
+<form name="paymentForm" th:action="@{/user/payments/prepare}" th:object="${payment}" method="post">
     <div class="form-group">
-    <label class="control-label" for="account" th:text="#{label.account}"> account </label><br>
-        <select id="account" required name="accountId">
+    <label class="control-label" for="accountId" th:text="#{label.account}"> account </label><br>
+        <select id="accountId" th:field="*{accountId}" required name="accountId">
             <option th:each="account: ${accounts}"
                     th:value="${account.id}"
                     th:text="${account.accountName + ' ' + account.money}">
             </option>
         </select>
+        <p th:each="error : ${#fields.errors('accountId')}"
+           th:utext="${error}" class="alert alert-danger">Validation error</p>
     </div>
     <div class="form-group">
-        <label class="control-label" for="money" th:text="#{label.money}"> money </label><br>
-        <input id="money" type = "number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name = "money" required/>
+        <label class="control-label" for="paymentMoney" th:text="#{label.money}"> money </label><br>
+        <input id="paymentMoney" type = "number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name = "paymentMoney" th:field="*{paymentMoney}" required/>
+        <p th:each="error : ${#fields.errors('paymentMoney')}"
+           th:utext="${error}" class="alert alert-danger">Validation error</p>
     </div>
     <div class="form-group">
         <label class="control-label" for="recipient" th:text="#{label.recipient}"> payment </label><br>
-        <input id="recipient" type = "text" name = "recipient" required/>
+        <input id="recipient" type = "text" name = "recipient" th:field="*{recipient}" required/>
+        <p th:each="error : ${#fields.errors('recipient')}"
+           th:utext="${error}" class="alert alert-danger">Validation error</p>
     </div>
     <button type="submit" th:text="#{label.prepare}"></button>
 </form>

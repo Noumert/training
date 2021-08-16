@@ -34,7 +34,7 @@ public class EntityDtoConverter {
                 .map(this::convertAccountDTOToAccount).collect(Collectors.toList());
     }
 
-    private Account convertAccountDTOToAccount(AccountDTO accountDTO) {
+    public Account convertAccountDTOToAccount(AccountDTO accountDTO) {
         return Account
                 .builder()
                 .id(accountDTO.getId())
@@ -45,7 +45,7 @@ public class EntityDtoConverter {
                 .build();
     }
 
-    private AccountDTO convertAccountToAccountDTO(Account account) {
+    public AccountDTO convertAccountToAccountDTO(Account account) {
         return AccountDTO
                 .builder()
                 .id(account.getId())
