@@ -31,9 +31,10 @@ public class EntityDtoConverter {
                 .map(this::convertAccountToAccountDTO).collect(Collectors.toList());
     }
 
-    public List<AccountDTO> convertAccountsListToDTO(Page<Account> accounts) {
-        return accounts.stream()
-                .map(this::convertAccountToAccountDTO).collect(Collectors.toList());
+    public Page<AccountDTO> convertAccountsListToDTO(Page<Account> accounts) {
+//        return new PageImpl<>(accounts.stream()
+//                .map(this::convertAccountToAccountDTO).collect(Collectors.toList()));
+        return accounts.map(this::convertAccountToAccountDTO);
     }
 
     public List<Account> convertAccountDTOsListToAccounts(List<AccountDTO> accountDTOS) {
@@ -166,10 +167,12 @@ public class EntityDtoConverter {
                 .collect(Collectors.toList());
     }
 
-    public List<PaymentDTO> convertPaymentsListToDTO(Page<Payment> payments) {
-        return payments.stream()
-                .map(this::convertPaymentToPaymentDTO)
-                .collect(Collectors.toList());
+    public Page<PaymentDTO> convertPaymentsListToDTO(Page<Payment> payments) {
+//        return new PageImpl<>(
+//                payments.stream()
+//                        .map(this::convertPaymentToPaymentDTO)
+//                        .collect(Collectors.toList()));
+        return payments.map(this::convertPaymentToPaymentDTO);
     }
 
     public List<Payment> convertPaymentDTOsListToPayments(List<PaymentDTO> paymentDTOS) {

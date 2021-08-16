@@ -36,13 +36,13 @@
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
     <thead>
     <tr>
-        <th><a th:href="@{'/user/profile?page=' + ${accPage} + '&accSortBy=accountNumber&accAsc=' + ${!accAsc}}"
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=accountNumber,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
                th:utext="#{label.account.number}"> Account number</a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${accPage} + '&accSortBy=accountName&accAsc=' + ${!accAsc}}"
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=accountName,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
                th:utext="#{label.account.name}"> Account name</a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${accPage} + '&accSortBy=money&accAsc=' + ${!accAsc}}"
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=money,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
                th:utext="#{label.money}"> Money </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${accPage} + '&accSortBy=ban&accAsc=' + ${!accAsc}}"
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=ban,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
                th:utext="#{label.banned}"> Status </a></th>
     </tr>
     </thead>
@@ -50,7 +50,7 @@
     <tr th:if="${accounts.empty}">
         <td colspan="4" th:utext="#{label.no.accounts}"> no cards</td>
     </tr>
-    <tr th:each="account : ${accounts}">
+    <tr th:each="account : ${accounts.content}">
         <td><span th:text="${account.accountNumber}"> Account number </span></td>
         <td><span th:text="${account.accountName}"> Account name </span></td>
         <td><span th:text="${account.money}"> Money </span></td>
@@ -58,8 +58,7 @@
     </tr>
 </table>
 
-<div class="pagination">
-
+<div th:replace="pagination :: acc">
 </div>
 
 <h1 th:utext="#{label.payments}">
@@ -68,17 +67,17 @@
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
     <thead>
     <tr>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=account.accountName&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=account,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                th:utext="#{label.account.name}"> Account name </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=recipient&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=recipient,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                th:utext="#{label.recipient}"> Recipient </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=money&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=money,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                 th:utext="#{label.money}"> Money </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=paymentNumber&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=paymentNumber,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                th:utext="#{label.payment.number}"> Payment number </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=dateTime&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=dateTime,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                th:utext="#{label.date.time}"> Data and time </a></th>
-        <th><a th:href="@{'/user/profile?page=' + ${payPage} + '&paySortBy=status&payAsc=' + ${!payAsc}}"
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=status,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
                th:utext="#{label.status}"> Status </a></th>
     </tr>
     </thead>
@@ -86,7 +85,7 @@
     <tr th:if="${payments.empty}">
         <td colspan="4" th:utext="#{label.no.payments}"> no payments</td>
     </tr>
-    <tr th:each="payment : ${payments}">
+    <tr th:each="payment : ${payments.content}">
         <td><span th:text="${payment.account.accountName}"> Account name </span></td>
         <td><span th:text="${payment.recipient}"> recipient </span></td>
         <td><span th:text="${payment.money}"> money </span></td>
@@ -103,6 +102,9 @@
         </td>
     </tr>
 </table>
+
+<div th:replace="pagination :: pay">
+</div>
 
 </body>
 </html>

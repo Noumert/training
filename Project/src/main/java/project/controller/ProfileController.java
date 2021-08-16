@@ -4,6 +4,7 @@ import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +14,10 @@ import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import project.dto.AccountDTO;
+import project.dto.PaymentDTO;
+import project.entity.Account;
+import project.entity.Payment;
 import project.entity.User;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
@@ -24,21 +29,17 @@ import project.service.UserService;
 import javax.print.attribute.standard.PageRanges;
 import javax.validation.constraints.NotNull;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Controller
 @RequestMapping("user/profile")
 public class ProfileController {
     private static final int PAGE_SIZE = 5;
-    private static final String SORT_DEFAULT = "SORT_DEFAULT";
-    private static final String SORT_ACCOUNTS_BY_MONEY = "SORT_ACCOUNTS_BY_MONEY";
-    private static final String SORT_ACCOUNTS_BY_NAME = "SORT_ACCOUNTS_BY_NAME";
-    private static final String SORT_ACCOUNTS_BY_NUMBER = "SORT_ACCOUNTS_BY_NUMBER";
-    private static final String SORT_PAYMENTS_BY_NUMBER = "SORT_PAYMENTS_BY_NUMBER";
-    private static final String SORT_PAYMENTS_BY_DATE_ASC = "SORT_PAYMENTS_BY_DATE_ASC";
-    private static final String SORT_PAYMENTS_BY_DATE_DESC = "SORT_PAYMENTS_BY_DATE_DESC";
 
     @Autowired
     private UserService userService;
@@ -120,28 +121,53 @@ public class ProfileController {
                                @RequestParam Optional<String> paySortBy,
                                @RequestParam Optional<Boolean> payAsc) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accPage",accPage.orElse(0));
+        model.addAttribute("accPage",accPage.orElse(1));
         model.addAttribute("accSortBy",accSortBy.orElse("id"));
         model.addAttribute("accAsc",accAsc.orElse(true));
-        model.addAttribute("payPage",payPage.orElse(0));
+        model.addAttribute("payPage",payPage.orElse(1));
         model.addAttribute("paySortBy",paySortBy.orElse("id"));
         model.addAttribute("payAsc",payAsc.orElse(true));
         try {
+
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
 
             Pageable pageableAccount = PageRequest.of(
-                    accPage.orElse(0), PAGE_SIZE,
+                    accPage.orElse(1)-1, PAGE_SIZE,
                     accAsc.orElse(true) ? Sort.Direction.ASC : Sort.Direction.DESC, accSortBy.orElse("id"));
             Pageable pageablePayment = PageRequest.of(
-                    payPage.orElse(0), PAGE_SIZE,
+                    payPage.orElse(1)-1, PAGE_SIZE,
                     payAsc.orElse(true) ? Sort.Direction.ASC : Sort.Direction.DESC, paySortBy.orElse("id"));
 
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
-                    .findUserAccountsByUserId(currentUserId,pageableAccount)));
-            model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
-                    .findUserPaymentsByUserId(currentUserId,pageablePayment)));
+            Page<Account> accounts = accountService
+                    .findUserAccountsByUserId(currentUserId, pageableAccount);
+            Page<Payment> payments = paymentService
+                    .findUserPaymentsByUserId(currentUserId, pageablePayment);
 
+            Page<AccountDTO> accountDTOS = entityDtoConverter.convertAccountsListToDTO(accounts);
+            Page<PaymentDTO> paymentDTOS = entityDtoConverter.convertPaymentsListToDTO(payments);
+
+
+            System.out.println();
+
+            model.addAttribute("accounts", accountDTOS);
+            model.addAttribute("payments", paymentDTOS);
+
+            int totalPagesAccount = accountDTOS.getTotalPages();
+            if (totalPagesAccount > 0) {
+                List<Integer> accountPageNumbers = IntStream.rangeClosed(1, totalPagesAccount)
+                        .boxed()
+                        .collect(Collectors.toList());
+                model.addAttribute("accountPageNumbers", accountPageNumbers);
+            }
+
+            int totalPagesPayments = paymentDTOS.getTotalPages();
+            if (totalPagesPayments > 0) {
+                List<Integer> paymentsPageNumbers = IntStream.rangeClosed(1, totalPagesPayments)
+                        .boxed()
+                        .collect(Collectors.toList());
+                model.addAttribute("paymentsPageNumbers", paymentsPageNumbers);
+            }
 
         } catch (UnexpectedRollbackException e) {
             log.info("error in transaction when open profile");
