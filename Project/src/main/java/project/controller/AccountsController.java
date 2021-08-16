@@ -145,7 +145,7 @@ public class AccountsController {
             }
             return "user/accountTopUpForm";
         } else {
-            long moneyValue = moneyParser.getMoneyValue(topUpDTO.getMoney());
+            long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
                 log.info("add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));

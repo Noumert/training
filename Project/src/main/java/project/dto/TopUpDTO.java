@@ -17,5 +17,5 @@ public class TopUpDTO {
     Long accountId;
     @NotNull @Min(value = 1)
     @Max(value = 99999)
-    Double money;
+    Double topUpMoney;
 }
