@@ -50,7 +50,7 @@ public class CreditCardService {
     }
 
 
-    public List<CreditCard> findUserCards(Long userId) throws NotFoundException {
+    public List<CreditCard> findUserCards(Long userId){
         return creditCardRepository
                 .findByUserId(userId);
     }

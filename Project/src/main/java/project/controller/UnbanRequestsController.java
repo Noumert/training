@@ -34,34 +34,43 @@ public class UnbanRequestsController {
 
         List<UnbanAccountRequestDTO> unbanAccountRequestDTOS = entityDtoConverter
                 .convertUnbanAccountRequestsToUnbanAccountRequestDTOs(unbanAccountRequestService.findByResolved(false));
-        log.info("{}",unbanAccountRequestDTOS);
+        log.info("{}", unbanAccountRequestDTOS);
         model.addAttribute("requests", unbanAccountRequestDTOS);
         return "admin/unbanRequests";
     }
 
     @PostMapping("/refuse")
-    public String refuseRequest(@NotNull Long requestId, Model model){
+    public String refuseRequest(@NotNull Long requestId, Model model) {
         try {
             UnbanAccountRequest request = unbanAccountRequestService.findById(requestId)
                     .orElseThrow(() -> new NotFoundException("no such request"));
-            unbanAccountRequestService.setResolvedByRequest(true,request);
+            unbanAccountRequestService.setResolvedByRequest(true, request);
+            log.info("refuse request with id {}", requestId);
             return "redirect:/admin/unbanRequests";
-        } catch (RuntimeException | NotFoundException e) {
-            model.addAttribute("error",true);
-            return "/admin/requestAnswerResult";
+        } catch (NotFoundException e) {
+            log.info("no such request with id {}", requestId);
+            model.addAttribute("noRequestError", true);
+        } catch (RuntimeException e) {
+            log.info("something went wrong with refuse request with id {}", requestId);
+            model.addAttribute("error", true);
         }
+        return "/admin/requestAnswerResult";
     }
 
     @PostMapping("/unban")
-    public String unbanRequest(@NotNull Long requestId, Model model){
+    public String unbanRequest(@NotNull Long requestId, Model model) {
         try {
             UnbanAccountRequest request = unbanAccountRequestService.findById(requestId)
                     .orElseThrow(() -> new NotFoundException("no such request"));
-            accountService.unbanAndSetResolvedByRequest(false,true, request);
+            accountService.unbanAndSetResolvedByRequest(false, true, request);
             return "redirect:/admin/unbanRequests";
-        } catch (RuntimeException | NotFoundException e) {
-            model.addAttribute("error",true);
-            return "/admin/requestAnswerResult";
+        } catch (NotFoundException e) {
+            log.info("no such request with id {}", requestId);
+            model.addAttribute("noRequestError", true);
+        } catch (RuntimeException e) {
+            log.info("something went wrong with refuse request with id {}", requestId);
+            model.addAttribute("error", true);
         }
+        return "/admin/requestAnswerResult";
     }
 }

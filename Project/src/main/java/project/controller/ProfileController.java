@@ -46,7 +46,6 @@ public class ProfileController {
     @RequestMapping()
     public String paymentsPage(Model model, String sortAccounts, String sortPayments) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        log.info("local {}", LocaleContextHolder.getLocale());
         Optional<String> sortAccountsOpt = Optional.ofNullable(sortAccounts);
         Optional<String> sortPaymentsOpt = Optional.ofNullable(sortPayments);
         log.info("sortAccounts {},sortPayments {}", sortAccountsOpt, sortPaymentsOpt);
@@ -94,8 +93,13 @@ public class ProfileController {
                     break;
             }
 
-        } catch (NotFoundException | UnexpectedRollbackException e) {
+        } catch (UnexpectedRollbackException e) {
+            log.info("error in transaction when open profile");
             model.addAttribute("error", true);
+        }
+        catch (NotFoundException e) {
+            log.info("no user when open profile");
+            model.addAttribute("noUserError", true);
         }
         return "user/profile";
     }
@@ -104,11 +108,21 @@ public class ProfileController {
     public String send(@NotNull Long paymentId, Model model) {
         try {
             paymentService.sendPayment(paymentService.findById(paymentId));
+            log.info("send payment with id {}",paymentId);
             return "redirect:/user/profile";
-        } catch (NotFoundException | NotEnoughMoneyException | UnexpectedRollbackException e) {
-            model.addAttribute("error", true);
-            return "user/paymentSendResult";
+        } catch (NotFoundException  e) {
+            log.info("no payment when send payment with id {}",paymentId);
+            model.addAttribute("noPaymentError", true);
         }
+        catch ( NotEnoughMoneyException  e) {
+            log.info("not enough money when send payment with id {}",paymentId);
+            model.addAttribute("noMoneyError", true);
+        }
+        catch (UnexpectedRollbackException e) {
+            log.info("something went wrong with transaction when send payment with id {}",paymentId);
+            model.addAttribute("error", true);
+        }
+        return "user/paymentSendResult";
     }
 
 }

@@ -10,6 +10,12 @@
         error
     </div>
 </span>
+<span th:if="${noAccountError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.account.not.found.error}">
+        error
+    </div>
+</span>
 <a href="/" th:href="@{/admin/accounts}" th:utext="#{label.back.to.accounts.page}">Back to Cards Page</a>
 </body>
 </html>

@@ -37,12 +37,13 @@ public class CreditCardsController {
 
     @RequestMapping()
     public String creditCardsPage(Model model) {
-        Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findUserCards(currentUserId)));
-            model.addAttribute("accounts",entityDtoConverter.convertAccountsListToDTO(
+            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
                     accountService.findFreeUserAccountsByUserId(currentUserId)));
-        } catch (NotFoundException | UnexpectedRollbackException e) {
+        } catch (UnexpectedRollbackException e) {
+            log.info("something went wrong with transaction findFreeUserAccountsByUserId");
             model.addAttribute("error", true);
         }
         return "user/creditCards";
@@ -50,19 +51,24 @@ public class CreditCardsController {
 
     @PostMapping("/add")
     public String addCreditCard(@NotNull Long accountId, Model model) {
+        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            Long currentUserId = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such account"));
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
             creditCardService.saveNewCard(CreditCard.builder()
                     .account(account)
                     .user(user)
                     .build());
+            log.info("add new card with account id {}", accountId);
             return "redirect:/user/creditCards";
-        } catch (NotFoundException | RuntimeException e) {
-            model.addAttribute("error", true);
-            return "/user/cardAddingResult";
+        } catch (NotFoundException e) {
+            log.info("no user with Id {}, or account with Id {}",currentUserId, accountId);
+            model.addAttribute("noUserOrAccountError", true);
+        } catch (RuntimeException e) {
+            log.info("some generated parameter was not unique when trying to add card with account id {}", accountId);
+            model.addAttribute("duplicatedError", true);
         }
+        return "/user/cardAddingResult";
     }
 
 }
