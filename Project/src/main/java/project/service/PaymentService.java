@@ -1,8 +1,11 @@
 package project.service;
 
+import javafx.scene.control.Pagination;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,6 @@ import project.entity.Account;
 import project.entity.Payment;
 import project.entity.StatusType;
 import project.repository.PaymentRepository;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +39,23 @@ public class PaymentService {
         }catch (RuntimeException e){
             throw new RuntimeException("something went wrong");
         }
+    }
+
+    public void save(Payment payment){
+        try {
+            paymentRepository.save(payment);
+        }catch (RuntimeException e){
+            throw new RuntimeException("something went wrong");
+        }
+    }
+
+    @Transactional
+    public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable){
+        return paymentRepository.findByAccountIdIn(accountService
+                .findUserAccountsByUserId(userId)
+                .stream()
+                .map(Account::getId)
+                .collect(Collectors.toList()), pageable);
     }
 
     @Transactional
@@ -86,13 +105,14 @@ public class PaymentService {
     }
 
 
-    public  void setStatusById(StatusType status, Long paymentId){
-        paymentRepository.setStatusById(status,paymentId);
+    public  void setStatusById(StatusType status, Payment payment){
+        payment.setStatus(status);
+        this.save(payment);
     }
 
     @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = NotEnoughMoneyException.class)
     public void sendPayment(Payment payment) throws NotFoundException, NotEnoughMoneyException {
-        setStatusById(StatusType.SENT,payment.getId());
+        setStatusById(StatusType.SENT,payment);
         accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount());
     }
 }

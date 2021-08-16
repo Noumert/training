@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<span th:fragment="acc" th:if="${accounts.totalPages > 0}" th:each="pageNumber : ${accountPageNumbers}">
+    <a th:href="@{/user/profile(accPage=${pageNumber},accSortBy=${accSortBy},accAsc=${accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
+       th:text="${pageNumber} "
+    >
+    </a>
+</span>
+
+<span th:fragment="pay" th:if="${payments.totalPages > 0}" th:each="pageNumber : ${paymentsPageNumbers}">
+    <a th:href="@{/user/profile(payPage=${pageNumber},paySortBy=${paySortBy},payAsc=${payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+       th:text="${pageNumber} "
+    >
+    </a>
+</span>
+</body>
+</html>

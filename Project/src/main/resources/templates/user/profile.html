@@ -18,119 +18,93 @@
     </div>
 </span>
 <h3>
-<span th:utext="#{label.email}"> email </span>:
-<span th:text="${user.email}"> email </span>
+    <span th:utext="#{label.email}"> email </span>:
+    <span th:text="${user.email}"> email </span>
 </h3>
 <h3>
-<span th:utext="#{label.first.name}"> first name </span>:
-<span th:text="${user.firstName}"> First name </span>
+    <span th:utext="#{label.first.name}"> first name </span>:
+    <span th:text="${user.firstName}"> First name </span>
 </h3>
 <h3>
-<span th:utext="#{label.last.name}"> last name </span>:
-<span th:text="${user.lastName}"> Last name </span>
+    <span th:utext="#{label.last.name}"> last name </span>:
+    <span th:text="${user.lastName}"> Last name </span>
 </h3>
 
 <h1 th:utext="#{label.accounts}">
 </h1>
 
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
-  <thead>
-  <tr>
-    <th th:utext="#{label.account.number}"> Account number </th>
-    <th th:utext="#{label.account.name}"> Account name </th>
-    <th th:utext="#{label.money}"> Money </th>
-    <th th:utext="#{label.banned}"> Active </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:if="${accounts.empty}">
-    <td colspan="4" th:utext="#{label.no.accounts}"> no cards </td>
-  </tr>
-  <tr th:each="account : ${accounts}">
-    <td><span th:text="${account.accountNumber}"> Account number </span></td>
-    <td><span th:text="${account.accountName}"> Account name </span></td>
-    <td><span th:text="${account.money}"> Money </span></td>
-    <td><span th:text="${account.ban} ? #{label.banned.account} : #{label.unbanned.account}"> Enable </span></td>
-  </tr>
-  <tr th:if="${!accounts.empty}">
-    <td>
-      <form name="sortAccountsByNumberForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_NUMBER" />
-        <button type="submit" th:text="#{label.sort}"></button>
-      </form>
-    </td>
-    <td>
-      <form name="sortAccountsByNameForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_NAME" />
-        <button type="submit" th:text="#{label.sort}"></button>
-      </form>
-    </td>
-    <td>
-      <form name="sortAccountsByMoneyForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortAccounts" th:value = "SORT_ACCOUNTS_BY_MONEY" />
-        <button type="submit" th:text="#{label.sort}"></button>
-      </form>
-    </td>
-  </tr>
+    <thead>
+    <tr>
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=accountNumber,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
+               th:utext="#{label.account.number}"> Account number</a></th>
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=accountName,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
+               th:utext="#{label.account.name}"> Account name</a></th>
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=money,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
+               th:utext="#{label.money}"> Money </a></th>
+        <th><a th:href="@{/user/profile(accPage=${accPage},accSortBy=ban,accAsc=${!accAsc},payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc})}"
+               th:utext="#{label.banned}"> Status </a></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${accounts.empty}">
+        <td colspan="4" th:utext="#{label.no.accounts}"> no cards</td>
+    </tr>
+    <tr th:each="account : ${accounts.content}">
+        <td><span th:text="${account.accountNumber}"> Account number </span></td>
+        <td><span th:text="${account.accountName}"> Account name </span></td>
+        <td><span th:text="${account.money}"> Money </span></td>
+        <td><span th:text="${account.ban} ? #{label.banned.account} : #{label.unbanned.account}"> Enable </span></td>
+    </tr>
 </table>
+
+<div th:replace="pagination :: acc">
+</div>
 
 <h1 th:utext="#{label.payments}">
 </h1>
 
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
-  <thead>
-  <tr>
-    <th th:utext="#{label.account.name}"> Account name </th>
-    <th th:utext="#{label.recipient}"> Recipient </th>
-    <th th:utext="#{label.money}"> Money </th>
-    <th th:utext="#{label.payment.number}"> Payment number </th>
-    <th th:utext="#{label.date.time}"> Data and time </th>
-    <th th:utext="#{label.status}"> Status </th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:if="${payments.empty}">
-    <td colspan="4" th:utext="#{label.no.payments}"> no payments </td>
-  </tr>
-  <tr th:each="payment : ${payments}">
-    <td><span th:text="${payment.account.accountName}"> Account name </span></td>
-    <td><span th:text="${payment.recipient}"> recipient </span></td>
-    <td><span th:text="${payment.money}"> money </span></td>
-    <td><span th:text="${payment.paymentNumber}"> payment number </span></td>
-    <td><span th:text="${payment.dateTime}"> data and time </span></td>
-    <td><span th:text="${payment.status} == 'PREPARED' ? #{label.payment.prepared} : #{label.payment.sent}"> status </span></td>
-    <td th:if="${payment.status} == 'PREPARED'">
-      <form name="unbanForm" th:action="@{/user/profile/send}" method="post">
-        <input type = "hidden" name = "paymentId" th:value = "${payment.id}" />
-        <button type="submit" th:text="#{label.send}"></button>
-      </form>
-    </td>
-  </tr>
-  <tr th:if="${!payments.empty}">
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-    </td>
-    <td>
-      <form name="sortPaymentsByNumberForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_NUMBER" />
-        <button type="submit" th:text="#{label.sort}"></button>
-      </form>
-    </td>
-    <td>
-      <form name="sortPaymentsByDataASCForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_DATE_ASC" />
-        <button type="submit" th:text="#{label.sort.asc}"></button>
-      </form>
-      <form name="sortPaymentsByDataDESCForm" th:action="@{/user/profile}" method="post">
-        <input type = "hidden" name = "sortPayments" th:value = "SORT_PAYMENTS_BY_DATE_DESC" />
-        <button type="submit" th:text="#{label.sort.desc}"></button>
-      </form>
-    </td>
-  </tr>
+    <thead>
+    <tr>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=account,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+               th:utext="#{label.account.name}"> Account name </a></th>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=recipient,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+               th:utext="#{label.recipient}"> Recipient </a></th>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=money,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+                th:utext="#{label.money}"> Money </a></th>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=paymentNumber,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+               th:utext="#{label.payment.number}"> Payment number </a></th>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=dateTime,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+               th:utext="#{label.date.time}"> Data and time </a></th>
+        <th><a th:href="@{/user/profile(payPage=${payPage},paySortBy=status,payAsc=${!payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}"
+               th:utext="#{label.status}"> Status </a></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="${payments.empty}">
+        <td colspan="4" th:utext="#{label.no.payments}"> no payments</td>
+    </tr>
+    <tr th:each="payment : ${payments.content}">
+        <td><span th:text="${payment.account.accountName}"> Account name </span></td>
+        <td><span th:text="${payment.recipient}"> recipient </span></td>
+        <td><span th:text="${payment.money}"> money </span></td>
+        <td><span th:text="${payment.paymentNumber}"> payment number </span></td>
+        <td><span th:text="${payment.dateTime}"> data and time </span></td>
+        <td><span
+                th:text="${payment.status} == 'PREPARED' ? #{label.payment.prepared} : #{label.payment.sent}"> status </span>
+        </td>
+        <td th:if="${payment.status} == 'PREPARED'">
+            <form name="unbanForm" th:action="@{/user/profile/send}" method="post">
+                <input type="hidden" name="paymentId" th:value="${payment.id}"/>
+                <button type="submit" th:text="#{label.send}"></button>
+            </form>
+        </td>
+    </tr>
 </table>
+
+<div th:replace="pagination :: pay">
+</div>
 
 </body>
 </html>

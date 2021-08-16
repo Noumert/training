@@ -2,6 +2,8 @@ package project.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import project.dto.*;
@@ -27,6 +29,12 @@ public class EntityDtoConverter {
     public List<AccountDTO> convertAccountsListToDTO(List<Account> accounts) {
         return accounts.stream()
                 .map(this::convertAccountToAccountDTO).collect(Collectors.toList());
+    }
+
+    public Page<AccountDTO> convertAccountsListToDTO(Page<Account> accounts) {
+//        return new PageImpl<>(accounts.stream()
+//                .map(this::convertAccountToAccountDTO).collect(Collectors.toList()));
+        return accounts.map(this::convertAccountToAccountDTO);
     }
 
     public List<Account> convertAccountDTOsListToAccounts(List<AccountDTO> accountDTOS) {
@@ -73,7 +81,7 @@ public class EntityDtoConverter {
         return UnbanAccountRequest
                 .builder()
                 .id(unbanAccountRequestDTO.getId())
-                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
+                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(), formatter.withLocale(LocaleContextHolder.getLocale())))
                 .resolved(unbanAccountRequestDTO.isResolved())
                 .account(convertAccountDTOToAccount(unbanAccountRequestDTO.getAccount()))
                 .build();
@@ -90,9 +98,8 @@ public class EntityDtoConverter {
     }
 
 
-
     public List<UnbanAccountRequest> convertUnbanAccountRequestDTOsToUnbanAccountRequests(List<UnbanAccountRequestDTO>
-                                                                                                 unbanAccountRequestDTOs) {
+                                                                                                  unbanAccountRequestDTOs) {
         return unbanAccountRequestDTOs.stream()
                 .map(this::convertUnbanAccountRequestDTOToUnbanAccountRequest)
                 .collect(Collectors.toList());
@@ -100,7 +107,7 @@ public class EntityDtoConverter {
     }
 
     public List<UnbanAccountRequestDTO> convertUnbanAccountRequestsToUnbanAccountRequestDTOs(List<UnbanAccountRequest>
-                                                                                                    unbanAccountRequests) {
+                                                                                                     unbanAccountRequests) {
         return unbanAccountRequests.stream()
                 .map(this::convertUnbanAccountRequestToUnbanAccountRequestDTO)
                 .collect(Collectors.toList());
@@ -160,6 +167,14 @@ public class EntityDtoConverter {
                 .collect(Collectors.toList());
     }
 
+    public Page<PaymentDTO> convertPaymentsListToDTO(Page<Payment> payments) {
+//        return new PageImpl<>(
+//                payments.stream()
+//                        .map(this::convertPaymentToPaymentDTO)
+//                        .collect(Collectors.toList()));
+        return payments.map(this::convertPaymentToPaymentDTO);
+    }
+
     public List<Payment> convertPaymentDTOsListToPayments(List<PaymentDTO> paymentDTOS) {
         return paymentDTOS.stream()
                 .map(this::convertPaymentDTOToPayment)
@@ -184,7 +199,7 @@ public class EntityDtoConverter {
                 .builder()
                 .account(convertAccountDTOToAccount(paymentDTO.getAccount()))
                 .id(paymentDTO.getId())
-                .dateTime(LocalDateTime.parse(paymentDTO.getDateTime(),formatter.withLocale(LocaleContextHolder.getLocale())))
+                .dateTime(LocalDateTime.parse(paymentDTO.getDateTime(), formatter.withLocale(LocaleContextHolder.getLocale())))
                 .paymentNumber(paymentDTO.getPaymentNumber())
                 .recipient(paymentDTO.getRecipient())
                 .status(StatusType.valueOf(paymentDTO.getStatus()))

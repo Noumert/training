@@ -3,15 +3,16 @@ package project.service;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import project.exceptions.NotEnoughMoneyException;
 import project.entity.Account;
 import project.entity.UnbanAccountRequest;
+import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
-
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -71,6 +72,11 @@ public class AccountService {
     public List<Account> findUserAccountsByUserId(Long userId){
         return accountRepository
                 .findByUserId(userId);
+    }
+
+    public Page<Account> findUserAccountsByUserId(Long userId, Pageable pageable){
+        return accountRepository
+                .findByUserId(userId,pageable);
     }
 
     public List<Account> findUserAccountsByUserIdOrderByAccountName(Long userId){
