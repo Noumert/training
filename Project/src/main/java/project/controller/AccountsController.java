@@ -57,12 +57,9 @@ public class AccountsController {
     @RequestMapping()
     public String accountsPage(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        try {
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
-            model.addAttribute("topUp", new TopUpDTO());
-        } catch (RuntimeException e) {
-            model.addAttribute("error", true);
-        }
+        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
+        model.addAttribute("topUp", new TopUpDTO());
+
         return "user/accounts";
     }
 
@@ -76,24 +73,33 @@ public class AccountsController {
                     .ban(false)
                     .build();
             accountService.saveNewAccount(account);
+            log.info("save new account");
             return "redirect:/user/accounts";
-        } catch (NotFoundException | RuntimeException e) {
-            model.addAttribute("error", true);
-            return "/user/accountAddingResult";
+        } catch (NotFoundException e) {
+            log.info("no user when try to save new account");
+            model.addAttribute("noUserError", true);
+        } catch (RuntimeException e) {
+            log.info("something went wrong with save new account");
+            model.addAttribute("duplicatedError", true);
         }
+        return "/user/accountAddingResult";
     }
 
     @PostMapping("/ban")
     public String banAccount(@NotNull Long accountId, Model model) {
         try {
-            log.info("unban account from user ban {} accountId {}", true, accountId);
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
             accountService.setBanById(true, account);
+            log.info("unban account from user ban {} accountId {}", true, accountId);
             return "redirect:/user/accounts";
-        } catch (RuntimeException | NotFoundException e) {
+        } catch (RuntimeException e) {
+            log.info("something went wrong with ban account ban {} accountId {}", true, accountId);
             model.addAttribute("error", true);
-            return "/user/accountBanResult";
+        } catch (NotFoundException e) {
+            log.info("account with accountId = {} not found", accountId);
+            model.addAttribute("noAccountError", true);
         }
+        return "/admin/accountBanResult";
     }
 
     @PostMapping("/unban")
@@ -108,11 +114,16 @@ public class AccountsController {
                     .build();
             unbanAccountRequestService.save(unbanAccountRequest);
             model.addAttribute("success", true);
+            log.info("unban request sent ban {} accountId {}", true, accountId);
             return "/user/accountBanResult";
-        } catch (NotFoundException | RuntimeException e) {
+        } catch (RuntimeException e) {
+            log.info("something went wrong with unban request account ban {} accountId {}", false, accountId);
             model.addAttribute("error", true);
-            return "/user/accountBanResult";
+        } catch (NotFoundException e) {
+            log.info("account with accountId = {} not found", accountId);
+            model.addAttribute("noAccountError", true);
         }
+        return "/admin/accountBanResult";
     }
 
     @PostMapping("/topUpForm")
@@ -123,7 +134,7 @@ public class AccountsController {
             Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
             model.addAttribute("account", entityDtoConverter.convertAccountToAccountDTO(account));
         } catch (NotFoundException e) {
-            model.addAttribute("error", true);
+            model.addAttribute("noAccountError", true);
             return "/user/accountTopUpResult";
         }
         return "user/accountTopUpForm";
@@ -140,21 +151,28 @@ public class AccountsController {
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
                 model.addAttribute("account", entityDtoConverter.convertAccountToAccountDTO(account));
             } catch (NotFoundException e) {
-                model.addAttribute("error", true);
+                model.addAttribute("noAccountError", true);
                 return "/user/accountTopUpResult";
             }
             return "user/accountTopUpForm";
         } else {
             long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
-                log.info("add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
                 accountService.addMoneyById(moneyValue, account);
+                log.info("add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 return "redirect:/user/accounts";
-            } catch (NotEnoughMoneyException | RuntimeException | NotFoundException e) {
+            } catch (RuntimeException e) {
+                log.info("something went wrong when try to add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 model.addAttribute("error", true);
-                return "/user/accountTopUpResult";
+            }catch (NotEnoughMoneyException e) {
+                log.info("money become negative");
+                model.addAttribute("noMoneyError", true);
             }
+            catch (NotFoundException e) {
+                model.addAttribute("noAccountError", true);
+            }
+            return "/user/accountTopUpResult";
         }
     }
 }

@@ -39,13 +39,12 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void save(User user) throws DuplicatedEmailException {
+    public void save(User user){
         try {
             userRepository.save(user);
         } catch (Exception ex) {
-            throw new DuplicatedEmailException("Same email exist");
+            throw new RuntimeException("something went wrong");
         }
-
     }
 
     public Optional<User> findByUserLogin(String email) {
@@ -76,8 +75,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findByRole(roleType);
     }
 
-    public void setAccountNonLockedById(boolean accountNonLocked, Long userId) {
-        userRepository.setBanById(accountNonLocked,userId);
+    public void setAccountNonLockedByUser(boolean accountNonLocked, User user) {
+        user.setAccountNonLocked(accountNonLocked);
+        save(user);
     }
 
     public Optional<User> findById(Long currentUserId) {

@@ -10,6 +10,12 @@
         error
     </div>
 </span>
+<span th:if="${noAccountError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.account.not.found.error}">
+        error
+    </div>
+</span>
 <span th:if="${success}">
     <div class="alert alert-info"
         th:utext="#{label.request.success}">

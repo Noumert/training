@@ -16,9 +16,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     List<User> findByRole(RoleType roleType);
-
-    @Transactional
-    @Modifying(flushAutomatically = true)
-    @Query("update User u set u.accountNonLocked = ?1 where u.id = ?2")
-    void setBanById(boolean accountNonLocked, Long userId);
 }

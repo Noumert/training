@@ -35,29 +35,37 @@ public class AccountsAdministrationController {
     }
 
     @PostMapping("/ban")
-    public String banAccount(@NotNull Long accountId, Model model){
+    public String banAccount(@NotNull Long accountId, Model model) {
         try {
-            log.info("ban account ban {} accountId {}", true, accountId);
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(true,account);
+            accountService.setBanById(true, account);
+            log.info("ban account ban {} accountId {}", true, accountId);
             return "redirect:/admin/accounts";
-        } catch (RuntimeException | NotFoundException e) {
-            model.addAttribute("error",true);
-            return "/admin/accountBanResult";
+        } catch (RuntimeException e) {
+            log.info("something went wrong with ban account ban {} accountId {}", true, accountId);
+            model.addAttribute("error", true);
+        } catch (NotFoundException e) {
+            log.info("account with accountId = {} not found", accountId);
+            model.addAttribute("noAccountError", true);
         }
+        return "/admin/accountBanResult";
     }
 
     @PostMapping("/unban")
-    public String unbanAccount(@NotNull Long accountId, Model model){
+    public String unbanAccount(@NotNull Long accountId, Model model) {
         try {
-            log.info("unban account ban {} accountId {}", false, accountId);
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(true,account);
+            accountService.setBanById(true, account);
+            log.info("unban account ban {} accountId {}", false, accountId);
             return "redirect:/admin/accounts";
-        } catch (RuntimeException | NotFoundException e) {
-            model.addAttribute("error",true);
-            return "/admin/accountBanResult";
+        } catch (RuntimeException e) {
+            log.info("something went wrong with unban account ban {} accountId {}", false, accountId);
+            model.addAttribute("error", true);
+        } catch (NotFoundException e) {
+            log.info("account with accountId = {} not found", accountId);
+            model.addAttribute("noAccountError", true);
         }
+        return "/admin/accountBanResult";
     }
 }
 

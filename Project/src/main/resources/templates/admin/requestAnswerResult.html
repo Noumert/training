@@ -3,10 +3,15 @@
 <head th:replace="headerTemplete :: headerTempl">
 </head>
 <body>
-
 <span th:if="${error}">
     <div class="alert alert-danger"
          th:utext="#{label.error}">
+        error
+    </div>
+</span>
+<span th:if="${noRequestError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.request.not.found.error}">
         error
     </div>
 </span>

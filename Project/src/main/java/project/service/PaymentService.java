@@ -49,7 +49,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByPaymentNumber(Long userId) throws NotFoundException {
+    public List<Payment> findUserPaymentsByUserIdOrderByPaymentNumber(Long userId){
         return paymentRepository.findByAccountIdInOrderByPaymentNumber(accountService
                 .findUserAccountsByUserId(userId)
                 .stream()
@@ -58,7 +58,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeDesc(Long userId) throws NotFoundException {
+    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeDesc(Long userId){
         return paymentRepository.findByAccountIdInOrderByDateTimeDesc(accountService
                 .findUserAccountsByUserId(userId)
                 .stream()
@@ -67,7 +67,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeAsc(Long userId) throws NotFoundException {
+    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeAsc(Long userId){
         return paymentRepository.findByAccountIdInOrderByDateTimeAsc(accountService
                 .findUserAccountsByUserId(userId)
                 .stream()
