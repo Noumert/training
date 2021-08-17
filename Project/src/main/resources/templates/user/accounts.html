@@ -46,7 +46,7 @@
             </form>
         </td>
         <td>
-            <form name="topUpForm" th:action="@{/user/accounts/topUpForm}" th:object="${topUp}" method="post">
+            <form name="topUpForm" th:action="@{/user/accounts/topUpForm}" method="get">
                 <input type = "hidden" name = "accountId"  th:value = "${account.id}" />
                 <button type="submit" th:text="#{label.top.up}" th:disabled="${account.ban}"></button>
             </form>

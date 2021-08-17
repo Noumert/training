@@ -149,7 +149,7 @@ public class EntityDtoConverter {
                             .lastName(user.getLastName())
                             .accountNumber(account.getAccountNumber())
                             .accountName(account.getAccountName())
-                            .money(account.getMoney())
+                            .money(moneyParser.getStringMoneyFromMoneyValue(account.getMoney()))
                             .id(account.getId())
                             .ban(account.isBan())
                             .build();
@@ -168,10 +168,6 @@ public class EntityDtoConverter {
     }
 
     public Page<PaymentDTO> convertPaymentsListToDTO(Page<Payment> payments) {
-//        return new PageImpl<>(
-//                payments.stream()
-//                        .map(this::convertPaymentToPaymentDTO)
-//                        .collect(Collectors.toList()));
         return payments.map(this::convertPaymentToPaymentDTO);
     }
 

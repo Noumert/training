@@ -7,9 +7,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.FillPaymentDTO;
 import project.entity.Account;
 import project.entity.MyUserDetails;
@@ -54,7 +53,7 @@ public class PaymentsController {
 
     @PostMapping(value = "/prepare")
     public String prepare(@ModelAttribute("payment") @Valid FillPaymentDTO fillPaymentDTO,
-                          BindingResult bindingResult, Model model) {
+                          BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
             Map<String, String> errorsMap = controllerUtils.getErrorsMap(bindingResult);
@@ -76,17 +75,27 @@ public class PaymentsController {
                     .build();
             paymentService.saveNewPayment(payment);
             log.info("prepare payment accountId : {} moneyUAHValue : {}", fillPaymentDTO.getAccountId(), moneyValue);
-            model.addAttribute("success", true);
-            return "/user/paymentPrepareResult";
+            redirectAttributes.addAttribute("success", true);
         } catch (NotFoundException e) {
             log.info("no account with Id {}",fillPaymentDTO.getAccountId());
-            model.addAttribute("noAccountError", true);
+            redirectAttributes.addAttribute("noAccountError", true);
         } catch (RuntimeException e) {
             log.info("some generated parameter was not unique when trying to prepare payment with id {}", fillPaymentDTO.getAccountId());
-            model.addAttribute("duplicatedError", true);
+            redirectAttributes.addAttribute("duplicatedError", true);
         }
-        return "/user/paymentPrepareResult";
+        return "redirect:/user/payments/prepare";
     }
 
+    @GetMapping(value = "/prepare")
+    public String prepareGet(Model model,
+                             @RequestParam(required = false, defaultValue = "false") Boolean success,
+                             @RequestParam(required = false, defaultValue = "false") Boolean noAccountError,
+                             @RequestParam(required = false, defaultValue = "false") Boolean duplicatedError) {
 
+            model.addAttribute("success", success);
+            model.addAttribute("noAccountError", noAccountError);
+            model.addAttribute("duplicatedError", duplicatedError);
+
+        return "/user/paymentPrepareResult";
+    }
 }

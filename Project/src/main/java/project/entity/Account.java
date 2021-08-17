@@ -26,8 +26,4 @@ public class Account {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany
-    private List<Payment> payments;
-    @OneToMany
-    private List<UnbanAccountRequest> unbanAccountRequests;
 }

@@ -1,6 +1,7 @@
 package project.controller;
 
 import javassist.NotFoundException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -12,8 +13,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.AccountDTO;
 import project.dto.PaymentDTO;
 import project.entity.Account;
@@ -50,94 +54,32 @@ public class ProfileController {
     @Autowired
     private PaymentService paymentService;
 
-
-//    @RequestMapping()
-//    public String paymentsPage(Model model, String sortAccounts, String sortPayments) {
-//        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-//        Optional<String> sortAccountsOpt = Optional.ofNullable(sortAccounts);
-//        Optional<String> sortPaymentsOpt = Optional.ofNullable(sortPayments);
-//        log.info("sortAccounts {},sortPayments {}", sortAccountsOpt, sortPaymentsOpt);
-//        try {
-//            User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
-//            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
-//
-//            switch (sortAccountsOpt.orElse(SORT_DEFAULT)) {
-//                case SORT_ACCOUNTS_BY_MONEY:
-//                    model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
-//                            .findUserAccountsByUserIdOrderByMoney(currentUserId)));
-//                    break;
-//                case SORT_ACCOUNTS_BY_NAME:
-//                    model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
-//                            .findUserAccountsByUserIdOrderByAccountName(currentUserId)));
-//                    break;
-//                case SORT_ACCOUNTS_BY_NUMBER:
-//                    model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
-//                            .findUserAccountsByUserIdOrderByAccountNumber(currentUserId)));
-//                    break;
-//                default:
-//                    model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService
-//                            .findUserAccountsByUserId(currentUserId)));
-//
-//                    break;
-//            }
-//
-//            switch (sortPaymentsOpt.orElse(SORT_DEFAULT)) {
-//                case SORT_PAYMENTS_BY_NUMBER:
-//                    model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
-//                            .findUserPaymentsByUserIdOrderByPaymentNumber(currentUserId)));
-//                    break;
-//                case SORT_PAYMENTS_BY_DATE_ASC:
-//                    model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
-//                            .findUserPaymentsByUserIdOrderByDateTimeAsc(currentUserId)));
-//                    ;
-//                    break;
-//                case SORT_PAYMENTS_BY_DATE_DESC:
-//                    model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
-//                            .findUserPaymentsByUserIdOrderByDateTimeDesc(currentUserId)));
-//                    break;
-//                default:
-//                    model.addAttribute("payments", entityDtoConverter.convertPaymentsListToDTO(paymentService
-//                            .findUserPaymentsByUserId(currentUserId)));
-//                    break;
-//            }
-//
-//        } catch (UnexpectedRollbackException e) {
-//            log.info("error in transaction when open profile");
-//            model.addAttribute("error", true);
-//        }
-//        catch (NotFoundException e) {
-//            log.info("no user when open profile");
-//            model.addAttribute("noUserError", true);
-//        }
-//        return "user/profile";
-//    }
-
     @RequestMapping()
     public String paymentsPage(Model model,
-                               @RequestParam Optional<Integer> accPage,
-                               @RequestParam Optional<String> accSortBy,
-                               @RequestParam Optional<Boolean> accAsc,
-                               @RequestParam Optional<Integer> payPage,
-                               @RequestParam Optional<String> paySortBy,
-                               @RequestParam Optional<Boolean> payAsc) {
+                               @RequestParam(required = false,defaultValue = "1") Integer accPage,
+                               @RequestParam(required = false,defaultValue = "id") String accSortBy,
+                               @RequestParam(required = false,defaultValue = "true") Boolean accAsc,
+                               @RequestParam(required = false,defaultValue = "1") Integer payPage,
+                               @RequestParam(required = false,defaultValue = "id") String paySortBy,
+                               @RequestParam(required = false,defaultValue = "true") Boolean payAsc) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accPage",accPage.orElse(1));
-        model.addAttribute("accSortBy",accSortBy.orElse("id"));
-        model.addAttribute("accAsc",accAsc.orElse(true));
-        model.addAttribute("payPage",payPage.orElse(1));
-        model.addAttribute("paySortBy",paySortBy.orElse("id"));
-        model.addAttribute("payAsc",payAsc.orElse(true));
+        model.addAttribute("accPage",accPage);
+        model.addAttribute("accSortBy",accSortBy);
+        model.addAttribute("accAsc",accAsc);
+        model.addAttribute("payPage",payPage);
+        model.addAttribute("paySortBy",paySortBy);
+        model.addAttribute("payAsc",payAsc);
         try {
 
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
 
             Pageable pageableAccount = PageRequest.of(
-                    accPage.orElse(1)-1, PAGE_SIZE,
-                    accAsc.orElse(true) ? Sort.Direction.ASC : Sort.Direction.DESC, accSortBy.orElse("id"));
+                    accPage-1, PAGE_SIZE,
+                    accAsc ? Sort.Direction.ASC : Sort.Direction.DESC, accSortBy);
             Pageable pageablePayment = PageRequest.of(
-                    payPage.orElse(1)-1, PAGE_SIZE,
-                    payAsc.orElse(true) ? Sort.Direction.ASC : Sort.Direction.DESC, paySortBy.orElse("id"));
+                    payPage-1, PAGE_SIZE,
+                    payAsc ? Sort.Direction.ASC : Sort.Direction.DESC, paySortBy);
 
             Page<Account> accounts = accountService
                     .findUserAccountsByUserId(currentUserId, pageableAccount);
@@ -179,22 +121,37 @@ public class ProfileController {
         return "user/profile";
     }
 
-    @RequestMapping("/send")
-    public String send(@NotNull Long paymentId, Model model) {
+    @PostMapping("/send")
+    public String send(@NotNull Long paymentId, Model model, RedirectAttributes redirectAttributes) {
         try {
             paymentService.sendPayment(paymentService.findById(paymentId));
             log.info("send payment with id {}", paymentId);
             return "redirect:/user/profile";
         } catch (NotFoundException e) {
             log.info("no payment when send payment with id {}", paymentId);
-            model.addAttribute("noPaymentError", true);
+            redirectAttributes.addAttribute("noPaymentError", true);
         } catch (NotEnoughMoneyException e) {
             log.info("not enough money when send payment with id {}", paymentId);
-            model.addAttribute("noMoneyError", true);
+            redirectAttributes.addAttribute("noMoneyError", true);
         } catch (UnexpectedRollbackException e) {
             log.info("something went wrong with transaction when send payment with id {}", paymentId);
-            model.addAttribute("error", true);
+            redirectAttributes.addAttribute("error", true);
         }
+        return "redirect:/user/profile/send";
+    }
+
+    @GetMapping("/send")
+    public String sendGet(@NotNull Long paymentId, Model model,
+                          @RequestParam(required = false,defaultValue = "false") Boolean noPaymentError,
+                          @RequestParam(required = false,defaultValue = "false") Boolean noMoneyError,
+                          @RequestParam(required = false,defaultValue = "false") Boolean error) {
+
+            model.addAttribute("noPaymentError", noPaymentError);
+
+            model.addAttribute("noMoneyError", noMoneyError);
+
+            model.addAttribute("error", error);
+
         return "user/paymentSendResult";
     }
 
