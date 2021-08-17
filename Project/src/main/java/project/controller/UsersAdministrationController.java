@@ -44,7 +44,8 @@ public class UsersAdministrationController {
             log.info("something went wrong when lock user accountNonLocked {} userId {}", false, userId);
             model.addAttribute("error", true);
         } catch (NotFoundException e) {
-
+            log.info("no user with id {}",userId);
+            model.addAttribute("noUserError", true);
         }
         return "/admin/userBlockResult";
     }
@@ -65,5 +66,7 @@ public class UsersAdministrationController {
         }
         return "/admin/userBlockResult";
     }
+
+    //TODO prg
 
 }

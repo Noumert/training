@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.UnexpectedRollbackException;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.model.EntityDtoConverter;
 import project.entity.Account;
 import project.entity.CreditCard;
@@ -50,7 +52,7 @@ public class CreditCardsController {
     }
 
     @PostMapping("/add")
-    public String addCreditCard(@NotNull Long accountId, Model model) {
+    public String addCreditCard(@NotNull Long accountId, Model model, RedirectAttributes redirectAttributes) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such account"));
@@ -62,12 +64,22 @@ public class CreditCardsController {
             log.info("add new card with account id {}", accountId);
             return "redirect:/user/creditCards";
         } catch (NotFoundException e) {
-            log.info("no user with Id {}, or account with Id {}",currentUserId, accountId);
-            model.addAttribute("noUserOrAccountError", true);
+            log.info("no user with Id {}, or account with Id {}", currentUserId, accountId);
+            redirectAttributes.addAttribute("noUserOrAccountError", true);
         } catch (RuntimeException e) {
             log.info("some generated parameter was not unique when trying to add card with account id {}", accountId);
-            model.addAttribute("duplicatedError", true);
+            redirectAttributes.addAttribute("duplicatedError", true);
         }
+        return "redirect:/user/creditCards/add";
+    }
+
+    @GetMapping("/add")
+    public String addCreditCardGet(Model model) {
+
+        model.addAttribute("noUserOrAccountError", true);
+
+        model.addAttribute("duplicatedError", true);
+
         return "/user/cardAddingResult";
     }
 

@@ -17,5 +17,5 @@ public class UserAccountDTO {
     private String accountNumber;
     private String accountName;
     private boolean ban;
-    private Long money;
+    private String money;
 }

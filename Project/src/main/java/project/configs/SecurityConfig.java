@@ -20,7 +20,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/registration","/login")
-                .permitAll()
+                .access("not isAuthenticated()")
                 .antMatchers("/","/main")
                 .permitAll()
                 .antMatchers("/admin/**")
@@ -43,10 +43,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//                .inMemoryAuthentication().withUser("Vova")
-//                .password(passwordEncoder().encode("password"))
-//                .roles("USER");
         auth.userDetailsService(userService);
     }
 
