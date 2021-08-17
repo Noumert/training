@@ -125,7 +125,7 @@ public class ProfileController {
     @PostMapping("/send")
     public String send(@NotNull Long paymentId, Model model, RedirectAttributes redirectAttributes) {
         try {
-            paymentService.sendPayment(paymentService.findById(paymentId));
+            paymentService.sendPayment(paymentService.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment")));
             log.info("send payment with id {}", paymentId);
             return "redirect:/user/profile";
         } catch (NotFoundException e) {

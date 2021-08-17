@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import project.entity.Payment;
 import project.entity.StatusType;
 
-import javax.transaction.Transactional;;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -17,10 +17,4 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
     List<Payment> findByAccountIdIn(List<Long> accountIds);
 
     Page<Payment> findByAccountIdIn(List<Long> accountIds, Pageable pageable);
-
-    List<Payment> findByAccountIdInOrderByPaymentNumber(List<Long> accountIds);
-
-    List<Payment> findByAccountIdInOrderByDateTimeAsc(List<Long> accountIds);
-
-    List<Payment> findByAccountIdInOrderByDateTimeDesc(List<Long> accountIds);
 }

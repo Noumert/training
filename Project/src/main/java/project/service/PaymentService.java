@@ -17,6 +17,7 @@ import project.entity.StatusType;
 import project.repository.PaymentRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -68,41 +69,13 @@ public class PaymentService {
                 .collect(Collectors.toList()));
     }
 
-    @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByPaymentNumber(Long userId){
-        return paymentRepository.findByAccountIdInOrderByPaymentNumber(accountService
-                .findUserAccountsByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
-    }
-
-    @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeDesc(Long userId){
-        return paymentRepository.findByAccountIdInOrderByDateTimeDesc(accountService
-                .findUserAccountsByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
-    }
-
-    @Transactional
-    public List<Payment> findUserPaymentsByUserIdOrderByDateTimeAsc(Long userId){
-        return paymentRepository.findByAccountIdInOrderByDateTimeAsc(accountService
-                .findUserAccountsByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
-    }
-
-
     private String randomPaymentNumber() {
         return UUID.randomUUID().toString();
     }
 
 
-    public Payment findById(Long paymentId) throws NotFoundException {
-        return paymentRepository.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment"));
+    public Optional<Payment> findById(Long paymentId) throws NotFoundException {
+        return paymentRepository.findById(paymentId);
     }
 
 

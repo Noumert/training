@@ -80,21 +80,6 @@ public class AccountService {
                 .findByUserId(userId,pageable);
     }
 
-    public List<Account> findUserAccountsByUserIdOrderByAccountName(Long userId){
-        return accountRepository
-                .findByUserIdOrderByAccountName(userId);
-    }
-
-    public List<Account> findUserAccountsByUserIdOrderByAccountNumber(Long userId){
-        return accountRepository
-                .findByUserIdOrderByAccountNumber(userId);
-    }
-
-    public List<Account> findUserAccountsByUserIdOrderByMoney(Long userId){
-        return accountRepository
-                .findByUserIdOrderByMoney(userId);
-    }
-
     Optional<Account> findByAccountName(String accountName){
         return accountRepository
                 .findByAccountName(accountName);

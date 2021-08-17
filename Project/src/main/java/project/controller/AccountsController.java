@@ -193,8 +193,7 @@ public class AccountsController {
         } else {
             long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
-                Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
-                accountService.addMoneyById(moneyValue, account);
+                accountService.addMoneyById(moneyValue, accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account")));
                 log.info("add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 return "redirect:/user/accounts";
             } catch (RuntimeException e) {

@@ -20,10 +20,4 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Page<Account> findByUserId(Long userId, Pageable pageable);
 
     Optional<Account> findByAccountName(String accountName);
-
-    List<Account> findByUserIdOrderByAccountName(Long userId);
-
-    List<Account> findByUserIdOrderByAccountNumber(Long userId);
-
-    List<Account> findByUserIdOrderByMoney(Long userId);
 }
