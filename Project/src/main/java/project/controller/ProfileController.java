@@ -23,6 +23,7 @@ import project.dto.PaymentDTO;
 import project.entity.Account;
 import project.entity.Payment;
 import project.entity.User;
+import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
@@ -56,29 +57,29 @@ public class ProfileController {
 
     @RequestMapping()
     public String paymentsPage(Model model,
-                               @RequestParam(required = false,defaultValue = "1") Integer accPage,
-                               @RequestParam(required = false,defaultValue = "id") String accSortBy,
-                               @RequestParam(required = false,defaultValue = "true") Boolean accAsc,
-                               @RequestParam(required = false,defaultValue = "1") Integer payPage,
-                               @RequestParam(required = false,defaultValue = "id") String paySortBy,
-                               @RequestParam(required = false,defaultValue = "true") Boolean payAsc) {
+                               @RequestParam(required = false, defaultValue = "1") Integer accPage,
+                               @RequestParam(required = false, defaultValue = "id") String accSortBy,
+                               @RequestParam(required = false, defaultValue = "true") Boolean accAsc,
+                               @RequestParam(required = false, defaultValue = "1") Integer payPage,
+                               @RequestParam(required = false, defaultValue = "id") String paySortBy,
+                               @RequestParam(required = false, defaultValue = "true") Boolean payAsc) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accPage",accPage);
-        model.addAttribute("accSortBy",accSortBy);
-        model.addAttribute("accAsc",accAsc);
-        model.addAttribute("payPage",payPage);
-        model.addAttribute("paySortBy",paySortBy);
-        model.addAttribute("payAsc",payAsc);
+        model.addAttribute("accPage", accPage);
+        model.addAttribute("accSortBy", accSortBy);
+        model.addAttribute("accAsc", accAsc);
+        model.addAttribute("payPage", payPage);
+        model.addAttribute("paySortBy", paySortBy);
+        model.addAttribute("payAsc", payAsc);
         try {
 
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
             model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
 
             Pageable pageableAccount = PageRequest.of(
-                    accPage-1, PAGE_SIZE,
+                    accPage - 1, PAGE_SIZE,
                     accAsc ? Sort.Direction.ASC : Sort.Direction.DESC, accSortBy);
             Pageable pageablePayment = PageRequest.of(
-                    payPage-1, PAGE_SIZE,
+                    payPage - 1, PAGE_SIZE,
                     payAsc ? Sort.Direction.ASC : Sort.Direction.DESC, paySortBy);
 
             Page<Account> accounts = accountService
@@ -136,21 +137,24 @@ public class ProfileController {
         } catch (UnexpectedRollbackException e) {
             log.info("something went wrong with transaction when send payment with id {}", paymentId);
             redirectAttributes.addAttribute("error", true);
+        } catch (BanException e) {
+            log.info("account was banned when send payment with id {}", paymentId);
+            redirectAttributes.addAttribute("banError", true);
         }
         return "redirect:/user/profile/send";
     }
 
     @GetMapping("/send")
     public String sendGet(@NotNull Long paymentId, Model model,
-                          @RequestParam(required = false,defaultValue = "false") Boolean noPaymentError,
-                          @RequestParam(required = false,defaultValue = "false") Boolean noMoneyError,
-                          @RequestParam(required = false,defaultValue = "false") Boolean error) {
+                          @RequestParam(required = false, defaultValue = "false") Boolean noPaymentError,
+                          @RequestParam(required = false, defaultValue = "false") Boolean noMoneyError,
+                          @RequestParam(required = false, defaultValue = "false") Boolean error,
+                          @RequestParam(required = false, defaultValue = "false") Boolean banError) {
 
-            model.addAttribute("noPaymentError", noPaymentError);
-
-            model.addAttribute("noMoneyError", noMoneyError);
-
-            model.addAttribute("error", error);
+        model.addAttribute("noPaymentError", noPaymentError);
+        model.addAttribute("noMoneyError", noMoneyError);
+        model.addAttribute("error", error);
+        model.addAttribute("banError", banError);
 
         return "user/paymentSendResult";
     }

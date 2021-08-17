@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.AccountDTO;
 import project.dto.TopUpDTO;
+import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.Account;
@@ -200,10 +201,13 @@ public class AccountsController {
                 log.info("something went wrong when try to add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 redirectAttributes.addAttribute("error", true);
             } catch (NotEnoughMoneyException e) {
-                log.info("money become negative");
+                log.info("money become negative when top up account with id {}", topUpDTO.getAccountId());
                 redirectAttributes.addAttribute("noMoneyError", true);
             } catch (NotFoundException e) {
                 redirectAttributes.addAttribute("noAccountError", true);
+            } catch (BanException e) {
+                log.info("account was banned when top up account with id {}", topUpDTO.getAccountId());
+                redirectAttributes.addAttribute("banError", true);
             }
 
             return "redirect:/user/accounts/topUpForm/topUp";
@@ -214,11 +218,14 @@ public class AccountsController {
     public String topUpAccountGet(Model model,
                                   @RequestParam(required = false, defaultValue = "false") Boolean error,
                                   @RequestParam(required = false, defaultValue = "false") Boolean noMoneyError,
-                                  @RequestParam(required = false, defaultValue = "false") Boolean noAccountError) {
+                                  @RequestParam(required = false, defaultValue = "false") Boolean noAccountError,
+                                  @RequestParam(required = false, defaultValue = "false") Boolean banError
+                                  ) {
 
         model.addAttribute("error", error);
         model.addAttribute("noMoneyError", noMoneyError);
         model.addAttribute("noAccountError", noAccountError);
+        model.addAttribute("banError", banError);
 
         return "/user/accountTopUpResult";
     }

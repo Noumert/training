@@ -21,6 +21,12 @@
         error
     </div>
 </span>
+<span th:if="${banError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.ban.error}">
+        error
+    </div>
+</span>
 <a href="/" th:href="@{/user/profile}" th:utext="#{label.back.to.profile.page}">Back to profile</a>
 </body>
 </html>

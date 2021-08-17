@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Account;
 import project.entity.UnbanAccountRequest;
+import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 
@@ -129,7 +130,8 @@ public class AccountService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
-    public void addMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException {
+    public void addMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException, BanException {
+        if(account.isBan()){throw new BanException("account was banned");}
         account.setMoney(account.getMoney() + money);
         save(account);
         if (account.getMoney() < 0) {
@@ -139,7 +141,8 @@ public class AccountService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
-    public void decreaseMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException{
+    public void decreaseMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException, BanException {
+        if(account.isBan()){throw new BanException("account was banned");}
         account.setMoney(account.getMoney() - money);
         save(account);
         if (account.getMoney() < 0) {
