@@ -39,13 +39,14 @@ public class AccountsAdministrationController {
 
     @PostMapping("/ban")
     public String banAccount(@NotNull Long accountId, Model model, RedirectAttributes redirectAttributes) {
+        boolean ban = true;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(true, account);
-            log.info("ban account ban {} accountId {}", true, accountId);
+            accountService.setBanById(ban, account);
+            log.info("ban account ban {} accountId {}", ban, accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {
-            log.info("something went wrong with ban account ban {} accountId {}", true, accountId);
+            log.info("something went wrong with ban account ban {} accountId {}", ban, accountId);
             redirectAttributes.addAttribute("error", true);
         } catch (NotFoundException e) {
             log.info("account with accountId = {} not found", accountId);
@@ -68,13 +69,14 @@ public class AccountsAdministrationController {
 
     @PostMapping("/unban")
     public String unbanAccount(@NotNull Long accountId, Model model) {
+        boolean ban = false;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(true, account);
-            log.info("unban account ban {} accountId {}", false, accountId);
+            accountService.setBanById(ban, account);
+            log.info("unban account ban {} accountId {}", ban, accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {
-            log.info("something went wrong with unban account ban {} accountId {}", false, accountId);
+            log.info("something went wrong with unban account ban {} accountId {}", ban, accountId);
             model.addAttribute("error", true);
         } catch (NotFoundException e) {
             log.info("account with accountId = {} not found", accountId);

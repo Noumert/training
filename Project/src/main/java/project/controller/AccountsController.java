@@ -96,13 +96,14 @@ public class AccountsController {
 
     @PostMapping("/ban")
     public String banAccount(@NotNull Long accountId, Model model, RedirectAttributes redirectAttributes) {
+        boolean ban = true;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(true, account);
-            log.info("unban account from user ban {} accountId {}", true, accountId);
+            accountService.setBanById(ban, account);
+            log.info("unban account from user ban {} accountId {}", ban, accountId);
             return "redirect:/user/accounts";
         } catch (RuntimeException e) {
-            log.info("something went wrong with ban account ban {} accountId {}", true, accountId);
+            log.info("something went wrong with ban account ban {} accountId {}", ban, accountId);
             redirectAttributes.addAttribute("error", true);
         } catch (NotFoundException e) {
             log.info("account with accountId = {} not found", accountId);
@@ -134,9 +135,9 @@ public class AccountsController {
                     .build();
             unbanAccountRequestService.save(unbanAccountRequest);
             redirectAttributes.addAttribute("success", true);
-            log.info("unban request sent ban {} accountId {}", true, accountId);
+            log.info("unban request sent accountId {}", accountId);
         } catch (RuntimeException e) {
-            log.info("something went wrong with unban request account ban {} accountId {}", false, accountId);
+            log.info("something went wrong with unban request accountId {}", accountId);
             redirectAttributes.addAttribute("error", true);
         } catch (NotFoundException e) {
             log.info("account with accountId = {} not found", accountId);
