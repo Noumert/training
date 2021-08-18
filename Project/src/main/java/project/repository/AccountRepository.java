@@ -20,4 +20,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     Page<Account> findByUserId(Long userId, Pageable pageable);
 
     Optional<Account> findByAccountName(String accountName);
+
+    @Modifying
+    @Query("update Account a set a.money = a.money+?2 where a.id = ?1")
+    void updateMoneyById(Long id, long money);
 }

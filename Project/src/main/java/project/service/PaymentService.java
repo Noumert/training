@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.exceptions.BanException;
-import project.exceptions.IncorrectTransactionException;
 import project.exceptions.NotEnoughMoneyException;
 import project.entity.Account;
 import project.entity.Payment;
@@ -85,8 +84,8 @@ public class PaymentService {
         this.save(payment);
     }
 
-    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = NotEnoughMoneyException.class)
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, BanException, IncorrectTransactionException {
+    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = {NotEnoughMoneyException.class,BanException.class})
+    public void sendPayment(Payment payment) throws NotEnoughMoneyException, BanException {
         setStatusById(StatusType.SENT,payment);
         accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount());
     }

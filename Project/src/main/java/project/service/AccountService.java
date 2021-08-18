@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import project.entity.Account;
 import project.entity.UnbanAccountRequest;
 import project.exceptions.BanException;
-import project.exceptions.IncorrectTransactionException;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 
@@ -116,38 +115,34 @@ public class AccountService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class, IncorrectTransactionException.class})
-    public void addMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException, IncorrectTransactionException {
+            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
+    public void addMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException {
         if (account.isBan()) {
             throw new BanException("account was banned");
         }
-        account.setMoney(account.getMoney() + money);
-        save(account);
-        if (account.getMoney() < 0) {
+
+        accountRepository.updateMoneyById(account.getId(),money);
+
+        if (findById(account.getId())
+                .orElseThrow(()->new NotEnoughMoneyException("money can't be negative"))
+                .getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
-        }
-        if (account.getMoney().equals(findById(account.getId())
-                .orElse(new Account())
-                .getMoney())) {
-            throw new IncorrectTransactionException("unexpected result of transaction");
         }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class, IncorrectTransactionException.class})
-    public void decreaseMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException, IncorrectTransactionException {
+            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
+    public void decreaseMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException {
         if (account.isBan()) {
             throw new BanException("account was banned");
         }
-        account.setMoney(account.getMoney() - money);
-        save(account);
-        if (account.getMoney() < 0) {
+
+        accountRepository.updateMoneyById(account.getId(),-money);
+
+        if (findById(account.getId())
+                .orElseThrow(()->new NotEnoughMoneyException("money can't be negative"))
+                .getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
-        }
-        if (account.getMoney().equals(findById(account.getId())
-                .orElse(new Account())
-                .getMoney())) {
-            throw new IncorrectTransactionException("unexpected result of transaction");
         }
     }
 }
