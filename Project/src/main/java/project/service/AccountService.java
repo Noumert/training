@@ -40,7 +40,7 @@ public class AccountService {
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
 
-    public void saveNewAccount(Account account) throws NotFoundException {
+    public void saveNewAccount(Account account) {
         account.setMoney(START_MONEY_VALUE);
         account.setAccountName(randomAccountName());
         account.setAccountNumber(randomAccountNumber());

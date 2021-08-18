@@ -74,7 +74,7 @@ public class PaymentService {
     }
 
 
-    public Optional<Payment> findById(Long paymentId) throws NotFoundException {
+    public Optional<Payment> findById(Long paymentId) {
         return paymentRepository.findById(paymentId);
     }
 
