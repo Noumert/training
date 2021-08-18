@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class AccountService {
     final static long START_MONEY_VALUE = 0L;
+    final static long NEGATIVE_MONEY_VALUE = -1L;
     final static int MIN_RANDOM = 1000;
     final static int MAX_RANDOM = 9999;
 
@@ -124,7 +125,7 @@ public class AccountService {
         accountRepository.updateMoneyById(account.getId(),money);
 
         if (findById(account.getId())
-                .orElseThrow(()->new NotEnoughMoneyException("money can't be negative"))
+                .orElse(Account.builder().money(NEGATIVE_MONEY_VALUE).build())
                 .getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
@@ -140,7 +141,7 @@ public class AccountService {
         accountRepository.updateMoneyById(account.getId(),-money);
 
         if (findById(account.getId())
-                .orElseThrow(()->new NotEnoughMoneyException("money can't be negative"))
+                .orElse(Account.builder().money(NEGATIVE_MONEY_VALUE).build())
                 .getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
