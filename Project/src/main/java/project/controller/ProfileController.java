@@ -123,7 +123,19 @@ public class ProfileController {
     }
 
     @PostMapping("/send")
-    public String send(@NotNull Long paymentId, Model model, RedirectAttributes redirectAttributes) {
+    public String send(@NotNull Long paymentId, Model model, RedirectAttributes redirectAttributes,
+                       @RequestParam(required = false, defaultValue = "1") Integer accPage,
+                       @RequestParam(required = false, defaultValue = "id") String accSortBy,
+                       @RequestParam(required = false, defaultValue = "true") Boolean accAsc,
+                       @RequestParam(required = false, defaultValue = "1") Integer payPage,
+                       @RequestParam(required = false, defaultValue = "id") String paySortBy,
+                       @RequestParam(required = false, defaultValue = "true") Boolean payAsc) {
+        redirectAttributes.addAttribute("accPage", accPage);
+        redirectAttributes.addAttribute("accSortBy", accSortBy);
+        redirectAttributes.addAttribute("accAsc", accAsc);
+        redirectAttributes.addAttribute("payPage", payPage);
+        redirectAttributes.addAttribute("paySortBy", paySortBy);
+        redirectAttributes.addAttribute("payAsc", payAsc);
         try {
             paymentService.sendPayment(paymentService.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment")));
             log.info("send payment with id {}", paymentId);
@@ -149,7 +161,20 @@ public class ProfileController {
                           @RequestParam(required = false, defaultValue = "false") Boolean noPaymentError,
                           @RequestParam(required = false, defaultValue = "false") Boolean noMoneyError,
                           @RequestParam(required = false, defaultValue = "false") Boolean error,
-                          @RequestParam(required = false, defaultValue = "false") Boolean banError) {
+                          @RequestParam(required = false, defaultValue = "false") Boolean banError,
+                          @RequestParam(required = false, defaultValue = "1") Integer accPage,
+                          @RequestParam(required = false, defaultValue = "id") String accSortBy,
+                          @RequestParam(required = false, defaultValue = "true") Boolean accAsc,
+                          @RequestParam(required = false, defaultValue = "1") Integer payPage,
+                          @RequestParam(required = false, defaultValue = "id") String paySortBy,
+                          @RequestParam(required = false, defaultValue = "true") Boolean payAsc) {
+
+        model.addAttribute("accPage", accPage);
+        model.addAttribute("accSortBy", accSortBy);
+        model.addAttribute("accAsc", accAsc);
+        model.addAttribute("payPage", payPage);
+        model.addAttribute("paySortBy", paySortBy);
+        model.addAttribute("payAsc", payAsc);
 
         model.addAttribute("noPaymentError", noPaymentError);
         model.addAttribute("noMoneyError", noMoneyError);

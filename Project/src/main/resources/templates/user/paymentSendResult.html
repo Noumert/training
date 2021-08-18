@@ -27,6 +27,6 @@
         error
     </div>
 </span>
-<a href="/" th:href="@{/user/profile}" th:utext="#{label.back.to.profile.page}">Back to profile</a>
+<a href="/" th:href="@{/user/profile(payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}" th:utext="#{label.back.to.profile.page}">Back to profile</a>
 </body>
 </html>
