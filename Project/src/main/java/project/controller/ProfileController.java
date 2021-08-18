@@ -24,6 +24,7 @@ import project.entity.Account;
 import project.entity.Payment;
 import project.entity.User;
 import project.exceptions.BanException;
+import project.exceptions.IncorrectTransactionException;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
@@ -140,6 +141,9 @@ public class ProfileController {
         } catch (BanException e) {
             log.info("account was banned when send payment with id {}", paymentId);
             redirectAttributes.addAttribute("banError", true);
+        } catch (IncorrectTransactionException e) {
+            log.info("unexpected result when send payment with id {}", paymentId);
+            redirectAttributes.addAttribute("error", true);
         }
         return "redirect:/user/profile/send";
     }

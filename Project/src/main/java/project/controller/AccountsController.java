@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.AccountDTO;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
+import project.exceptions.IncorrectTransactionException;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.Account;
@@ -207,6 +208,9 @@ public class AccountsController {
             } catch (BanException e) {
                 log.info("account was banned when top up account with id {}", topUpDTO.getAccountId());
                 redirectAttributes.addAttribute("banError", true);
+            } catch (IncorrectTransactionException e) {
+                log.info("unexpected result when top up account with id {}", topUpDTO.getAccountId());
+                redirectAttributes.addAttribute("error", true);
             }
 
             return "redirect:/user/accounts/topUpForm/topUp";

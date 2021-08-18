@@ -12,11 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import project.entity.Account;
 import project.entity.UnbanAccountRequest;
 import project.exceptions.BanException;
+import project.exceptions.IncorrectTransactionException;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -63,24 +65,24 @@ public class AccountService {
     }
 
     private String randomAccountName() {
-        return "U"+UUID.randomUUID();
+        return "U" + UUID.randomUUID();
     }
 
     private String randomFourDigits() {
         return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
     }
 
-    public List<Account> findUserAccountsByUserId(Long userId){
+    public List<Account> findUserAccountsByUserId(Long userId) {
         return accountRepository
                 .findByUserId(userId);
     }
 
-    public Page<Account> findUserAccountsByUserId(Long userId, Pageable pageable){
+    public Page<Account> findUserAccountsByUserId(Long userId, Pageable pageable) {
         return accountRepository
-                .findByUserId(userId,pageable);
+                .findByUserId(userId, pageable);
     }
 
-    Optional<Account> findByAccountName(String accountName){
+    Optional<Account> findByAccountName(String accountName) {
         return accountRepository
                 .findByAccountName(accountName);
     }
@@ -89,7 +91,7 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
-    public Optional<Account> findById(Long accountId){
+    public Optional<Account> findById(Long accountId) {
         return accountRepository.findById(accountId);
     }
 
@@ -114,24 +116,38 @@ public class AccountService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
-    public void addMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException, BanException {
-        if(account.isBan()){throw new BanException("account was banned");}
+            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class, IncorrectTransactionException.class})
+    public void addMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException, IncorrectTransactionException {
+        if (account.isBan()) {
+            throw new BanException("account was banned");
+        }
         account.setMoney(account.getMoney() + money);
         save(account);
         if (account.getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
+        if (account.getMoney().equals(findById(account.getId())
+                .orElse(new Account())
+                .getMoney())) {
+            throw new IncorrectTransactionException("unexpected result of transaction");
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = NotEnoughMoneyException.class)
-    public void decreaseMoneyById(Long money,@NotNull Account account) throws NotEnoughMoneyException, BanException {
-        if(account.isBan()){throw new BanException("account was banned");}
+            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class, IncorrectTransactionException.class})
+    public void decreaseMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException, IncorrectTransactionException {
+        if (account.isBan()) {
+            throw new BanException("account was banned");
+        }
         account.setMoney(account.getMoney() - money);
         save(account);
         if (account.getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
+        }
+        if (account.getMoney().equals(findById(account.getId())
+                .orElse(new Account())
+                .getMoney())) {
+            throw new IncorrectTransactionException("unexpected result of transaction");
         }
     }
 }
