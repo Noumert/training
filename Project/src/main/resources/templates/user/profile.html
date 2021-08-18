@@ -91,11 +91,13 @@
         <td><span th:text="${payment.money}"> money </span></td>
         <td><span th:text="${payment.paymentNumber}"> payment number </span></td>
         <td><span th:text="${payment.dateTime}"> data and time </span></td>
-        <td><span
-                th:text="${payment.status} == 'PREPARED' ? #{label.payment.prepared} : #{label.payment.sent}"> status </span>
+        <td><span th:text="${payment.status} == 'PREPARED' ? #{label.payment.prepared} : #{label.payment.sent}">
+            status
+        </span>
         </td>
         <td th:if="${payment.status} == 'PREPARED'">
-            <form name="unbanForm" th:action="@{/user/profile/send}" method="post">
+            <form name="unbanForm" th:action="@{/user/profile/send(payPage=${payPage},paySortBy=${paySortBy},
+            payAsc=${payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}" method="post">
                 <input type="hidden" name="paymentId" th:value="${payment.id}"/>
                 <button type="submit" th:text="#{label.send}"></button>
             </form>
