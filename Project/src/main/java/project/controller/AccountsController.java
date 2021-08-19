@@ -193,7 +193,11 @@ public class AccountsController {
         } else {
             long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
-                accountService.addMoneyById(moneyValue, accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account")));
+                Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
+                if (account.isBan()) {
+                    throw new BanException("account was banned");
+                }
+                accountService.addMoneyById(moneyValue, account.getId());
                 log.info("add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 return "redirect:/user/accounts";
             } catch (RuntimeException e) {

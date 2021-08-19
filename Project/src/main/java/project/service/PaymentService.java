@@ -84,9 +84,9 @@ public class PaymentService {
         this.save(payment);
     }
 
-    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = {NotEnoughMoneyException.class,BanException.class})
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, BanException {
+    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = {NotEnoughMoneyException.class})
+    public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
         setStatusById(StatusType.SENT,payment);
-        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount());
+        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
     }
 }

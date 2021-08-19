@@ -17,7 +17,11 @@ public class UnbanAccountRequestService {
     UnbanAccountRequestRepository unbanAccountRequestRepository;
 
     public void save(UnbanAccountRequest unbanAccountRequest){
-        unbanAccountRequestRepository.save(unbanAccountRequest);
+        try {
+            unbanAccountRequestRepository.save(unbanAccountRequest);
+        }catch (RuntimeException e){
+            throw new RuntimeException("problem with save");
+        }
     }
 
     public List<UnbanAccountRequest> findAll() {

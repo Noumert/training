@@ -21,7 +21,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByAccountName(String accountName);
 
-    @Modifying
-    @Query("update Account a set a.money = a.money+?2 where a.id = ?1")
-    void updateMoneyById(Long id, long money);
+//    @Modifying
+//    @Query("update Account a set a.money = a.money+?2 where a.id = ?1")
+//    void updateMoneyById(Long id, long money);
 }

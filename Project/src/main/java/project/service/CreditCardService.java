@@ -32,7 +32,7 @@ public class CreditCardService {
         creditCard.setExpirationDate(LocalDate.now().plusYears(EXPIRED_DURATION));
         try {
             creditCardRepository.save(creditCard);
-        } catch (Exception e){
+        } catch (RuntimeException e){
             throw new RuntimeException("problem with save");
         }
     }
@@ -40,7 +40,7 @@ public class CreditCardService {
     public void save(CreditCard creditCard) {
         try {
             creditCardRepository.save(creditCard);
-        } catch (Exception e){
+        } catch (RuntimeException e){
             throw new RuntimeException("problem with save");
         }
     }

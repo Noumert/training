@@ -137,7 +137,11 @@ public class ProfileController {
         redirectAttributes.addAttribute("paySortBy", paySortBy);
         redirectAttributes.addAttribute("payAsc", payAsc);
         try {
-            paymentService.sendPayment(paymentService.findById(paymentId).orElseThrow(()->new NotFoundException("No such payment")));
+            Payment payment = paymentService.findById(paymentId).orElseThrow(() -> new NotFoundException("No such payment"));
+            if (payment.getAccount().isBan()) {
+                throw new BanException("account was banned");
+            }
+            paymentService.sendPayment(payment);
             log.info("send payment with id {}", paymentId);
             return "redirect:/user/profile";
         } catch (NotFoundException e) {

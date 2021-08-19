@@ -42,7 +42,7 @@ public class UserService implements UserDetailsService {
     public void save(User user){
         try {
             userRepository.save(user);
-        } catch (Exception ex) {
+        } catch (RuntimeException ex) {
             throw new RuntimeException("something went wrong");
         }
     }

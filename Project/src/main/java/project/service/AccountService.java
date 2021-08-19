@@ -117,33 +117,23 @@ public class AccountService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void addMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException {
-        if (account.isBan()) {
-            throw new BanException("account was banned");
-        }
-
-        accountRepository.updateMoneyById(account.getId(),money);
-
-        if (findById(account.getId())
-                .orElse(Account.builder().money(NEGATIVE_MONEY_VALUE).build())
-                .getMoney() < 0) {
+    public void addMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
+        Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+        accountDB.setMoney(accountDB.getMoney()-money);
+        if (accountDB.getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
+        save(accountDB);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void decreaseMoneyById(Long money, @NotNull Account account) throws NotEnoughMoneyException, BanException {
-        if (account.isBan()) {
-            throw new BanException("account was banned");
-        }
-
-        accountRepository.updateMoneyById(account.getId(),-money);
-
-        if (findById(account.getId())
-                .orElse(Account.builder().money(NEGATIVE_MONEY_VALUE).build())
-                .getMoney() < 0) {
+    public void decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
+        Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+        accountDB.setMoney(accountDB.getMoney()-money);
+        if (accountDB.getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
+        save(accountDB);
     }
 }
