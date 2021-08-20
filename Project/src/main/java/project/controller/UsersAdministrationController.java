@@ -31,7 +31,7 @@ public class UsersAdministrationController {
 
     @RequestMapping()
     public String usersPage(Model model) {
-        List<UserDTO> userDTOS = entityDtoConverter.convertUserListToUserDto(userService.findByRole(RoleType.ROLE_USER));
+        List<UserDTO> userDTOS = entityDtoConverter.convertUserListToUserDTO(userService.findByRole(RoleType.ROLE_USER));
         model.addAttribute("users", userDTOS);
         return "admin/usersAdministration";
     }
