@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
-import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
 import project.entity.User;
-import project.model.MoneyParser;
+import project.model.MoneyFormatConverter;
 import project.service.AccountServiceImpl;
 import project.service.CreditCardService;
 import project.service.UnbanAccountRequestService;
@@ -45,7 +44,7 @@ public class AccountsController {
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    private MoneyParser moneyParser;
+    private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
 
@@ -188,7 +187,7 @@ public class AccountsController {
 
             return "user/accountTopUpForm";
         } else {
-            long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
+            long moneyValue = moneyFormatConverter.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
                 if (account.isBan()) {
@@ -200,9 +199,6 @@ public class AccountsController {
             } catch (RuntimeException e) {
                 log.info("something went wrong when try to add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 redirectAttributes.addAttribute("error", true);
-            } catch (NotEnoughMoneyException e) {
-                log.info("money become negative when top up account with id {}", topUpDTO.getAccountId());
-                redirectAttributes.addAttribute("noMoneyError", true);
             } catch (NotFoundException e) {
                 redirectAttributes.addAttribute("noAccountError", true);
             } catch (BanException e) {

@@ -69,24 +69,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void addMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
+            isolation = Isolation.SERIALIZABLE)
+    public Account addMoneyById(Long money, @NotNull Long accountId) throws NotFoundException {
         Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
         accountDB.setMoney(accountDB.getMoney() + money);
-        if (accountDB.getMoney() < 0) {
-            throw new NotEnoughMoneyException("money can't be negative");
-        }
-        save(accountDB);
+        return save(accountDB);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
+    public Account decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
         Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
         accountDB.setMoney(accountDB.getMoney() - money);
         if (accountDB.getMoney() < 0) {
             throw new NotEnoughMoneyException("money can't be negative");
         }
-        save(accountDB);
+        return save(accountDB);
     }
 }

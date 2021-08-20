@@ -15,7 +15,7 @@ import project.entity.MyUserDetails;
 import project.entity.Payment;
 import project.entity.StatusType;
 import project.model.EntityDtoConverter;
-import project.model.MoneyParser;
+import project.model.MoneyFormatConverter;
 import project.service.AccountServiceImpl;
 import project.service.PaymentServiceImpl;
 import project.service.UserService;
@@ -38,7 +38,7 @@ public class PaymentsController {
     @Autowired
     private UserService userService;
     @Autowired
-    private MoneyParser moneyParser;
+    private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
 
@@ -63,7 +63,7 @@ public class PaymentsController {
                     accountService.findByUserId(currentUserId)));
             return "user/payments";
         }
-        long moneyValue = moneyParser.getMoneyValue(fillPaymentDTO.getPaymentMoney());
+        long moneyValue = moneyFormatConverter.getMoneyValue(fillPaymentDTO.getPaymentMoney());
         try {
             Account account = accountService.findById(fillPaymentDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
             Payment payment = Payment

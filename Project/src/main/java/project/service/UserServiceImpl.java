@@ -17,7 +17,6 @@ import project.repository.UserRepository;
 
 import java.util.*;
 
-@Slf4j
 @Service
 public class UserServiceImpl implements UserDetailsService,UserService {
     @Autowired
