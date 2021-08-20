@@ -18,7 +18,7 @@ import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
 import project.entity.User;
 import project.model.MoneyParser;
-import project.service.AccountService;
+import project.service.AccountServiceImpl;
 import project.service.CreditCardService;
 import project.service.UnbanAccountRequestService;
 import project.service.UserService;
@@ -27,17 +27,19 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Controller
 @RequestMapping("/user/accounts")
 public class AccountsController {
+    final static long START_MONEY_VALUE = 0L;
     @Autowired
     private CreditCardService creditCardService;
     @Autowired
     private UserService userService;
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
     @Autowired
     private EntityDtoConverter entityDtoConverter;
     @Autowired
@@ -50,7 +52,7 @@ public class AccountsController {
     @RequestMapping()
     public String accountsPage(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
+        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findByUserId(currentUserId)));
 
         return "user/accounts";
     }
@@ -60,11 +62,13 @@ public class AccountsController {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             User currentUser = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
-            Account account = Account.builder()
+            accountService.save(Account.builder()
+                    .money(START_MONEY_VALUE)
+                    .accountName("U"+UUID.randomUUID())
+                    .accountNumber(UUID.randomUUID().toString())
                     .user(currentUser)
                     .ban(false)
-                    .build();
-            accountService.saveNewAccount(account);
+                    .build());
             log.info("save new account");
             return "redirect:/user/accounts";
         } catch (NotFoundException e) {

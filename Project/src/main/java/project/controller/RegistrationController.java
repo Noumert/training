@@ -57,9 +57,9 @@ public class RegistrationController {
                 User user = entityDtoConverter.convertUserDTOToUser(userDto);
                 user.setRole(RoleType.ROLE_USER);
                 user.setAccountNonLocked(true);
-                userService.saveNewUser(user);
+                userService.save(user);
                 redirectAttributes.addAttribute("success", true);
-            } catch (DuplicatedEmailException e) {
+            } catch (RuntimeException e) {
                 redirectAttributes.addAttribute("generalError", true);
                 redirectAttributes.addAttribute("success", false);
             }

@@ -1,10 +1,8 @@
 package project.controller;
 
 import javassist.NotFoundException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,16 +25,13 @@ import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
-import project.service.AccountService;
-import project.service.PaymentService;
+import project.service.AccountServiceImpl;
+import project.service.PaymentServiceImpl;
 import project.service.UserService;
 
-import javax.print.attribute.standard.PageRanges;
 import javax.validation.constraints.NotNull;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -51,9 +46,9 @@ public class ProfileController {
     @Autowired
     private EntityDtoConverter entityDtoConverter;
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentService;
 
     @RequestMapping()
     public String paymentsPage(Model model,
@@ -83,7 +78,7 @@ public class ProfileController {
                     payAsc ? Sort.Direction.ASC : Sort.Direction.DESC, paySortBy);
 
             Page<Account> accounts = accountService
-                    .findUserAccountsByUserId(currentUserId, pageableAccount);
+                    .findByUserId(currentUserId, pageableAccount);
             Page<Payment> payments = paymentService
                     .findUserPaymentsByUserId(currentUserId, pageablePayment);
 

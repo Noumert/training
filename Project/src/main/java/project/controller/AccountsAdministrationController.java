@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.Account;
 import project.model.EntityDtoConverter;
 import project.dto.UserAccountDTO;
-import project.service.AccountService;
+import project.service.AccountServiceImpl;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
     @Autowired
     private EntityDtoConverter entityDtoConverter;
 
