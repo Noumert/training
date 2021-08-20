@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
-import project.exceptions.NotEnoughMoneyException;
 import project.model.EntityDtoConverter;
 import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
 import project.entity.User;
-import project.model.MoneyParser;
-import project.service.AccountService;
+import project.model.MoneyFormatConverter;
+import project.service.AccountServiceImpl;
 import project.service.CreditCardService;
 import project.service.UnbanAccountRequestService;
 import project.service.UserService;
@@ -27,30 +26,32 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Controller
 @RequestMapping("/user/accounts")
 public class AccountsController {
+    final static long START_MONEY_VALUE = 0L;
     @Autowired
     private CreditCardService creditCardService;
     @Autowired
     private UserService userService;
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
     @Autowired
     private EntityDtoConverter entityDtoConverter;
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    private MoneyParser moneyParser;
+    private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
 
     @RequestMapping()
     public String accountsPage(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findUserAccountsByUserId(currentUserId)));
+        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findByUserId(currentUserId)));
 
         return "user/accounts";
     }
@@ -60,11 +61,13 @@ public class AccountsController {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             User currentUser = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
-            Account account = Account.builder()
+            accountService.save(Account.builder()
+                    .money(START_MONEY_VALUE)
+                    .accountName("U"+UUID.randomUUID())
+                    .accountNumber(UUID.randomUUID().toString())
                     .user(currentUser)
                     .ban(false)
-                    .build();
-            accountService.saveNewAccount(account);
+                    .build());
             log.info("save new account");
             return "redirect:/user/accounts";
         } catch (NotFoundException e) {
@@ -184,7 +187,7 @@ public class AccountsController {
 
             return "user/accountTopUpForm";
         } else {
-            long moneyValue = moneyParser.getMoneyValue(topUpDTO.getTopUpMoney());
+            long moneyValue = moneyFormatConverter.getMoneyValue(topUpDTO.getTopUpMoney());
             try {
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
                 if (account.isBan()) {
@@ -196,9 +199,6 @@ public class AccountsController {
             } catch (RuntimeException e) {
                 log.info("something went wrong when try to add moneyValue accountId {} money {}", topUpDTO.getAccountId(), moneyValue);
                 redirectAttributes.addAttribute("error", true);
-            } catch (NotEnoughMoneyException e) {
-                log.info("money become negative when top up account with id {}", topUpDTO.getAccountId());
-                redirectAttributes.addAttribute("noMoneyError", true);
             } catch (NotFoundException e) {
                 redirectAttributes.addAttribute("noAccountError", true);
             } catch (BanException e) {

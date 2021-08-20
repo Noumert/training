@@ -7,7 +7,7 @@ import project.controller.GlobalConstants;
 import java.util.Locale;
 
 @Component
-public class MoneyParser {
+public class MoneyFormatConverter {
     public long getMoneyValue(String money) {
         try {
             return (long) (Double.parseDouble(money) * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);

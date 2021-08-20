@@ -1,87 +1,27 @@
 package project.service;
 
-import javassist.NotFoundException;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import project.entity.MyUserDetails;
 import project.entity.RoleType;
 import project.entity.User;
-import project.exceptions.DuplicatedEmailException;
-import project.repository.UserRepository;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
-@Slf4j
-@Service
-public class UserService implements UserDetailsService {
-    @Autowired
-    UserRepository userRepository;
+public interface UserService extends UserDetailsService {
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User save(User user);
 
-        return mapUserToUserDetails(userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password.")));
-    }
+    Optional<User> findByUserLogin(String email);
 
-    public void saveNewUser(User user) throws DuplicatedEmailException {
-        try {
-            userRepository.save(user);
-        } catch (RuntimeException ex) {
-            throw new DuplicatedEmailException("Same email exist");
-        }
+    List<User> findAll();
 
-    }
+    List<User> findByRole(RoleType roleType);
 
-    public void save(User user){
-        try {
-            userRepository.save(user);
-        } catch (RuntimeException ex) {
-            throw new RuntimeException("something went wrong");
-        }
-    }
+    void setAccountNonLockedByUser(boolean accountNonLocked, User user);
 
-    public Optional<User> findByUserLogin(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    private Collection<GrantedAuthority> mapRolesToAuthorities(RoleType role) {
-        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
-    }
-
-    private MyUserDetails mapUserToUserDetails(User user) {
-        return MyUserDetails.builder()
-                .authorities(mapRolesToAuthorities(user.getRole()))
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .accountNonLocked(user.isAccountNonLocked())
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .build();
-    }
-
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
-    public List<User> findByRole(RoleType roleType) {
-        return userRepository.findByRole(roleType);
-    }
-
-    public void setAccountNonLockedByUser(boolean accountNonLocked, User user) {
-        user.setAccountNonLocked(accountNonLocked);
-        save(user);
-    }
-
-    public Optional<User> findById(Long currentUserId) {
-        return userRepository.findById(currentUserId);
-    }
+    Optional<User> findById(Long currentUserId);
 }
 

@@ -3,7 +3,6 @@ package project.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import project.dto.*;
@@ -22,7 +21,7 @@ public class EntityDtoConverter {
     private static final DateTimeFormatter formatterWithoutTime = DateTimeFormatter
             .ofLocalizedDate(FormatStyle.MEDIUM);
     @Autowired
-    MoneyParser moneyParser;
+    MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -32,8 +31,6 @@ public class EntityDtoConverter {
     }
 
     public Page<AccountDTO> convertAccountsListToDTO(Page<Account> accounts) {
-//        return new PageImpl<>(accounts.stream()
-//                .map(this::convertAccountToAccountDTO).collect(Collectors.toList()));
         return accounts.map(this::convertAccountToAccountDTO);
     }
 
@@ -49,7 +46,7 @@ public class EntityDtoConverter {
                 .ban(accountDTO.isBan())
                 .accountName(accountDTO.getAccountName())
                 .accountNumber(accountDTO.getAccountNumber())
-                .money(moneyParser.getMoneyValue(accountDTO.getMoney()))
+                .money(moneyFormatConverter.getMoneyValue(accountDTO.getMoney()))
                 .build();
     }
 
@@ -60,7 +57,7 @@ public class EntityDtoConverter {
                 .ban(account.isBan())
                 .accountName(account.getAccountName())
                 .accountNumber(account.getAccountNumber())
-                .money(moneyParser.getStringMoneyFromMoneyValue(account.getMoney()))
+                .money(moneyFormatConverter.getStringMoneyFromMoneyValue(account.getMoney()))
                 .build();
     }
 
@@ -149,7 +146,7 @@ public class EntityDtoConverter {
                             .lastName(user.getLastName())
                             .accountNumber(account.getAccountNumber())
                             .accountName(account.getAccountName())
-                            .money(moneyParser.getStringMoneyFromMoneyValue(account.getMoney()))
+                            .money(moneyFormatConverter.getStringMoneyFromMoneyValue(account.getMoney()))
                             .id(account.getId())
                             .ban(account.isBan())
                             .build();
@@ -186,7 +183,7 @@ public class EntityDtoConverter {
                 .paymentNumber(payment.getPaymentNumber())
                 .recipient(payment.getRecipient())
                 .status(payment.getStatus().name())
-                .money(moneyParser.getStringMoneyFromMoneyValue(payment.getMoney()))
+                .money(moneyFormatConverter.getStringMoneyFromMoneyValue(payment.getMoney()))
                 .build();
     }
 
@@ -199,7 +196,7 @@ public class EntityDtoConverter {
                 .paymentNumber(paymentDTO.getPaymentNumber())
                 .recipient(paymentDTO.getRecipient())
                 .status(StatusType.valueOf(paymentDTO.getStatus()))
-                .money(moneyParser.getMoneyValue(paymentDTO.getMoney()))
+                .money(moneyFormatConverter.getMoneyValue(paymentDTO.getMoney()))
                 .build();
     }
 }

@@ -10,128 +10,31 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Account;
-import project.entity.UnbanAccountRequest;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Slf4j
-@Transactional
-@Service
-public class AccountService {
-    final static long START_MONEY_VALUE = 0L;
-    final static long NEGATIVE_MONEY_VALUE = -1L;
-    final static int MIN_RANDOM = 1000;
-    final static int MAX_RANDOM = 9999;
+interface AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private CreditCardService creditCardService;
-    @Autowired
-    private UnbanAccountRequestService unbanAccountRequestService;
+    Account save(Account account);
 
-    public void saveNewAccount(Account account) {
-        account.setMoney(START_MONEY_VALUE);
-        account.setAccountName(randomAccountName());
-        account.setAccountNumber(randomAccountNumber());
-        try {
-            accountRepository.save(account);
-        } catch (Exception e) {
-            throw new RuntimeException("problem with save");
-        }
-    }
+    List<Account> findByUserId(Long userId);
 
-    public void save(Account account) {
-        try {
-            accountRepository.save(account);
-        } catch (Exception e) {
-            throw new RuntimeException("problem with save");
-        }
-    }
+    Page<Account> findByUserId(Long userId, Pageable pageable);
 
+    List<Account> findAll();
 
-    private String randomAccountNumber() {
-        return UUID.randomUUID().toString();
-    }
+    Optional<Account> findById(Long accountId);
 
-    private String randomAccountName() {
-        return "U" + UUID.randomUUID();
-    }
+    List<Account> findFreeUserAccountsByUserId(Long userId);
 
-    private String randomFourDigits() {
-        return String.valueOf((int) Math.floor(Math.random() * (AccountService.MAX_RANDOM - AccountService.MIN_RANDOM + 1) + AccountService.MIN_RANDOM));
-    }
+    Account setBanByAccount(boolean ban, Account account);
 
-    public List<Account> findUserAccountsByUserId(Long userId) {
-        return accountRepository
-                .findByUserId(userId);
-    }
+    Account addMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException;
 
-    public Page<Account> findUserAccountsByUserId(Long userId, Pageable pageable) {
-        return accountRepository
-                .findByUserId(userId, pageable);
-    }
-
-    Optional<Account> findByAccountName(String accountName) {
-        return accountRepository
-                .findByAccountName(accountName);
-    }
-
-    public List<Account> findAll() {
-        return accountRepository.findAll();
-    }
-
-    public Optional<Account> findById(Long accountId) {
-        return accountRepository.findById(accountId);
-    }
-
-    @Transactional
-    public List<Account> findFreeUserAccountsByUserId(Long userId) {
-        return accountRepository
-                .findByUserId(userId)
-                .stream()
-                .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
-                .collect(Collectors.toList());
-    }
-
-    public void setBanByAccount(boolean ban, Account account) {
-        account.setBan(ban);
-        save(account);
-    }
-
-    @Transactional
-    public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest) throws NotFoundException {
-        unbanAccountRequestService.setResolvedByRequest(resolved, unbanAccountRequest);
-        this.setBanByAccount(ban, unbanAccountRequest.getAccount());
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void addMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-        accountDB.setMoney(accountDB.getMoney()-money);
-        if (accountDB.getMoney() < 0) {
-            throw new NotEnoughMoneyException("money can't be negative");
-        }
-        save(accountDB);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
-    public void decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {
-        Account accountDB = findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-        accountDB.setMoney(accountDB.getMoney()-money);
-        if (accountDB.getMoney() < 0) {
-            throw new NotEnoughMoneyException("money can't be negative");
-        }
-        save(accountDB);
-    }
+    Account decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException;
 }

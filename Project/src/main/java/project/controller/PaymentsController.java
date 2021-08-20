@@ -15,14 +15,15 @@ import project.entity.MyUserDetails;
 import project.entity.Payment;
 import project.entity.StatusType;
 import project.model.EntityDtoConverter;
-import project.model.MoneyParser;
-import project.service.AccountService;
-import project.service.PaymentService;
+import project.model.MoneyFormatConverter;
+import project.service.AccountServiceImpl;
+import project.service.PaymentServiceImpl;
 import project.service.UserService;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -31,13 +32,13 @@ public class PaymentsController {
     @Autowired
     private EntityDtoConverter entityDtoConverter;
     @Autowired
-    private AccountService accountService;
+    private AccountServiceImpl accountService;
     @Autowired
-    private PaymentService paymentService;
+    private PaymentServiceImpl paymentService;
     @Autowired
     private UserService userService;
     @Autowired
-    private MoneyParser moneyParser;
+    private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
 
@@ -46,7 +47,7 @@ public class PaymentsController {
     public String paymentsPage(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
-                accountService.findUserAccountsByUserId(currentUserId)));
+                accountService.findByUserId(currentUserId)));
         model.addAttribute("payment", new FillPaymentDTO());
         return "user/payments";
     }
@@ -59,21 +60,22 @@ public class PaymentsController {
             Map<String, String> errorsMap = controllerUtils.getErrorsMap(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
-                    accountService.findUserAccountsByUserId(currentUserId)));
+                    accountService.findByUserId(currentUserId)));
             return "user/payments";
         }
-        long moneyValue = moneyParser.getMoneyValue(fillPaymentDTO.getPaymentMoney());
+        long moneyValue = moneyFormatConverter.getMoneyValue(fillPaymentDTO.getPaymentMoney());
         try {
             Account account = accountService.findById(fillPaymentDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
             Payment payment = Payment
                     .builder()
+                    .paymentNumber(UUID.randomUUID().toString())
                     .dateTime(LocalDateTime.now())
                     .money(moneyValue)
                     .account(account)
                     .recipient(fillPaymentDTO.getRecipient())
                     .status(StatusType.PREPARED)
                     .build();
-            paymentService.saveNewPayment(payment);
+            paymentService.save(payment);
             log.info("prepare payment accountId : {} moneyUAHValue : {}", fillPaymentDTO.getAccountId(), moneyValue);
             redirectAttributes.addAttribute("success", true);
         } catch (NotFoundException e) {

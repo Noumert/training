@@ -1,90 +1,35 @@
 package project.service;
 
 import javassist.NotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import project.exceptions.NotEnoughMoneyException;
 import project.entity.Account;
 import project.entity.Payment;
 import project.entity.StatusType;
+import project.exceptions.NotEnoughMoneyException;
 import project.repository.PaymentRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Slf4j
-@Service
-public class PaymentService {
-    @Autowired
-    PaymentRepository paymentRepository;
-    @Autowired
-    AccountService accountService;
+public interface PaymentService {
 
-    public List<Payment> findAll(){
-        return paymentRepository.findAll();
-    }
+        public List<Payment> findAll();
 
+        public void save(Payment payment);
 
-    public void saveNewPayment(Payment payment){
-        payment.setPaymentNumber(randomPaymentNumber());
-        try {
-            paymentRepository.save(payment);
-        }catch (RuntimeException e){
-            throw new RuntimeException("something went wrong");
-        }
-    }
+        public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable);
 
-    public void save(Payment payment){
-        try {
-            paymentRepository.save(payment);
-        }catch (RuntimeException e){
-            throw new RuntimeException("something went wrong");
-        }
-    }
+        public List<Payment> findUserPaymentsByUserId(Long userId);
 
-    @Transactional
-    public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable){
-        return paymentRepository.findByAccountIdIn(accountService
-                .findUserAccountsByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()), pageable);
-    }
+        public Optional<Payment> findById(Long paymentId);
 
-    @Transactional
-    public List<Payment> findUserPaymentsByUserId(Long userId){
-        return paymentRepository.findByAccountIdIn(accountService
-                .findUserAccountsByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
-    }
+        public void setStatusByPayment(StatusType status, Payment payment);
 
-    private String randomPaymentNumber() {
-        return UUID.randomUUID().toString();
-    }
+        public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException;
 
-
-    public Optional<Payment> findById(Long paymentId) {
-        return paymentRepository.findById(paymentId);
-    }
-
-
-    public  void setStatusByPayment(StatusType status, Payment payment){
-        payment.setStatus(status);
-        this.save(payment);
-    }
-
-    @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = {NotEnoughMoneyException.class})
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
-        setStatusByPayment(StatusType.SENT,payment);
-        accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
-    }
 }
