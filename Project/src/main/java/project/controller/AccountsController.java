@@ -3,15 +3,12 @@ package project.controller;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.dto.AccountDTO;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
@@ -27,13 +24,9 @@ import project.service.UnbanAccountRequestService;
 import project.service.UserService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -100,7 +93,7 @@ public class AccountsController {
         boolean ban = true;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(ban, account);
+            accountService.setBanByAccount(ban, account);
             log.info("unban account from user ban {} accountId {}", ban, accountId);
             return "redirect:/user/accounts";
         } catch (RuntimeException e) {

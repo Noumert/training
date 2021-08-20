@@ -11,13 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import project.entity.Account;
 import project.entity.UnbanAccountRequest;
-import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -104,7 +102,7 @@ public class AccountService {
                 .collect(Collectors.toList());
     }
 
-    public void setBanById(boolean ban, Account account) {
+    public void setBanByAccount(boolean ban, Account account) {
         account.setBan(ban);
         save(account);
     }
@@ -112,7 +110,7 @@ public class AccountService {
     @Transactional
     public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest) throws NotFoundException {
         unbanAccountRequestService.setResolvedByRequest(resolved, unbanAccountRequest);
-        this.setBanById(ban, unbanAccountRequest.getAccount());
+        this.setBanByAccount(ban, unbanAccountRequest.getAccount());
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW,

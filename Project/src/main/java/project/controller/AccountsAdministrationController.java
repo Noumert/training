@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +41,7 @@ public class AccountsAdministrationController {
         boolean ban = true;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(ban, account);
+            accountService.setBanByAccount(ban, account);
             log.info("ban account ban {} accountId {}", ban, accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {
@@ -72,7 +71,7 @@ public class AccountsAdministrationController {
         boolean ban = false;
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            accountService.setBanById(ban, account);
+            accountService.setBanByAccount(ban, account);
             log.info("unban account ban {} accountId {}", ban, accountId);
             return "redirect:/admin/accounts";
         } catch (RuntimeException e) {

@@ -1,6 +1,5 @@
 package project.service;
 
-import javafx.scene.control.Pagination;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
 import project.entity.Account;
 import project.entity.Payment;
@@ -79,14 +77,14 @@ public class PaymentService {
     }
 
 
-    public  void setStatusById(StatusType status, Payment payment){
+    public  void setStatusByPayment(StatusType status, Payment payment){
         payment.setStatus(status);
         this.save(payment);
     }
 
     @Transactional(propagation= Propagation.REQUIRES_NEW,rollbackFor = {NotEnoughMoneyException.class})
     public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
-        setStatusById(StatusType.SENT,payment);
+        setStatusByPayment(StatusType.SENT,payment);
         accountService.decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
     }
 }
