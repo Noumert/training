@@ -11,16 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
 import project.entity.User;
 import project.model.MoneyFormatConverter;
-import project.service.AccountServiceImpl;
-import project.service.CreditCardService;
-import project.service.UnbanAccountRequestService;
-import project.service.UserService;
+import project.service.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -38,9 +35,7 @@ public class AccountsController {
     @Autowired
     private UserService userService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired

@@ -56,11 +56,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     public List<Account> findFreeUserAccountsByUserId(Long userId) {
-        return accountRepository
-                .findByUserId(userId)
-                .stream()
-                .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
-                .collect(Collectors.toList());
+        return accountRepository.findFreeUserAccountsByUserId(userId);
+//                accountRepository
+//                .findByUserId(userId)
+//                .stream()
+//                .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
+//                .collect(Collectors.toList());
     }
 
     public Account setBanByAccount(boolean ban, Account account) {

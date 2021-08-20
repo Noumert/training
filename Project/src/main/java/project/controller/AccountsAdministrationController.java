@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.Account;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.dto.UserAccountDTO;
+import project.service.AccountService;
 import project.service.AccountServiceImpl;
 
 import javax.validation.constraints.NotNull;
@@ -23,9 +24,8 @@ import java.util.List;
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
+
 
     @RequestMapping()
     public String accountsPage(Model model) {

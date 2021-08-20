@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.entity.Account;
 import project.entity.CreditCard;
 import project.entity.MyUserDetails;
 import project.entity.User;
-import project.service.AccountServiceImpl;
+import project.service.AccountService;
 import project.service.CreditCardService;
 import project.service.UserService;
 
@@ -35,9 +35,7 @@ public class CreditCardsController {
     @Autowired
     private UserService userService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
 
     @RequestMapping()
     public String creditCardsPage(Model model) {

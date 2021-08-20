@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.UnbanAccountRequest;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.dto.UnbanAccountRequestDTO;
+import project.service.AccountService;
 import project.service.AccountServiceImpl;
 import project.service.UnbanAccountRequestService;
 
@@ -27,9 +28,8 @@ public class UnbanRequestsController {
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
+
 
     @RequestMapping()
     public String requestsPage(Model model) {

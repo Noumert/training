@@ -23,11 +23,9 @@ import project.entity.Payment;
 import project.entity.User;
 import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.entity.MyUserDetails;
-import project.service.AccountServiceImpl;
-import project.service.PaymentServiceImpl;
-import project.service.UserService;
+import project.service.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -44,11 +42,9 @@ public class ProfileController {
     @Autowired
     private UserService userService;
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private PaymentServiceImpl paymentService;
+    private PaymentService paymentService;
 
     @RequestMapping()
     public String paymentsPage(Model model,

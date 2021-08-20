@@ -14,11 +14,9 @@ import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.Payment;
 import project.entity.StatusType;
-import project.model.EntityDtoConverter;
+import project.model.EntityDtoConverterOlolo;
 import project.model.MoneyFormatConverter;
-import project.service.AccountServiceImpl;
-import project.service.PaymentServiceImpl;
-import project.service.UserService;
+import project.service.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -30,11 +28,9 @@ import java.util.UUID;
 @RequestMapping("/user/payments")
 public class PaymentsController {
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private PaymentServiceImpl paymentService;
+    private PaymentService paymentService;
     @Autowired
     private UserService userService;
     @Autowired
