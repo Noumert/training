@@ -154,7 +154,7 @@ public class EntityDtoConverter {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDTO> convertUserListToUserDto(List<User> users) {
+    public List<UserDTO> convertUserListToUserDTO(List<User> users) {
         return users.stream().map(this::convertUserToUserDTO).collect(Collectors.toList());
     }
 
