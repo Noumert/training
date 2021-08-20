@@ -16,6 +16,7 @@ import project.repository.AccountRepository;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -45,7 +46,7 @@ public class AccountServiceTest {
                 .build();
         Mockito.when(accountRepository.save(any(Account.class))).thenThrow(RuntimeException.class);
 
-        Assertions.assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> accountService.save(account));
+        assertThrows(RuntimeException.class, () -> accountService.save(account));
     }
 
     @Test
@@ -91,8 +92,7 @@ public class AccountServiceTest {
     public void addMoneyByIdNotFoundException() {
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThatExceptionOfType(NotFoundException.class)
-                .isThrownBy(() -> accountService.addMoneyById(300L,1L)).withMessage("no such account");
+        assertThrows(NotFoundException.class, () -> accountService.addMoneyById(300L,1L));
     }
 
     @Test
@@ -103,6 +103,7 @@ public class AccountServiceTest {
                 .build();
         Mockito.when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+
         assertThat(accountService.decreaseMoneyById(300L,1L).getMoney()).isEqualTo(0L);
     }
 
@@ -113,18 +114,14 @@ public class AccountServiceTest {
                 .money(200L)
                 .build();
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-        Assertions.assertThatExceptionOfType(NotEnoughMoneyException.class)
-                .isThrownBy(() -> accountService.decreaseMoneyById(300L,1L)).withMessage("money can't be negative");
+
+        assertThrows(NotEnoughMoneyException.class, () -> accountService.decreaseMoneyById(300L,1L));
     }
 
     @Test
     public void decreaseMoneyByIdNotFoundException(){
-        Account account = Account.builder()
-                .id(1L)
-                .money(200L)
-                .build();
         Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.empty());
-        Assertions.assertThatExceptionOfType(NotFoundException.class)
-                .isThrownBy(() -> accountService.decreaseMoneyById(100L,1L)).withMessage("no such account");
+
+        assertThrows(NotFoundException.class, () -> accountService.decreaseMoneyById(100L,1L));
     }
 }
