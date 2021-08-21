@@ -6,6 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import project.service.UserService;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 public class PageController {

@@ -10,27 +10,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dto.UserAccountDTO;
 import project.entity.Account;
 import project.model.EntityDtoConverter;
-import project.dto.UserAccountDTO;
-import project.service.AccountServiceImpl;
+import project.service.AccountService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("/admin/accounts")
 public class AccountsAdministrationController {
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter<Account, UserAccountDTO> accountUserAccountDtoConverter;
+
 
     @RequestMapping()
     public String accountsPage(Model model) {
 
-        List<UserAccountDTO> userCardDTOS = entityDtoConverter.convertAccountsToDto(accountService.findAll());
+        List<UserAccountDTO> userCardDTOS = accountUserAccountDtoConverter.convertEntityListToDtoList(accountService.findAll());
         model.addAttribute("userAccounts", userCardDTOS);
 
         return "admin/accountsAdministration";

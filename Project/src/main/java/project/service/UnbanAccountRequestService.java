@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UnbanAccountRequestService {
-    public void save(UnbanAccountRequest unbanAccountRequest);
+    void save(UnbanAccountRequest unbanAccountRequest);
 
-    public List<UnbanAccountRequest> findAll();
+    List<UnbanAccountRequest> findAll();
 
-    public List<UnbanAccountRequest> findByResolved(boolean resolved);
+    List<UnbanAccountRequest> findByResolved(boolean resolved);
 
-    public void setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest);
+    void setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest);
 
-    public Optional<UnbanAccountRequest> findById(Long requestId);
-
-    public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest);
+    Optional<UnbanAccountRequest> findById(Long requestId);
 }

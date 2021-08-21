@@ -11,6 +11,9 @@ import project.repository.UnbanAccountRequestRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Service
 public class UnbanAccountRequestServiceImpl implements  UnbanAccountRequestService{
     @Autowired
@@ -18,30 +21,29 @@ public class UnbanAccountRequestServiceImpl implements  UnbanAccountRequestServi
     @Autowired
     AccountServiceImpl accountService;
 
+    @Override
     public void save(UnbanAccountRequest unbanAccountRequest) {
         unbanAccountRequestRepository.save(unbanAccountRequest);
     }
 
+    @Override
     public List<UnbanAccountRequest> findAll() {
         return unbanAccountRequestRepository.findAll();
     }
 
+    @Override
     public List<UnbanAccountRequest> findByResolved(boolean resolved) {
         return unbanAccountRequestRepository.findByResolved(resolved);
     }
 
+    @Override
     public void setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest) {
         unbanAccountRequest.setResolved(resolved);
         save(unbanAccountRequest);
     }
 
+    @Override
     public Optional<UnbanAccountRequest> findById(Long requestId){
         return unbanAccountRequestRepository.findById(requestId);
-    }
-
-    @Transactional
-    public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest){
-        setResolvedByRequest(resolved, unbanAccountRequest);
-        accountService.setBanByAccount(ban, unbanAccountRequest.getAccount());
     }
 }

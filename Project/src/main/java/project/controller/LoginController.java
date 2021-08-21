@@ -5,6 +5,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Controller
 public class LoginController {
 

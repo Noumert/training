@@ -12,30 +12,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.UnbanAccountRequest;
-import project.model.EntityDtoConverter;
 import project.dto.UnbanAccountRequestDTO;
-import project.service.AccountServiceImpl;
+import project.model.EntityDtoConverter;
+import project.service.AccountService;
+import project.service.UnbanAccountRequestProcessingService;
 import project.service.UnbanAccountRequestService;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("/admin/unbanRequests")
 public class UnbanRequestsController {
     @Autowired
+    private UnbanAccountRequestProcessingService unbanAccountRequestProcessingService;
+    @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter<UnbanAccountRequest,UnbanAccountRequestDTO> unbanAccountRequestDtoConverter;
+
 
     @RequestMapping()
     public String requestsPage(Model model) {
 
-        List<UnbanAccountRequestDTO> unbanAccountRequestDTOS = entityDtoConverter
-                .convertUnbanAccountRequestsToUnbanAccountRequestDTOs(unbanAccountRequestService.findByResolved(false));
+        List<UnbanAccountRequestDTO> unbanAccountRequestDTOS = unbanAccountRequestDtoConverter
+                .convertEntityListToDtoList(unbanAccountRequestService.findByResolved(false));
         log.info("{}", unbanAccountRequestDTOS);
         model.addAttribute("requests", unbanAccountRequestDTOS);
         return "admin/unbanRequests";
@@ -76,7 +83,7 @@ public class UnbanRequestsController {
         try {
             UnbanAccountRequest request = unbanAccountRequestService.findById(requestId)
                     .orElseThrow(() -> new NotFoundException("no such request"));
-            unbanAccountRequestService.unbanAndSetResolvedByRequest(ban, true, request);
+            unbanAccountRequestProcessingService.unbanAndSetResolvedByRequest(ban, true, request);
             return "redirect:/admin/unbanRequests";
         } catch (NotFoundException e) {
             log.info("no such request with id {}", requestId);

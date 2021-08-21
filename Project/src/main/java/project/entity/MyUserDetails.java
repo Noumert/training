@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Created by Noumert on 12.08.2021.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

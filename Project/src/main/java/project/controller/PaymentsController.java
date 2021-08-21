@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dto.AccountDTO;
 import project.dto.FillPaymentDTO;
 import project.entity.Account;
 import project.entity.MyUserDetails;
@@ -16,37 +17,39 @@ import project.entity.Payment;
 import project.entity.StatusType;
 import project.model.EntityDtoConverter;
 import project.model.MoneyFormatConverter;
-import project.service.AccountServiceImpl;
-import project.service.PaymentServiceImpl;
-import project.service.UserService;
+import project.service.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("/user/payments")
 public class PaymentsController {
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private AccountService accountService;
     @Autowired
-    private AccountServiceImpl accountService;
-    @Autowired
-    private PaymentServiceImpl paymentService;
+    private PaymentService paymentService;
     @Autowired
     private UserService userService;
     @Autowired
     private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
+    @Autowired
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
 
 
     @RequestMapping()
     public String paymentsPage(Model model) {
-        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
+        Long currentUserId =
+                ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        model.addAttribute("accounts", accountDtoConverter.convertEntityListToDtoList(
                 accountService.findByUserId(currentUserId)));
         model.addAttribute("payment", new FillPaymentDTO());
         return "user/payments";
@@ -56,16 +59,18 @@ public class PaymentsController {
     public String prepare(@ModelAttribute("payment") @Valid FillPaymentDTO fillPaymentDTO,
                           BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+            Long currentUserId =
+                    ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
             Map<String, String> errorsMap = controllerUtils.getErrorsMap(bindingResult);
             model.mergeAttributes(errorsMap);
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
+            model.addAttribute("accounts", accountDtoConverter.convertEntityListToDtoList(
                     accountService.findByUserId(currentUserId)));
             return "user/payments";
         }
         long moneyValue = moneyFormatConverter.getMoneyValue(fillPaymentDTO.getPaymentMoney());
         try {
-            Account account = accountService.findById(fillPaymentDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
+            Account account = accountService.findById(fillPaymentDTO.getAccountId())
+                    .orElseThrow(() -> new NotFoundException("no such account"));
             Payment payment = Payment
                     .builder()
                     .paymentNumber(UUID.randomUUID().toString())
@@ -82,7 +87,8 @@ public class PaymentsController {
             log.info("no account with Id {}",fillPaymentDTO.getAccountId());
             redirectAttributes.addAttribute("noAccountError", true);
         } catch (RuntimeException e) {
-            log.info("some generated parameter was not unique when trying to prepare payment with id {}", fillPaymentDTO.getAccountId());
+            log.info("some generated parameter was not unique when trying to prepare payment with id {}",
+                    fillPaymentDTO.getAccountId());
             redirectAttributes.addAttribute("duplicatedError", true);
         }
         return "redirect:/user/payments/prepare";

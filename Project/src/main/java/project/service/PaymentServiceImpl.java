@@ -19,6 +19,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Service
 public class PaymentServiceImpl implements  PaymentService {
     @Autowired
@@ -26,45 +29,34 @@ public class PaymentServiceImpl implements  PaymentService {
     @Autowired
     AccountServiceImpl accountService;
 
+    @Override
     public List<Payment> findAll() {
         return paymentRepository.findAll();
     }
 
+    @Override
     public void save(Payment payment) {
         paymentRepository.save(payment);
     }
 
-    @Transactional
-    public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable) {
-        return paymentRepository.findByAccountIdIn(accountService
-                .findByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()), pageable);
+    @Override
+    public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable) {
+        return paymentRepository.findPaymentsByUserId(userId, pageable);
     }
 
-    @Transactional
-    public List<Payment> findUserPaymentsByUserId(Long userId) {
-        return paymentRepository.findByAccountIdIn(accountService
-                .findByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
+    @Override
+    public List<Payment> findPaymentsByUserId(Long userId) {
+        return paymentRepository.findPaymentsByUserId(userId);
     }
 
+    @Override
     public Optional<Payment> findById(Long paymentId) {
         return paymentRepository.findById(paymentId);
     }
 
-
+    @Override
     public void setStatusByPayment(StatusType status, Payment payment) {
         payment.setStatus(status);
         this.save(payment);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
-        setStatusByPayment(StatusType.SENT, payment);
-        accountService.decreaseMoneyById(payment.getMoney(), payment.getAccount().getId());
     }
 }

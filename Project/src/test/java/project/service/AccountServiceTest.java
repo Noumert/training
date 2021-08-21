@@ -58,12 +58,9 @@ public class AccountServiceTest {
                 .id(2L)
                 .build();
         List<Account> accounts = Arrays.asList(account1, account2);
-        Mockito.when(accountRepository.findByUserId(1L)).thenReturn(accounts);
-        Mockito.when(creditCardService.findByAccountId(1L)).thenReturn(Optional.of(new CreditCard()));
-        Mockito.when(creditCardService.findByAccountId(2L)).thenReturn(Optional.empty());
-        List<Account> expected = Collections.singletonList(account2);
+        Mockito.when(accountRepository.findFreeUserAccountsByUserId(1L)).thenReturn(accounts);
 
-        assertThat(accountService.findFreeUserAccountsByUserId(1L)).isEqualTo(expected);
+        assertThat(accountService.findFreeUserAccountsByUserId(1L)).isEqualTo(accounts);
     }
 
     @Test

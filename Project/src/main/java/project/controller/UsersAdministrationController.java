@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +19,9 @@ import project.service.UserService;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("/admin/users")
@@ -27,11 +29,11 @@ public class UsersAdministrationController {
     @Autowired
     private UserService userService;
     @Autowired
-    private EntityDtoConverter entityDtoConverter;
+    private EntityDtoConverter<User,UserDTO> userDtoConverter;
 
     @RequestMapping()
     public String usersPage(Model model) {
-        List<UserDTO> userDTOS = entityDtoConverter.convertUserListToUserDTO(userService.findByRole(RoleType.ROLE_USER));
+        List<UserDTO> userDTOS = userDtoConverter.convertEntityListToDtoList(userService.findByRole(RoleType.ROLE_USER));
         model.addAttribute("users", userDTOS);
         return "admin/usersAdministration";
     }

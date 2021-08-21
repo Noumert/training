@@ -12,6 +12,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
@@ -21,7 +24,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Optional<Account> findByAccountName(String accountName);
 
-//    @Modifying
-//    @Query("update Account a set a.money = a.money+?2 where a.id = ?1")
-//    void updateMoneyById(Long id, long money);
+    @Query("select a from Account a left join CreditCard c on c.account.id=a.id where a.user.id = :userId and c.account.id is null")
+    List<Account> findFreeUserAccountsByUserId(Long userId);
 }
