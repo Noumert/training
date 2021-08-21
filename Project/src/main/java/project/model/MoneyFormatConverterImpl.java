@@ -11,6 +11,11 @@ import java.util.Locale;
  */
 @Component
 public class MoneyFormatConverterImpl implements MoneyFormatConverter {
+    /**
+     * Convert String money in double format into long moneyValue
+     * @param money
+     * @return moneyValue
+     */
     public long getMoneyValue(String money) {
         try {
             return (long) (Double.parseDouble(money) * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);
@@ -19,10 +24,20 @@ public class MoneyFormatConverterImpl implements MoneyFormatConverter {
         }
     }
 
+    /**
+     * Convert Long moneyValue into formatted String money
+     * @param moneyValue
+     * @return money
+     */
     public String getStringMoneyFromMoneyValue(Long moneyValue) {
         return String.format("%.2f",(double)moneyValue/100);
     }
 
+    /**
+     * Convert double money into long moneyValue
+     * @param money
+     * @return moneyValue
+     */
     public long getMoneyValue(double money) {
         return (long) (money * GlobalConstants.MONEY_TO_VALUE_COEFFICIENT);
     }
