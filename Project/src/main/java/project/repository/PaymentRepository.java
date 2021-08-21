@@ -12,6 +12,9 @@ import project.entity.StatusType;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment,Long> {
 //    List<Payment> findByAccountIdIn(List<Long> accountIds);

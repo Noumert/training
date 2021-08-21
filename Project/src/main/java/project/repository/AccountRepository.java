@@ -12,6 +12,9 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 

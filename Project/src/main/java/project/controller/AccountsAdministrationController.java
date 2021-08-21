@@ -18,6 +18,9 @@ import project.service.AccountService;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("/admin/accounts")

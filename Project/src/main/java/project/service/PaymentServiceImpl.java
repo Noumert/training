@@ -19,6 +19,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Service
 public class PaymentServiceImpl implements  PaymentService {
     @Autowired
@@ -40,7 +43,7 @@ public class PaymentServiceImpl implements  PaymentService {
     public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable) {
         return paymentRepository.findPaymentsByUserId(userId, pageable);
     }
-    
+
     @Override
     public List<Payment> findPaymentsByUserId(Long userId) {
         return paymentRepository.findPaymentsByUserId(userId);

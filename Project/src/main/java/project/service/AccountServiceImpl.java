@@ -20,7 +20,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
@@ -32,43 +34,45 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private UnbanAccountRequestService unbanAccountRequestService;
 
+    @Override
     public Account save(Account account) {
         return accountRepository.save(account);
     }
 
+    @Override
     public List<Account> findByUserId(Long userId) {
         return accountRepository
                 .findByUserId(userId);
     }
 
+    @Override
     public Page<Account> findByUserId(Long userId, Pageable pageable) {
         return accountRepository
                 .findByUserId(userId, pageable);
     }
 
+    @Override
     public List<Account> findAll() {
         return accountRepository.findAll();
     }
 
+    @Override
     public Optional<Account> findById(Long accountId) {
         return accountRepository.findById(accountId);
     }
 
-    @Transactional
+    @Override
     public List<Account> findFreeUserAccountsByUserId(Long userId) {
         return accountRepository.findFreeUserAccountsByUserId(userId);
-//                accountRepository
-//                .findByUserId(userId)
-//                .stream()
-//                .filter(account -> !creditCardService.findByAccountId(account.getId()).isPresent())
-//                .collect(Collectors.toList());
     }
 
+    @Override
     public Account setBanByAccount(boolean ban, Account account) {
         account.setBan(ban);
         return save(account);
     }
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE)
     public Account addMoneyById(Long money, @NotNull Long accountId) throws NotFoundException {
@@ -77,6 +81,7 @@ public class AccountServiceImpl implements AccountService {
         return save(accountDB);
     }
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE, rollbackFor = {NotEnoughMoneyException.class})
     public Account decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException {

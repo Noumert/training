@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Slf4j
 @Controller
 @RequestMapping("user/profile")

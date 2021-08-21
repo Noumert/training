@@ -17,6 +17,9 @@ import project.repository.UserRepository;
 
 import java.util.*;
 
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Service
 public class UserServiceImpl implements UserDetailsService,UserService {
     @Autowired
@@ -29,10 +32,12 @@ public class UserServiceImpl implements UserDetailsService,UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Invalid username or password.")));
     }
 
+    @Override
     public User save(User user) {
         return userRepository.save(user);
     }
 
+    @Override
     public Optional<User> findByUserLogin(String email) {
         return userRepository.findByEmail(email);
     }
@@ -53,19 +58,23 @@ public class UserServiceImpl implements UserDetailsService,UserService {
                 .build();
     }
 
+    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @Override
     public List<User> findByRole(RoleType roleType) {
         return userRepository.findByRole(roleType);
     }
 
+    @Override
     public void setAccountNonLockedByUser(boolean accountNonLocked, User user) {
         user.setAccountNonLocked(accountNonLocked);
         save(user);
     }
 
+    @Override
     public Optional<User> findById(Long currentUserId) {
         return userRepository.findById(currentUserId);
     }

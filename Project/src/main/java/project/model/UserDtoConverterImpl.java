@@ -10,6 +10,9 @@ import project.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Created by Noumert on 21.08.2021.
+ */
 @Component
 public class UserDtoConverterImpl implements EntityDtoConverter<User, UserDTO>{
     @Autowired

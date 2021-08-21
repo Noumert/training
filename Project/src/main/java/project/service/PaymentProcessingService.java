@@ -4,6 +4,9 @@ import javassist.NotFoundException;
 import project.entity.Payment;
 import project.exceptions.NotEnoughMoneyException;
 
+/**
+ * Created by Noumert on 21.08.2021.
+ */
 public interface PaymentProcessingService {
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException;
+    void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException;
 }

@@ -5,7 +5,9 @@ import lombok.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-
+/**
+ * Created by Noumert on 13.08.2021.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

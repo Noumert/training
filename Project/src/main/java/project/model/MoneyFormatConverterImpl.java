@@ -6,6 +6,9 @@ import project.controller.GlobalConstants;
 
 import java.util.Locale;
 
+/**
+ * Created by Noumert on 21.08.2021.
+ */
 @Component
 public class MoneyFormatConverterImpl implements MoneyFormatConverter {
     public long getMoneyValue(String money) {

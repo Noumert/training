@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Created by Noumert on 20.08.2021.
+ */
 public interface UserService extends UserDetailsService {
 
     User save(User user);

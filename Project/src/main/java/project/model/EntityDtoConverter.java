@@ -14,6 +14,9 @@ import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Created by Noumert on 21.08.2021.
+ */
 public interface EntityDtoConverter<E, D> {
 
     D convertEntityToDto(E entity);

@@ -18,6 +18,9 @@ import project.service.UserService;
 import javax.validation.Valid;
 import java.util.Map;
 
+/**
+ * Created by Noumert on 11.08.2021.
+ */
 @Controller
 public class RegistrationController {
     @Autowired

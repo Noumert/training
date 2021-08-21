@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Created by Noumert on 12.08.2021.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

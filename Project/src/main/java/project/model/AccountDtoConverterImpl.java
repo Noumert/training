@@ -9,6 +9,9 @@ import project.entity.Account;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Created by Noumert on 21.08.2021.
+ */
 @Component
 public class AccountDtoConverterImpl implements EntityDtoConverter<Account, AccountDTO> {
     @Autowired
