@@ -30,7 +30,7 @@ public class MoneyFormatConverterImpl implements MoneyFormatConverter {
      * @return money
      */
     public String getStringMoneyFromMoneyValue(Long moneyValue) {
-        return String.format("%.2f",(double)moneyValue/100);
+        return String.format("%.2f",(double)moneyValue/100).replace(',','.');
     }
 
     /**

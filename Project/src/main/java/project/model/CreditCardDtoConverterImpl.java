@@ -35,8 +35,8 @@ public class CreditCardDtoConverterImpl implements EntityDtoConverter<CreditCard
     public CreditCard convertDtoToEntity(CreditCardDTO creditCardDTO) {
         return CreditCard.builder()
                 .id(creditCardDTO.getId())
-                .expirationDate(LocalDate.from(LocalDateTime.parse(creditCardDTO.getExpirationDate(),
-                        formatter.withLocale(LocaleContextHolder.getLocale()))))
+                .expirationDate(LocalDate.parse(creditCardDTO.getExpirationDate(),
+                        formatter.withLocale(LocaleContextHolder.getLocale())))
                 .cardNumber(creditCardDTO.getCardNumber())
                 .build();
     }
@@ -48,7 +48,7 @@ public class CreditCardDtoConverterImpl implements EntityDtoConverter<CreditCard
     }
 
     @Override
-    public List<CreditCard> convertDtoListToPaymentList(List<CreditCardDTO> creditCardDTOS) {
+    public List<CreditCard> convertDtoListToEntityList(List<CreditCardDTO> creditCardDTOS) {
         return creditCardDTOS.stream()
                 .map(this::convertDtoToEntity).collect(Collectors.toList());
     }

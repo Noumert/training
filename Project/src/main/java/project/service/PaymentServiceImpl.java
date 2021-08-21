@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 public class PaymentServiceImpl implements  PaymentService {
     @Autowired
     PaymentRepository paymentRepository;
-    @Autowired
-    AccountServiceImpl accountService;
 
     @Override
     public List<Payment> findAll() {
@@ -35,8 +33,8 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public void save(Payment payment) {
-        paymentRepository.save(payment);
+    public Payment save(Payment payment) {
+        return paymentRepository.save(payment);
     }
 
     @Override
@@ -55,8 +53,8 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public void setStatusByPayment(StatusType status, Payment payment) {
+    public Payment setStatusByPayment(StatusType status, Payment payment) {
         payment.setStatus(status);
-        this.save(payment);
+        return this.save(payment);
     }
 }

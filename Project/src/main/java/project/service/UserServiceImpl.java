@@ -21,7 +21,7 @@ import java.util.*;
  * Created by Noumert on 13.08.2021.
  */
 @Service
-public class UserServiceImpl implements UserDetailsService,UserService {
+public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
@@ -35,11 +35,6 @@ public class UserServiceImpl implements UserDetailsService,UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
-    }
-
-    @Override
-    public Optional<User> findByUserLogin(String email) {
-        return userRepository.findByEmail(email);
     }
 
     private Collection<GrantedAuthority> mapRolesToAuthorities(RoleType role) {
@@ -69,9 +64,9 @@ public class UserServiceImpl implements UserDetailsService,UserService {
     }
 
     @Override
-    public void setAccountNonLockedByUser(boolean accountNonLocked, User user) {
+    public User setAccountNonLockedByUser(boolean accountNonLocked, User user) {
         user.setAccountNonLocked(accountNonLocked);
-        save(user);
+        return save(user);
     }
 
     @Override

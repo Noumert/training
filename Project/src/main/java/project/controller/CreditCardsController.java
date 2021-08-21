@@ -51,7 +51,7 @@ public class CreditCardsController {
                 ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
             model.addAttribute("userCards", creditCardDtoConverter
-                    .convertEntityListToDtoList(creditCardService.findUserCards(currentUserId)));
+                    .convertEntityListToDtoList(creditCardService.findUserCardsById(currentUserId)));
             model.addAttribute("accounts", accountDtoConverter
                     .convertEntityListToDtoList(accountService.findFreeUserAccountsByUserId(currentUserId)));
         } catch (UnexpectedRollbackException e) {

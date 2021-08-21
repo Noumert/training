@@ -8,6 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import project.entity.Account;
 import project.entity.CreditCard;
 import project.exceptions.NotEnoughMoneyException;
@@ -23,9 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
     @Mock
-    AccountRepository accountRepository;
-    @Mock
-    CreditCardService creditCardService;
+    private AccountRepository accountRepository;
+
     @InjectMocks
     private AccountServiceImpl accountService;
 
@@ -121,4 +124,58 @@ public class AccountServiceTest {
 
         assertThrows(NotFoundException.class, () -> accountService.decreaseMoneyById(100L,1L));
     }
+
+    @Test
+    void findByUserIdPage() {
+        Account account1 = Account.builder()
+                .id(1L)
+                .build();
+        Account account2 = Account.builder()
+                .id(2L)
+                .build();
+        Page<Account> accounts = new PageImpl<>(Arrays.asList(account1,account2));
+        Pageable pageable = PageRequest.of(1,2);
+        Mockito.when(accountRepository.findByUserId(1L,pageable)).thenReturn(accounts);
+
+        assertThat(accountService.findByUserId(1L,pageable)).isEqualTo(accounts);
+    }
+
+    @Test
+    void findByUserId() {
+        Account account1 = Account.builder()
+                .id(1L)
+                .build();
+        Account account2 = Account.builder()
+                .id(2L)
+                .build();
+        List<Account> accounts = Arrays.asList(account1,account2);
+        Mockito.when(accountRepository.findByUserId(1L)).thenReturn(accounts);
+
+        assertThat(accountService.findByUserId(1L)).isEqualTo(accounts);
+    }
+
+    @Test
+    void findAll() {
+        Account account1 = Account.builder()
+                .id(1L)
+                .build();
+        Account account2 = Account.builder()
+                .id(2L)
+                .build();
+        List<Account> accounts = Arrays.asList(account1,account2);
+        Mockito.when(accountRepository.findAll()).thenReturn(accounts);
+
+        assertThat(accountService.findAll()).isEqualTo(accounts);
+    }
+
+    @Test
+    void findById() {
+        Account account = Account.builder()
+                .id(1L)
+                .build();
+        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+
+        assertThat(accountService.findById(1L)).isEqualTo(Optional.of(account));
+    }
+
 }

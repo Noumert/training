@@ -10,12 +10,10 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Noumert on 13.08.2021.
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class TopUpDTO {
     Long accountId;
     @NotNull @Min(value = 1)

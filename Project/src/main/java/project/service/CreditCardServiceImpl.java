@@ -15,18 +15,14 @@ import java.util.Optional;
 public class CreditCardServiceImpl implements CreditCardService {
     @Autowired
     private CreditCardRepository creditCardRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AccountServiceImpl accountService;
 
     @Override
-    public void save(CreditCard creditCard) {
-        creditCardRepository.save(creditCard);
+    public CreditCard save(CreditCard creditCard) {
+        return creditCardRepository.save(creditCard);
     }
 
     @Override
-    public List<CreditCard> findUserCards(Long userId) {
+    public List<CreditCard> findUserCardsById(Long userId) {
         return creditCardRepository
                 .findByUserId(userId);
     }

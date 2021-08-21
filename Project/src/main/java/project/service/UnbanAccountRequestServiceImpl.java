@@ -18,12 +18,10 @@ import java.util.Optional;
 public class UnbanAccountRequestServiceImpl implements  UnbanAccountRequestService{
     @Autowired
     UnbanAccountRequestRepository unbanAccountRequestRepository;
-    @Autowired
-    AccountServiceImpl accountService;
 
     @Override
-    public void save(UnbanAccountRequest unbanAccountRequest) {
-        unbanAccountRequestRepository.save(unbanAccountRequest);
+    public UnbanAccountRequest save(UnbanAccountRequest unbanAccountRequest) {
+        return unbanAccountRequestRepository.save(unbanAccountRequest);
     }
 
     @Override
@@ -37,9 +35,9 @@ public class UnbanAccountRequestServiceImpl implements  UnbanAccountRequestServi
     }
 
     @Override
-    public void setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest) {
+    public UnbanAccountRequest setResolvedByRequest(boolean resolved, UnbanAccountRequest unbanAccountRequest) {
         unbanAccountRequest.setResolved(resolved);
-        save(unbanAccountRequest);
+        return save(unbanAccountRequest);
     }
 
     @Override

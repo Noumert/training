@@ -26,7 +26,7 @@ public class UserDtoConverterImpl implements EntityDtoConverter<User, UserDTO>{
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword()))
+                .password(user.getPassword())
                 .accountNonLocked(user.isAccountNonLocked())
                 .build();
     }
@@ -50,7 +50,7 @@ public class UserDtoConverterImpl implements EntityDtoConverter<User, UserDTO>{
     }
 
     @Override
-    public List<User> convertDtoListToPaymentList(List<UserDTO> userDTOS) {
+    public List<User> convertDtoListToEntityList(List<UserDTO> userDTOS) {
         return userDTOS.stream().map(this::convertDtoToEntity).collect(Collectors.toList());
     }
 

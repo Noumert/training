@@ -10,12 +10,10 @@ import javax.validation.constraints.Size;
 /**
  * Created by Noumert on 13.08.2021.
  */
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@Data
 public class UserDTO {
     private Long id;
     private boolean accountNonLocked;

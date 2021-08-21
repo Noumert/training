@@ -12,9 +12,9 @@ import java.util.Optional;
  */
 public interface CreditCardService {
 
-    void save(CreditCard creditCard);
+    CreditCard save(CreditCard creditCard);
 
-    List<CreditCard> findUserCards(Long userId);
+    List<CreditCard> findUserCardsById(Long userId);
 
     List<CreditCard> findAll();
 

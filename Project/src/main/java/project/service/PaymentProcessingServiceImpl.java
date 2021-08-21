@@ -17,7 +17,7 @@ public class PaymentProcessingServiceImpl implements PaymentProcessingService{
     @Autowired
     PaymentService paymentService;
     @Autowired
-    AccountServiceImpl accountService;
+    AccountService accountService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})
