@@ -27,9 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
     @Mock
-    AccountRepository accountRepository;
-    @Mock
-    CreditCardService creditCardService;
+    private AccountRepository accountRepository;
+
     @InjectMocks
     private AccountServiceImpl accountService;
 
