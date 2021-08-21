@@ -26,47 +26,34 @@ public class PaymentServiceImpl implements  PaymentService {
     @Autowired
     AccountServiceImpl accountService;
 
+    @Override
     public List<Payment> findAll() {
         return paymentRepository.findAll();
     }
 
+    @Override
     public void save(Payment payment) {
         paymentRepository.save(payment);
     }
 
-    //TODO in one query
-    @Transactional
-    public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable) {
-        return paymentRepository.findByAccountIdIn(accountService
-                .findByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()), pageable);
+    @Override
+    public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable) {
+        return paymentRepository.findPaymentsByUserId(userId, pageable);
+    }
+    
+    @Override
+    public List<Payment> findPaymentsByUserId(Long userId) {
+        return paymentRepository.findPaymentsByUserId(userId);
     }
 
-    //TODO in one query
-    @Transactional
-    public List<Payment> findUserPaymentsByUserId(Long userId) {
-        return paymentRepository.findByAccountIdIn(accountService
-                .findByUserId(userId)
-                .stream()
-                .map(Account::getId)
-                .collect(Collectors.toList()));
-    }
-
+    @Override
     public Optional<Payment> findById(Long paymentId) {
         return paymentRepository.findById(paymentId);
     }
 
-
+    @Override
     public void setStatusByPayment(StatusType status, Payment payment) {
         payment.setStatus(status);
         this.save(payment);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})
-    public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
-        setStatusByPayment(StatusType.SENT, payment);
-        accountService.decreaseMoneyById(payment.getMoney(), payment.getAccount().getId());
     }
 }

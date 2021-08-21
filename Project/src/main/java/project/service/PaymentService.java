@@ -22,14 +22,11 @@ public interface PaymentService {
 
         public void save(Payment payment);
 
-        public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable);
+        public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);
 
-        public List<Payment> findUserPaymentsByUserId(Long userId);
+        public List<Payment> findPaymentsByUserId(Long userId);
 
         public Optional<Payment> findById(Long paymentId);
 
         public void setStatusByPayment(StatusType status, Payment payment);
-
-        public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException;
-
 }
