@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.model.EntityDtoConverterOlolo;
 import project.dto.UserDTO;
 import project.entity.RoleType;
 import project.entity.User;
+import project.model.EntityDtoConverter;
 import project.service.UserService;
 
 import javax.validation.Valid;
@@ -24,6 +24,8 @@ public class RegistrationController {
     private ControllerUtils controllerUtils;
     @Autowired
     private UserService userService;
+    @Autowired
+    private EntityDtoConverter<User,UserDTO> userDtoConverter;
 
     @GetMapping(value = {"/registration"})
     public String showRegistrationForm(Model model, @RequestParam(required = false, defaultValue = "false") Boolean success,
@@ -46,7 +48,7 @@ public class RegistrationController {
             return "registration";
         } else {
             try {
-                User user = entityDtoConverter.convertUserDTOToUser(userDto);
+                User user = userDtoConverter.convertDtoToEntity(userDto);
                 user.setRole(RoleType.ROLE_USER);
                 user.setAccountNonLocked(true);
                 userService.save(user);

@@ -34,7 +34,7 @@ public interface AccountService {
 
     Account setBanByAccount(boolean ban, Account account);
 
-    Account addMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException;
+    Account addMoneyById(Long money, @NotNull Long accountId) throws NotFoundException;
 
     Account decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException;
 }

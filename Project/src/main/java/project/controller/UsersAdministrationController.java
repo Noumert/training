@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.User;
-import project.model.EntityDtoConverterOlolo;
+import project.model.EntityDtoConverter;
 import project.dto.UserDTO;
 import project.entity.RoleType;
 import project.service.UserService;
@@ -25,10 +25,12 @@ import java.util.List;
 public class UsersAdministrationController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private EntityDtoConverter<User,UserDTO> userDtoConverter;
 
     @RequestMapping()
     public String usersPage(Model model) {
-        List<UserDTO> userDTOS = entityDtoConverter.convertUserListToUserDTO(userService.findByRole(RoleType.ROLE_USER));
+        List<UserDTO> userDTOS = userDtoConverter.convertEntityListToDtoList(userService.findByRole(RoleType.ROLE_USER));
         model.addAttribute("users", userDTOS);
         return "admin/usersAdministration";
     }

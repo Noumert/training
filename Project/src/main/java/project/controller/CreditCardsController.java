@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.model.EntityDtoConverterOlolo;
+import project.dto.AccountDTO;
+import project.dto.CreditCardDTO;
 import project.entity.Account;
 import project.entity.CreditCard;
 import project.entity.MyUserDetails;
 import project.entity.User;
+import project.model.EntityDtoConverter;
 import project.service.AccountService;
 import project.service.CreditCardService;
 import project.service.UserService;
@@ -36,14 +38,20 @@ public class CreditCardsController {
     private UserService userService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    @Autowired
+    private EntityDtoConverter<CreditCard, CreditCardDTO> creditCardDtoConverter;
 
     @RequestMapping()
     public String creditCardsPage(Model model) {
-        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Long currentUserId =
+                ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            model.addAttribute("userCards", entityDtoConverter.convertCardsListToDTO(creditCardService.findUserCards(currentUserId)));
-            model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(
-                    accountService.findFreeUserAccountsByUserId(currentUserId)));
+            model.addAttribute("userCards", creditCardDtoConverter
+                    .convertEntityListToDtoList(creditCardService.findUserCards(currentUserId)));
+            model.addAttribute("accounts", accountDtoConverter
+                    .convertEntityListToDtoList(accountService.findFreeUserAccountsByUserId(currentUserId)));
         } catch (UnexpectedRollbackException e) {
             log.info("something went wrong with transaction findFreeUserAccountsByUserId");
             model.addAttribute("error", true);
@@ -53,10 +61,13 @@ public class CreditCardsController {
 
     @PostMapping("/add")
     public String addCreditCard(@NotNull Long accountId, Model model, RedirectAttributes redirectAttributes) {
-        Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        Long currentUserId =
+                ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         try {
-            User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such account"));
-            Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
+            User user = userService.findById(currentUserId)
+                    .orElseThrow(() -> new NotFoundException("no such account"));
+            Account account = accountService.findById(accountId)
+                    .orElseThrow(() -> new NotFoundException("no such account"));
             creditCardService.save(CreditCard.builder()
                     .account(account)
                     .cardNumber(UUID.randomUUID().toString())

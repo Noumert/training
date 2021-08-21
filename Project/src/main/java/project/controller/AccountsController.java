@@ -9,9 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dto.AccountDTO;
 import project.dto.TopUpDTO;
 import project.exceptions.BanException;
-import project.model.EntityDtoConverterOlolo;
+import project.model.EntityDtoConverter;
 import project.entity.Account;
 import project.entity.MyUserDetails;
 import project.entity.UnbanAccountRequest;
@@ -42,11 +43,13 @@ public class AccountsController {
     private MoneyFormatConverter moneyFormatConverter;
     @Autowired
     private ControllerUtils controllerUtils;
+    @Autowired
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
 
     @RequestMapping()
     public String accountsPage(Model model) {
         Long currentUserId = ((MyUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
-        model.addAttribute("accounts", entityDtoConverter.convertAccountsListToDTO(accountService.findByUserId(currentUserId)));
+        model.addAttribute("accounts", accountDtoConverter.convertEntityListToDtoList(accountService.findByUserId(currentUserId)));
 
         return "user/accounts";
     }
@@ -156,7 +159,7 @@ public class AccountsController {
         model.addAttribute("topUp", new TopUpDTO());
         try {
             Account account = accountService.findById(accountId).orElseThrow(() -> new NotFoundException("no such account"));
-            model.addAttribute("account", entityDtoConverter.convertAccountToAccountDTO(account));
+            model.addAttribute("account", accountDtoConverter.convertEntityToDto(account));
         } catch (NotFoundException e) {
             model.addAttribute("noAccountError", true);
             return "/user/accountTopUpResult";
@@ -174,7 +177,7 @@ public class AccountsController {
 
             try {
                 Account account = accountService.findById(topUpDTO.getAccountId()).orElseThrow(() -> new NotFoundException("no such account"));
-                model.addAttribute("account", entityDtoConverter.convertAccountToAccountDTO(account));
+                model.addAttribute("account", accountDtoConverter.convertEntityToDto(account));
             } catch (NotFoundException e) {
                 redirectAttributes.addAttribute("noAccountError", true);
                 return "redirect:/user/accounts/topUpResult";

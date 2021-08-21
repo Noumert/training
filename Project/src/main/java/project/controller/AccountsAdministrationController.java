@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.entity.Account;
-import project.model.EntityDtoConverterOlolo;
 import project.dto.UserAccountDTO;
+import project.entity.Account;
+import project.model.EntityDtoConverter;
 import project.service.AccountService;
-import project.service.AccountServiceImpl;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -25,12 +24,14 @@ import java.util.List;
 public class AccountsAdministrationController {
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private EntityDtoConverter<Account, UserAccountDTO> accountUserAccountDtoConverter;
 
 
     @RequestMapping()
     public String accountsPage(Model model) {
 
-        List<UserAccountDTO> userCardDTOS = entityDtoConverter.convertAccountsToDto(accountService.findAll());
+        List<UserAccountDTO> userCardDTOS = accountUserAccountDtoConverter.convertEntityListToDtoList(accountService.findAll());
         model.addAttribute("userAccounts", userCardDTOS);
 
         return "admin/accountsAdministration";

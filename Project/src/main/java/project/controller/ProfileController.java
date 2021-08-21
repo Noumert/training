@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dto.AccountDTO;
 import project.dto.PaymentDTO;
+import project.dto.UserDTO;
 import project.entity.Account;
 import project.entity.Payment;
 import project.entity.User;
 import project.exceptions.BanException;
 import project.exceptions.NotEnoughMoneyException;
-import project.model.EntityDtoConverterOlolo;
+import project.model.EntityDtoConverter;
 import project.entity.MyUserDetails;
 import project.service.*;
 
@@ -45,6 +46,12 @@ public class ProfileController {
     private AccountService accountService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    @Autowired
+    private EntityDtoConverter<User, UserDTO> userDtoConverter;
+    @Autowired
+    private EntityDtoConverter<Payment, PaymentDTO> paymentDtoConverter;
 
     @RequestMapping()
     public String paymentsPage(Model model,
@@ -64,7 +71,7 @@ public class ProfileController {
         try {
 
             User user = userService.findById(currentUserId).orElseThrow(() -> new NotFoundException("no such user"));
-            model.addAttribute("user", entityDtoConverter.convertUserToUserDTO(user));
+            model.addAttribute("user", userDtoConverter.convertEntityToDto(user));
 
             Pageable pageableAccount = PageRequest.of(
                     accPage - 1, PAGE_SIZE,
@@ -78,11 +85,8 @@ public class ProfileController {
             Page<Payment> payments = paymentService
                     .findUserPaymentsByUserId(currentUserId, pageablePayment);
 
-            Page<AccountDTO> accountDTOS = entityDtoConverter.convertAccountsListToDTO(accounts);
-            Page<PaymentDTO> paymentDTOS = entityDtoConverter.convertPaymentsListToDTO(payments);
-
-
-            System.out.println();
+            Page<AccountDTO> accountDTOS = accountDtoConverter.convertEntityPageToDtoPage(accounts);
+            Page<PaymentDTO> paymentDTOS = paymentDtoConverter.convertEntityPageToDtoPage(payments);
 
             model.addAttribute("accounts", accountDTOS);
             model.addAttribute("payments", paymentDTOS);
@@ -103,9 +107,7 @@ public class ProfileController {
                 model.addAttribute("paymentsPageNumbers", paymentsPageNumbers);
             }
 
-        } catch (UnexpectedRollbackException e) {
-            log.info("error in transaction when open profile");
-            model.addAttribute("error", true);
+
         } catch (NotFoundException e) {
             log.info("no user when open profile");
             model.addAttribute("noUserError", true);

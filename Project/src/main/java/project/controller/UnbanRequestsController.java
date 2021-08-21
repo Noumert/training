@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.entity.UnbanAccountRequest;
-import project.model.EntityDtoConverterOlolo;
 import project.dto.UnbanAccountRequestDTO;
+import project.model.EntityDtoConverter;
 import project.service.AccountService;
-import project.service.AccountServiceImpl;
 import project.service.UnbanAccountRequestService;
 
 import javax.validation.constraints.NotNull;
@@ -29,13 +28,15 @@ public class UnbanRequestsController {
     private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private EntityDtoConverter<UnbanAccountRequest,UnbanAccountRequestDTO> unbanAccountRequestDtoConverter;
 
 
     @RequestMapping()
     public String requestsPage(Model model) {
 
-        List<UnbanAccountRequestDTO> unbanAccountRequestDTOS = entityDtoConverter
-                .convertUnbanAccountRequestsToUnbanAccountRequestDTOs(unbanAccountRequestService.findByResolved(false));
+        List<UnbanAccountRequestDTO> unbanAccountRequestDTOS = unbanAccountRequestDtoConverter
+                .convertEntityListToDtoList(unbanAccountRequestService.findByResolved(false));
         log.info("{}", unbanAccountRequestDTOS);
         model.addAttribute("requests", unbanAccountRequestDTOS);
         return "admin/unbanRequests";

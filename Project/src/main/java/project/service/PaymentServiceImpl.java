@@ -34,6 +34,7 @@ public class PaymentServiceImpl implements  PaymentService {
         paymentRepository.save(payment);
     }
 
+    //TODO in one query
     @Transactional
     public Page<Payment> findUserPaymentsByUserId(Long userId, Pageable pageable) {
         return paymentRepository.findByAccountIdIn(accountService
@@ -43,6 +44,7 @@ public class PaymentServiceImpl implements  PaymentService {
                 .collect(Collectors.toList()), pageable);
     }
 
+    //TODO in one query
     @Transactional
     public List<Payment> findUserPaymentsByUserId(Long userId) {
         return paymentRepository.findByAccountIdIn(accountService

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class PaymentConverterImpl implements EntityDtoConverter<Payment, PaymentDTO> {
+public class PaymentDtoConverterImpl implements EntityDtoConverter<Payment, PaymentDTO> {
     private static final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
 
