@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 public class PaymentServiceImpl implements  PaymentService {
     @Autowired
     PaymentRepository paymentRepository;
-    @Autowired
-    AccountServiceImpl accountService;
 
     @Override
     public List<Payment> findAll() {

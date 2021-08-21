@@ -17,13 +17,11 @@ public interface UserService extends UserDetailsService {
 
     User save(User user);
 
-    Optional<User> findByUserLogin(String email);
-
     List<User> findAll();
 
     List<User> findByRole(RoleType roleType);
 
-    void setAccountNonLockedByUser(boolean accountNonLocked, User user);
+    User setAccountNonLockedByUser(boolean accountNonLocked, User user);
 
     Optional<User> findById(Long currentUserId);
 }

@@ -6,12 +6,10 @@ import lombok.*;
 /**
  * Created by Noumert on 13.08.2021.
  */
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@Data
 public class UserAccountDTO {
     private String email;
     private String firstName;

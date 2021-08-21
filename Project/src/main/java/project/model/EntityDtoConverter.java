@@ -25,7 +25,7 @@ public interface EntityDtoConverter<E, D> {
 
     List<D> convertEntityListToDtoList(List<E> entities);
 
-    List<E> convertDtoListToPaymentList(List<D> dtos);
+    List<E> convertDtoListToEntityList(List<D> dtos);
 
     Page<D> convertEntityPageToDtoPage(Page<E> entities);
 

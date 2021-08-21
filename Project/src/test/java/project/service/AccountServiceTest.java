@@ -169,7 +169,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    void findByIdSuccess() {
+    void findById() {
         Account account = Account.builder()
                 .id(1L)
                 .build();
@@ -178,10 +178,4 @@ public class AccountServiceTest {
         assertThat(accountService.findById(1L)).isEqualTo(Optional.of(account));
     }
 
-    @Test
-    void findByIdEmpty() {
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThat(accountService.findById(1L)).isEqualTo(Optional.empty());
-    }
 }

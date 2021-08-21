@@ -63,7 +63,7 @@ public class PaymentDtoConverterImpl implements EntityDtoConverter<Payment, Paym
     }
 
     @Override
-    public List<Payment> convertDtoListToPaymentList(List<PaymentDTO> paymentDTOS) {
+    public List<Payment> convertDtoListToEntityList(List<PaymentDTO> paymentDTOS) {
         return paymentDTOS.stream()
                 .map(this::convertDtoToEntity)
                 .collect(Collectors.toList());

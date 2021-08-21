@@ -1,15 +1,17 @@
 package project.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Noumert on 12.08.2021.
  */
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -29,4 +31,18 @@ public class Account {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Account account = (Account) o;
+
+        return Objects.equals(id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

@@ -14,7 +14,7 @@ public class UnbanAccountRequestProcessingServiceImpl implements UnbanAccountReq
     @Autowired
     UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    AccountServiceImpl accountService;
+    AccountService accountService;
 
     @Override
     @Transactional

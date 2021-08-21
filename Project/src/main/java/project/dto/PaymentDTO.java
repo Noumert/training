@@ -7,12 +7,10 @@ import java.time.LocalDateTime;
 /**
  * Created by Noumert on 13.08.2021.
  */
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class PaymentDTO {
     private Long id;
     private String paymentNumber;

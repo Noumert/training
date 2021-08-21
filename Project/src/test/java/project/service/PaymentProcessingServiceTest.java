@@ -50,8 +50,6 @@ class PaymentProcessingServiceTest {
         Mockito.when(paymentService.setStatusByPayment(StatusType.SENT,payment)).thenReturn(payment);
 
         assertThrows(NotEnoughMoneyException.class, () -> paymentProcessingService.sendPayment(payment));
-        verify(accountService,only()).decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
-        verify(paymentService,only()).setStatusByPayment(StatusType.SENT,payment);
     }
 
     @Test
@@ -63,7 +61,5 @@ class PaymentProcessingServiceTest {
         Mockito.when(paymentService.setStatusByPayment(StatusType.SENT,payment)).thenReturn(payment);
 
         assertThrows(NotFoundException.class, () -> paymentProcessingService.sendPayment(payment));
-        verify(accountService,only()).decreaseMoneyById(payment.getMoney(),payment.getAccount().getId());
-        verify(paymentService,only()).setStatusByPayment(StatusType.SENT,payment);
     }
 }

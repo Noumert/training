@@ -27,12 +27,6 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private CreditCardService creditCardService;
-    @Autowired
-    private UnbanAccountRequestService unbanAccountRequestService;
 
     @Override
     public Account save(Account account) {

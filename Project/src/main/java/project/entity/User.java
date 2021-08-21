@@ -1,9 +1,10 @@
 package project.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -34,4 +36,18 @@ public class User{
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

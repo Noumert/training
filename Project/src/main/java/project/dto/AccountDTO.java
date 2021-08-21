@@ -8,12 +8,10 @@ import javax.validation.constraints.NotNull;
 /**
  * Created by Noumert on 13.08.2021.
  */
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
+@Data
 public class AccountDTO {
     @NotNull
     private Long id;

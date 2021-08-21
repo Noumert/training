@@ -15,10 +15,6 @@ import java.util.Optional;
 public class CreditCardServiceImpl implements CreditCardService {
     @Autowired
     private CreditCardRepository creditCardRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AccountServiceImpl accountService;
 
     @Override
     public CreditCard save(CreditCard creditCard) {

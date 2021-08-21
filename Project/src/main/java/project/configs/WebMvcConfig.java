@@ -48,9 +48,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
-
-//    @Bean
-//    public MethodValidationPostProcessor methodValidationPostProcessor() {
-//        return new MethodValidationPostProcessor();
-//    }
 }

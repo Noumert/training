@@ -56,7 +56,7 @@ public class UnbanAccountRequestDtoConverterImpl implements
     }
 
     @Override
-    public List<UnbanAccountRequest> convertDtoListToPaymentList(List<UnbanAccountRequestDTO> unbanAccountRequestDTOS) {
+    public List<UnbanAccountRequest> convertDtoListToEntityList(List<UnbanAccountRequestDTO> unbanAccountRequestDTOS) {
         return unbanAccountRequestDTOS.stream()
                 .map(this::convertDtoToEntity)
                 .collect(Collectors.toList());

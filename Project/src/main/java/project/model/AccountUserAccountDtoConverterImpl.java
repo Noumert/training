@@ -54,7 +54,7 @@ public class AccountUserAccountDtoConverterImpl implements EntityDtoConverter<Ac
     }
 
     @Override
-    public List<Account> convertDtoListToPaymentList(List<UserAccountDTO> userAccountDTOS) {
+    public List<Account> convertDtoListToEntityList(List<UserAccountDTO> userAccountDTOS) {
         return userAccountDTOS.stream()
                 .map(this::convertDtoToEntity)
                 .collect(Collectors.toList());
