@@ -1,10 +1,7 @@
 package project.model;
 
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import project.controller.GlobalConstants;
-
-import java.util.Locale;
 
 /**
  * Created by Noumert on 21.08.2021.

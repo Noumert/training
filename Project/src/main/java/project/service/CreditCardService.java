@@ -1,8 +1,6 @@
 package project.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import project.entity.CreditCard;
-import project.repository.CreditCardRepository;
 
 import java.util.List;
 import java.util.Optional;

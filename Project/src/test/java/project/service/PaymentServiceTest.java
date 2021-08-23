@@ -10,10 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import project.entity.Account;
 import project.entity.Payment;
 import project.entity.StatusType;
-import project.repository.AccountRepository;
 import project.repository.PaymentRepository;
 
 import java.util.Arrays;

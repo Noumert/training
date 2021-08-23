@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import project.entity.User;
-import project.model.EntityDtoConverter;
 import project.dto.UserDTO;
 import project.entity.RoleType;
+import project.entity.User;
+import project.model.EntityDtoConverter;
 import project.service.UserService;
 
 import javax.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class UsersAdministrationController {
     @Autowired
     private UserService userService;
     @Autowired
-    private EntityDtoConverter<User,UserDTO> userDtoConverter;
+    private EntityDtoConverter<User, UserDTO> userDtoConverter;
 
     @RequestMapping()
     public String usersPage(Model model) {

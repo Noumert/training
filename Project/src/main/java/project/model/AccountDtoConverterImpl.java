@@ -3,8 +3,8 @@ package project.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
-import project.dto.AccountDTO;
 import project.entity.Account;
+import project.dto.AccountDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;

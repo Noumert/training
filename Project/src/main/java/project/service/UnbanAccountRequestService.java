@@ -1,7 +1,5 @@
 package project.service;
 
-import javassist.NotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 import project.entity.UnbanAccountRequest;
 
 import java.util.List;

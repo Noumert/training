@@ -22,6 +22,7 @@
         <module>collectionsTasks</module>
         <module>streamsTask</module>
         <module>Project</module>
+        <module>ProjectServlet</module>
     </modules>
 
     <properties>

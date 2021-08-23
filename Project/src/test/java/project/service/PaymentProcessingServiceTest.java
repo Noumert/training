@@ -11,7 +11,6 @@ import project.entity.Account;
 import project.entity.Payment;
 import project.entity.StatusType;
 import project.exceptions.NotEnoughMoneyException;
-import project.repository.AccountRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

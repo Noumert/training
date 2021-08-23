@@ -2,8 +2,6 @@ package project.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 /**
  * Created by Noumert on 13.08.2021.
  */

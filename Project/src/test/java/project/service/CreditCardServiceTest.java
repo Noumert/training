@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.entity.Account;
 import project.entity.CreditCard;
-import project.entity.User;
-import project.repository.AccountRepository;
 import project.repository.CreditCardRepository;
 
 import java.util.Arrays;

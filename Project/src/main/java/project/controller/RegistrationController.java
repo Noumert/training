@@ -28,7 +28,7 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
     @Autowired
-    private EntityDtoConverter<User,UserDTO> userDtoConverter;
+    private EntityDtoConverter<User, UserDTO> userDtoConverter;
 
     @GetMapping(value = {"/registration"})
     public String showRegistrationForm(Model model, @RequestParam(required = false, defaultValue = "false") Boolean success,

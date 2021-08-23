@@ -1,12 +1,11 @@
 package project.model;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import project.dto.*;
-import project.entity.*;
+import project.dto.UserAccountDTO;
+import project.entity.Account;
+import project.entity.User;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

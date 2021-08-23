@@ -1,7 +1,6 @@
 package project.service;
 
 import javassist.NotFoundException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import project.entity.Account;
-import project.entity.CreditCard;
 import project.exceptions.NotEnoughMoneyException;
 import project.repository.AccountRepository;
 

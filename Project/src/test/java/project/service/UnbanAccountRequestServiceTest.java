@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.entity.Payment;
-import project.entity.StatusType;
 import project.entity.UnbanAccountRequest;
-import project.repository.PaymentRepository;
 import project.repository.UnbanAccountRequestRepository;
 
 import java.util.Arrays;
