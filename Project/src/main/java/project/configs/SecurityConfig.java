@@ -19,12 +19,13 @@ import project.service.UserService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/registration","/login")
+                .antMatchers("/registration", "/login")
                 .access("not isAuthenticated()")
-                .antMatchers("/","/main")
+                .antMatchers("/", "/main")
                 .permitAll()
                 .antMatchers("/admin/**")
                 .hasRole("ADMIN")
@@ -46,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        auth.userDetailsService(userService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
