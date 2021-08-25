@@ -48,6 +48,6 @@ public class Payment {
 
     @Override
     public int hashCode() {
-        return 1545849159;
+        return Objects.hash(id);
     }
 }
