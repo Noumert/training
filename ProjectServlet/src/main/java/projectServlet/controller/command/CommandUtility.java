@@ -14,29 +14,28 @@ class CommandUtility {
     static void setUserRole(HttpServletRequest request,
                             RoleType role, String name) {
         HttpSession session = request.getSession();
-        ServletContext context = request.getServletContext();
-        context.setAttribute("userName", name);
+//        ServletContext context = request.getServletContext();
+        session.setAttribute("userName", name);
         session.setAttribute("role", role);
     }
 
     static void clearSessionAndContext(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        ServletContext context = request.getServletContext();
         HashSet<String> loggedUsers = (HashSet<String>) request.getSession().getServletContext()
                 .getAttribute("loggedUsers");
 
-        loggedUsers.remove((String)context.getAttribute("userName"));
+        loggedUsers.remove((String)session.getAttribute("userName"));
         request.getSession().getServletContext()
                 .setAttribute("loggedUsers", loggedUsers);
-        context.setAttribute("user",new User());
-        context.setAttribute("userName","Guest");
+        session.setAttribute("user",new User());
+        session.setAttribute("userName","Guest");
         session.setAttribute("role",RoleType.ROLE_GUEST);
     }
 
     static void setUser(HttpServletRequest request,
                             User user) {
-        ServletContext context = request.getServletContext();
-        context.setAttribute("user", user);
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
     }
 
     static boolean checkUserIsLogged(HttpServletRequest request, String userName){
