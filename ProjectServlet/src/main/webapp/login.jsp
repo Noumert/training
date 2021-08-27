@@ -1,26 +1,34 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<html>
-<head>
-    <title>Login in system</title>
+<%@ include file="/WEB-INF/templates/bundle.jspf" %>
 
-</head>
+<html>
+
+<%@ include file="/WEB-INF/templates/header.jspf" %>
+
 <body>
 
-        <h1>Вход в систему</h1><br/>
-        <form method="post" action="${pageContext.request.contextPath}/login">
+<%@ include file="/WEB-INF/templates/topPanelAdmin.jspf" %>
 
-            <p>email</p>
-            <input type="text" name="name" required><br/>
-            <p>password</p>
-            <input type="password" name="pass" required><br/><br/>
-            <p style="color:red"><%=(request.getParameter("error") == null) ? ""
-                                 : "username/password incorrect"%></p>
-            <input class="button" type="submit" value="Войти">
-        </form>
-        <br/>
-        <a href="${pageContext.request.contextPath}/registration">Registration</a>
+<h1><fmt:message key="label.login"/></h1><br/>
+<form method="post" action="${pageContext.request.contextPath}/login">
+
+    <p><fmt:message key="label.email"/></p>
+    <input type="text" name="name" required><br/>
+    <p><fmt:message key="label.password"/></p>
+    <input type="password" name="pass" required><br/><br/>
+    <p style="color:red"><%=(request.getParameter("error") == null) ? ""
+            : "username/password incorrect"%>
+    </p>
+    <c:if test="${param.error=='true'}">
+        <p style="color:red"><fmt:message key="label.login.error"/></p>
+    </c:if>
+    <button type="submit" class="btn btn-success"><fmt:message key="label.form.submit"/></button>
+</form>
+<br/>
+<a href="${pageContext.request.contextPath}/registration">Registration</a>
 
 </body>
 </html>

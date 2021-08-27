@@ -1,0 +1,2 @@
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="langs.messages"/>

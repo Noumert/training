@@ -30,10 +30,10 @@ public class AuthFilter implements Filter {
         if(session.getAttribute("role")==null){
             session.setAttribute("role",RoleType.ROLE_GUEST);
         }
-        if (session.getAttribute("role").equals(RoleType.ROLE_ADMIN.name())){
+        if (session.getAttribute("role").equals(RoleType.ROLE_ADMIN)){
 //            res.sendRedirect("/admin");
             System.out.println("ADMIN");
-        } else if(session.getAttribute("role").equals(RoleType.ROLE_USER.name())) {
+        } else if(session.getAttribute("role").equals(RoleType.ROLE_USER)) {
 //            res.sendRedirect("/user");
             System.out.println("USER");
         } else {
