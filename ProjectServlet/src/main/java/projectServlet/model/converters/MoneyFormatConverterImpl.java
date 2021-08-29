@@ -1,11 +1,11 @@
-package project.model;
+package projectServlet.model.converters;
 
-import org.springframework.stereotype.Component;
+
+import projectServlet.model.GlobalConstants;
 
 /**
  * Created by Noumert on 21.08.2021.
  */
-@Component
 public class MoneyFormatConverterImpl implements MoneyFormatConverter {
     /**
      * Convert String money in double format into long moneyValue

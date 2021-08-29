@@ -1,37 +1,34 @@
-package project.model;
+package projectServlet.model.converters;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
-import project.dto.UnbanAccountRequestDTO;
-import project.entity.Account;
-import project.entity.UnbanAccountRequest;
-import project.dto.AccountDTO;
+
+
+import projectServlet.model.dto.AccountDTO;
+import projectServlet.model.dto.UnbanAccountRequestDTO;
+import projectServlet.model.entity.Account;
+import projectServlet.model.entity.UnbanAccountRequest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
  * Created by Noumert on 21.08.2021.
  */
-@Component
 public class UnbanAccountRequestDtoConverterImpl implements
         EntityDtoConverter<UnbanAccountRequest, UnbanAccountRequestDTO> {
     private final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
-    @Autowired
-    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter = new AccountDtoConverterImpl();
 
     @Override
     public UnbanAccountRequestDTO convertEntityToDto(UnbanAccountRequest unbanAccountRequest) {
         return UnbanAccountRequestDTO
                 .builder()
                 .id(unbanAccountRequest.getId())
-                .dateTime(unbanAccountRequest.getDateTime().format(formatter.withLocale(LocaleContextHolder.getLocale())))
+                .dateTime(unbanAccountRequest.getDateTime().format(formatter.withLocale(Locale.getDefault())))
                 .resolved(unbanAccountRequest.isResolved())
                 .account(accountDtoConverter.convertEntityToDto(unbanAccountRequest.getAccount()))
                 .build();
@@ -42,7 +39,7 @@ public class UnbanAccountRequestDtoConverterImpl implements
         return UnbanAccountRequest
                 .builder()
                 .id(unbanAccountRequestDTO.getId())
-                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(), formatter.withLocale(LocaleContextHolder.getLocale())))
+                .dateTime(LocalDateTime.parse(unbanAccountRequestDTO.getDateTime(), formatter.withLocale(Locale.getDefault())))
                 .resolved(unbanAccountRequestDTO.isResolved())
                 .account(accountDtoConverter.convertDtoToEntity(unbanAccountRequestDTO.getAccount()))
                 .build();
@@ -62,13 +59,13 @@ public class UnbanAccountRequestDtoConverterImpl implements
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<UnbanAccountRequestDTO> convertEntityPageToDtoPage(Page<UnbanAccountRequest> unbanAccountRequests) {
-        return unbanAccountRequests.map(this::convertEntityToDto);
-    }
-
-    @Override
-    public Page<UnbanAccountRequest> convertDtoPageToEntityPage(Page<UnbanAccountRequestDTO> unbanAccountRequestDTOS) {
-        return unbanAccountRequestDTOS.map(this::convertDtoToEntity);
-    }
+//    @Override
+//    public Page<UnbanAccountRequestDTO> convertEntityPageToDtoPage(Page<UnbanAccountRequest> unbanAccountRequests) {
+//        return unbanAccountRequests.map(this::convertEntityToDto);
+//    }
+//
+//    @Override
+//    public Page<UnbanAccountRequest> convertDtoPageToEntityPage(Page<UnbanAccountRequestDTO> unbanAccountRequestDTOS) {
+//        return unbanAccountRequestDTOS.map(this::convertDtoToEntity);
+//    }
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 
 public class UserServiceImpl implements UserService {
-    DaoFactory daoFactory = DaoFactory.getInstance();
+    private DaoFactory daoFactory = DaoFactory.getInstance();
 
     @Override
     public Optional<User> authenticateUser(String username,String password)
@@ -35,14 +35,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-//        return userRepository.findAll();
-        return null;
+        try (UserDao dao = daoFactory.createUserDao()) {
+            return dao.findAll();
+        }
     }
 
     @Override
     public List<User> findByRole(RoleType roleType) {
-        return null;
-//        return userRepository.findByRole(roleType);
+        try (UserDao dao = daoFactory.createUserDao()) {
+            return dao.findByRole(roleType);
+        }
     }
 
     @Override
@@ -52,9 +54,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long currentUserId) {
-        return Optional.empty();
-//        return userRepository.findById(currentUserId);
+    public Optional<User> findById(Long userId) {
+        try (UserDao dao = daoFactory.createUserDao()) {
+            return dao.findById(userId);
+        }
     }
 }
 

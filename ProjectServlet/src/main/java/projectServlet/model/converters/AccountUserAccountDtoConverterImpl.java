@@ -1,11 +1,8 @@
-package project.model;
+package projectServlet.model.converters;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
-import project.entity.Account;
-import project.entity.User;
-import project.dto.UserAccountDTO;
+import projectServlet.model.dto.UserAccountDTO;
+import projectServlet.model.entity.Account;
+import projectServlet.model.entity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,10 +10,9 @@ import java.util.stream.Collectors;
 /**
  * Created by Noumert on 21.08.2021.
  */
-@Component
-public class AccountUserAccountDtoConverterImpl implements EntityDtoConverter<Account, UserAccountDTO>{
-    @Autowired
-    private MoneyFormatConverter moneyFormatConverter;
+
+public class AccountUserAccountDtoConverterImpl implements EntityDtoConverter<Account, UserAccountDTO> {
+    MoneyFormatConverter moneyFormatConverter = new MoneyFormatConverterImpl();
 
     @Override
     public UserAccountDTO convertEntityToDto(Account account) {
@@ -60,13 +56,13 @@ public class AccountUserAccountDtoConverterImpl implements EntityDtoConverter<Ac
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Page<UserAccountDTO> convertEntityPageToDtoPage(Page<Account> accounts) {
-        return null;
-    }
-
-    @Override
-    public Page<Account> convertDtoPageToEntityPage(Page<UserAccountDTO> userAccountDTOS) {
-        return null;
-    }
+//    @Override
+//    public Page<UserAccountDTO> convertEntityPageToDtoPage(Page<Account> accounts) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Page<Account> convertDtoPageToEntityPage(Page<UserAccountDTO> userAccountDTOS) {
+//        return null;
+//    }
 }

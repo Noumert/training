@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class Account {
 
-    private Long id;
+    private Long account_id;
     private String accountNumber;
     private String accountName;
     private Long money;
@@ -15,7 +15,7 @@ public class Account {
     private User user;
 
     public Account(Long id, String accountNumber, String accountName, Long money, boolean ban, User user) {
-        this.id = id;
+        this.account_id = id;
         this.accountNumber = accountNumber;
         this.accountName = accountName;
         this.money = money;
@@ -36,16 +36,16 @@ public class Account {
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
 
-        return Objects.equals(id, account.id);
+        return Objects.equals(account_id, account.account_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(account_id);
     }
 
     public Long getId() {
-        return this.id;
+        return this.account_id;
     }
 
     public String getAccountNumber() {
@@ -68,8 +68,8 @@ public class Account {
         return this.user;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long account_id) {
+        this.account_id = account_id;
     }
 
     public void setAccountNumber(String accountNumber) {
@@ -97,7 +97,7 @@ public class Account {
     }
 
     public static class AccountBuilder {
-        private Long id;
+        private Long account_id;
         private String accountNumber;
         private String accountName;
         private Long money;
@@ -108,7 +108,7 @@ public class Account {
         }
 
         public AccountBuilder id(Long id) {
-            this.id = id;
+            this.account_id = id;
             return this;
         }
 
@@ -138,11 +138,11 @@ public class Account {
         }
 
         public Account build() {
-            return new Account(id, accountNumber, accountName, money, ban, user);
+            return new Account(account_id, accountNumber, accountName, money, ban, user);
         }
 
         public String toString() {
-            return "Account.AccountBuilder(id=" + this.id + ", accountNumber=" + this.accountNumber + ", accountName=" + this.accountName + ", money=" + this.money + ", ban=" + this.ban + ", user=" + this.user + ")";
+            return "Account.AccountBuilder(id=" + this.account_id + ", accountNumber=" + this.accountNumber + ", accountName=" + this.accountName + ", money=" + this.money + ", ban=" + this.ban + ", user=" + this.user + ")";
         }
     }
 }

@@ -19,9 +19,6 @@
     <input type="text" name="name" required><br/>
     <p><fmt:message key="label.password"/></p>
     <input type="password" name="pass" required><br/><br/>
-    <p style="color:red"><%=(request.getParameter("error") == null) ? ""
-            : "username/password incorrect"%>
-    </p>
     <c:if test="${param.error=='true'}">
         <p style="color:red"><fmt:message key="label.login.error"/></p>
     </c:if>

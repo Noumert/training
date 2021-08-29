@@ -21,7 +21,7 @@ public class LoginCommand implements Command{
             return "/login.jsp";
         }
 
-        Optional<User> userOpt = userService.authenticateUser(name, PasswordEncoder.encode(pass));
+        Optional<User> userOpt = userService.authenticateUser(name, pass);
         User user;
 
         if(!userOpt.isPresent()){

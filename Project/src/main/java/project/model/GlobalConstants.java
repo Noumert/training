@@ -1,4 +1,4 @@
-package project.controller;
+package project.model;
 
 import java.util.Locale;
 

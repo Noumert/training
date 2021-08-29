@@ -12,9 +12,8 @@ public class UserMapper implements ObjectMapper<User> {
 
     @Override
     public User extractFromResultSet(ResultSet rs) throws SQLException {
-        User user = new User();
         return User.builder()
-                .id(rs.getLong("id"))
+                .id(rs.getLong("user_id"))
                 .accountNonLocked(rs.getBoolean("account_non_locked"))
                 .firstName(rs.getString("first_name"))
                 .lastName(rs.getString("last_name"))
@@ -24,10 +23,10 @@ public class UserMapper implements ObjectMapper<User> {
                 .build();
     }
 
-//    @Override
-//    public User makeUnique(Map<Long, User> cache,
-//                           User user) {
-//        cache.putIfAbsent(user.getId(), user);
-//        return cache.get(user.getId());
-//    }
+    @Override
+    public User makeUnique(Map<Long, User> cache,
+                           User user) {
+        cache.putIfAbsent(user.getId(), user);
+        return cache.get(user.getId());
+    }
 }

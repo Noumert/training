@@ -1,6 +1,5 @@
 package projectServlet.model.entity;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -9,13 +8,13 @@ import java.util.Objects;
  */
 
 public class UnbanAccountRequest {
-    private Long id;
+    private Long unban_account_request_id;
     private LocalDateTime dateTime;
     private boolean resolved;
     private Account account;
 
     public UnbanAccountRequest(Long id, LocalDateTime dateTime, boolean resolved, Account account) {
-        this.id = id;
+        this.unban_account_request_id = id;
         this.dateTime = dateTime;
         this.resolved = resolved;
         this.account = account;
@@ -34,16 +33,16 @@ public class UnbanAccountRequest {
         if (o == null || getClass() != o.getClass()) return false;
         UnbanAccountRequest that = (UnbanAccountRequest) o;
 
-        return Objects.equals(id, that.id);
+        return Objects.equals(unban_account_request_id, that.unban_account_request_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(unban_account_request_id);
     }
 
     public Long getId() {
-        return this.id;
+        return this.unban_account_request_id;
     }
 
     public LocalDateTime getDateTime() {
@@ -58,8 +57,8 @@ public class UnbanAccountRequest {
         return this.account;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long unban_account_request_id) {
+        this.unban_account_request_id = unban_account_request_id;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -79,7 +78,7 @@ public class UnbanAccountRequest {
     }
 
     public static class UnbanAccountRequestBuilder {
-        private Long id;
+        private Long unban_account_request_id;
         private LocalDateTime dateTime;
         private boolean resolved;
         private Account account;
@@ -88,7 +87,7 @@ public class UnbanAccountRequest {
         }
 
         public UnbanAccountRequestBuilder id(Long id) {
-            this.id = id;
+            this.unban_account_request_id = id;
             return this;
         }
 
@@ -108,11 +107,11 @@ public class UnbanAccountRequest {
         }
 
         public UnbanAccountRequest build() {
-            return new UnbanAccountRequest(id, dateTime, resolved, account);
+            return new UnbanAccountRequest(unban_account_request_id, dateTime, resolved, account);
         }
 
         public String toString() {
-            return "UnbanAccountRequest.UnbanAccountRequestBuilder(id=" + this.id + ", dateTime=" + this.dateTime + ", resolved=" + this.resolved + ", account=" + this.account + ")";
+            return "UnbanAccountRequest.UnbanAccountRequestBuilder(id=" + this.unban_account_request_id + ", dateTime=" + this.dateTime + ", resolved=" + this.resolved + ", account=" + this.account + ")";
         }
     }
 }
