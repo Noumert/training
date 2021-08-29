@@ -25,7 +25,7 @@
     <button type="submit" class="btn btn-success"><fmt:message key="label.form.submit"/></button>
 </form>
 <br/>
-<a href="${pageContext.request.contextPath}/registration">Registration</a>
+<a href="${pageContext.request.contextPath}/registration"><fmt:message key="label.registration"/></a>
 
 </body>
 </html>

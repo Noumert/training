@@ -19,6 +19,8 @@ public class Servlet extends HttpServlet {
 
         servletConfig.getServletContext()
                 .setAttribute("loggedUsers", new HashSet<String>());
+        commands.put("main",
+                new MainCommand());
         commands.put("user",
                 new UserCommand());
         commands.put("admin",
