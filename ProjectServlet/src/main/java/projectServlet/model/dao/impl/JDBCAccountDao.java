@@ -22,21 +22,36 @@ public class JDBCAccountDao implements AccountDao {
 
     @Override
     public void save(Account account) {
-        try (PreparedStatement ps = connection.prepareStatement
-                ("INSERT INTO account (account_id, account_name, account_number ," +
-                        " ban, money, user_id)" +
-                        " VALUES (? ,? ,?, ? ,? ,? )")) {
-            ps.setLong(1, account.getId());
-            ps.setString(2, account.getAccountName());
-            ps.setString(3, account.getAccountNumber());
-            ps.setBoolean(4, account.isBan());
-            ps.setLong(5, account.getMoney());
-            ps.setLong(6, account.getUser().getId());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (account.getId() == null) {
+            try (PreparedStatement ps = connection.prepareStatement
+                    ("INSERT INTO account (account_name, account_number ," +
+                            " ban, money, user_id)" +
+                            " VALUES (? ,? ,?, ? ,? )")) {
+                ps.setString(1, account.getAccountName());
+                ps.setString(2, account.getAccountNumber());
+                ps.setBoolean(3, account.isBan());
+                ps.setLong(4, account.getMoney());
+                ps.setLong(5, account.getUser().getId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try (PreparedStatement ps = connection.prepareStatement
+                    ("update account set account_name=?, account_number=? ," +
+                            " ban=?, money=?, user_id=? " +
+                            "where account_id=?")) {
+                ps.setString(1, account.getAccountName());
+                ps.setString(2, account.getAccountNumber());
+                ps.setBoolean(3, account.isBan());
+                ps.setLong(4, account.getMoney());
+                ps.setLong(5, account.getUser().getId());
+                ps.setLong(6, account.getId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
-
     }
 
     @Override

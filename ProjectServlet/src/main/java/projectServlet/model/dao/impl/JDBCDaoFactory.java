@@ -2,6 +2,7 @@ package projectServlet.model.dao.impl;
 
 import projectServlet.model.dao.AccountDao;
 import projectServlet.model.dao.DaoFactory;
+import projectServlet.model.dao.UnbanAccountRequestDao;
 import projectServlet.model.dao.UserDao;
 
 import javax.sql.DataSource;
@@ -20,6 +21,11 @@ public class JDBCDaoFactory extends DaoFactory {
     @Override
     public AccountDao createAccountDao() {
         return new JDBCAccountDao(getConnection());
+    }
+
+    @Override
+    public UnbanAccountRequestDao createUnbanAccountRequestDao() {
+        return new JDBCUnbanAccountRequestDao(getConnection());
     }
 
     private Connection getConnection(){

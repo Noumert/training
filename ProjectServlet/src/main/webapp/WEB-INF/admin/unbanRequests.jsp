@@ -1,23 +1,32 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="headerTemplete :: headerTempl">
-</head>
-<body>
-<div th:replace="headerTemplete :: panelTopMain">
-</div>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<span th:if="${error}">
-    <div class="alert alert-info"
-         th:utext="#{label.error}">
-            error
+<%@ include file="/WEB-INF/templates/bundle.jspf" %>
+
+<html>
+
+<%@ include file="/WEB-INF/templates/header.jspf" %>
+
+<body>
+
+<%@ include file="/WEB-INF/templates/topPanel.jspf" %>
+
+<c:if test="${param.error=='true'}">
+    <div class="alert alert-info">
+        <fmt:message key="label.error"/>
     </div>
-</span>
+</c:if>
+
+<h1>
+    <fmt:message key="label.users"/>
+</h1>
 
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
     <thead>
     <tr>
-        <th th:utext="#{label.date.time}"> Data and time </th>
-        <th th:utext="#{label.account.name}"> Account name </th>
+        <th> <fmt:message key="label.data.time"/> </th>
+        <th> <fmt:message key="label.account.name"/> </th>
     </tr>
     </thead>
     <tbody>

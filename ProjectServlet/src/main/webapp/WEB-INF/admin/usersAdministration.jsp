@@ -34,7 +34,7 @@
     <tbody>
     <c:if test="${empty users}">
         <tr>
-            <td colspan="4"><fmt:message key="label.no.accounts"/></td>
+            <td colspan="4"><fmt:message key="label.no.users"/></td>
         </tr>
     </c:if>
     <c:forEach var="user" items="${users}">
@@ -42,14 +42,15 @@
             <td><span> ${user.email}</span></td>
             <td><span> ${user.firstName}</span></td>
             <td><span> ${user.lastName}</span></td>
-            <td><span><c:choose>
-                <c:when test="${user.accountNonLocked}">
-                    <fmt:message key="label.unbanned.account"/>
-                </c:when>
-                <c:otherwise>
-                    <fmt:message key="label.banned.account"/>
-                </c:otherwise>
-            </c:choose>
+            <td><span>
+                <c:choose>
+                    <c:when test="${user.accountNonLocked}">
+                        <fmt:message key="label.unbanned.account"/>
+                    </c:when>
+                    <c:otherwise>
+                        <fmt:message key="label.banned.account"/>
+                    </c:otherwise>
+                </c:choose>
             </span>
             </td>
             <c:if test="${user.accountNonLocked}">

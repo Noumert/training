@@ -26,7 +26,7 @@ public class JDBCUserDao implements UserDao {
     @Override
     public Optional<User> findById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement
-                ("SELECT * FROM user WHERE id = ?")) {
+                ("SELECT * FROM user WHERE user_id = ?")) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             ObjectMapper<User> userMapper = new UserMapper();
@@ -81,18 +81,36 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public void save(User user) {
-        try (PreparedStatement ps = connection.prepareStatement
-                ("INSERT INTO user (account_non_locked, email, first_name , last_name, password, role)" +
-                        " VALUES (? ,? ,?, ? ,? ,? )")) {
-            ps.setBoolean(1, user.isAccountNonLocked());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getFirstName());
-            ps.setString(4, user.getLastName());
-            ps.setString(5, user.getPassword());
-            ps.setString(6, user.getRole().name());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if(user.getId()==null) {
+            try (PreparedStatement ps = connection.prepareStatement
+                    ("INSERT INTO user (account_non_locked, email, first_name , last_name, password, role)" +
+                            " VALUES (? ,? ,?, ? ,? ,? )")) {
+                ps.setBoolean(1, user.isAccountNonLocked());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getFirstName());
+                ps.setString(4, user.getLastName());
+                ps.setString(5, user.getPassword());
+                ps.setString(6, user.getRole().name());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        else {
+            try (PreparedStatement ps = connection.prepareStatement
+                    ("update user set account_non_locked=?, email=?, first_name=? , last_name=?, password=?, role=?" +
+                            " where user_id=?")) {
+                ps.setBoolean(1, user.isAccountNonLocked());
+                ps.setString(2, user.getEmail());
+                ps.setString(3, user.getFirstName());
+                ps.setString(4, user.getLastName());
+                ps.setString(5, user.getPassword());
+                ps.setString(6, user.getRole().name());
+                ps.setLong(7, user.getId());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -120,7 +138,6 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public User authenticateUser(String username, String password) {
-        Map<Long, User> users = new HashMap<>();
 
         try (PreparedStatement ps = connection.prepareStatement("select * from user where email = ?")) {
 
@@ -134,7 +151,7 @@ public class JDBCUserDao implements UserDao {
                         .extractFromResultSet(rs);
             }
 
-            if (user == null) {
+            if (user == null || !user.isAccountNonLocked()) {
                 return null;
             }
 
