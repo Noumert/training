@@ -12,11 +12,8 @@
     <title>Payment</title>
 </head>
     <body>
-        <h2>
-           Error Page<br/>
-            <i>Error <%= exception %></i>
-        </h2>
-
+    <h1 style="color:red">500 <fmt:message key="label.error"/></h1>
+    <a href="${pageContext.request.contextPath}/main"><fmt:message key="label.main"/></a>
 
        <br>
 

@@ -10,7 +10,7 @@
 
 <body>
 
-<%@ include file="/WEB-INF/templates/topPanelAdmin.jspf" %>
+<%@ include file="/WEB-INF/templates/topPanel.jspf" %>
 
 <h1><fmt:message key="label.login"/></h1><br/>
 <form method="post" action="${pageContext.request.contextPath}/login">

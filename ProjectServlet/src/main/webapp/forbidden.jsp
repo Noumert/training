@@ -10,7 +10,7 @@
 
 <body>
 
-<h1 style="color:red"><fmt:message key="label.forbidden"/></h1>
+<h1 style="color:red">403 <fmt:message key="label.forbidden"/></h1>
 <a href="${pageContext.request.contextPath}/main"><fmt:message key="label.main"/></a>
 
 </body>

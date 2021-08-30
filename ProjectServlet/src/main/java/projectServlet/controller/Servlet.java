@@ -1,6 +1,8 @@
 package projectServlet.controller;
 
 import projectServlet.controller.command.*;
+import projectServlet.controller.command.Admin.AdminCommand;
+import projectServlet.controller.command.User.UserCommand;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
