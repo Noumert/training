@@ -25,30 +25,34 @@
 <table style="border-spacing: 7px 11px; border-collapse: separate;">
     <thead>
     <tr>
-        <th> <fmt:message key="label.data.time"/> </th>
+        <th> <fmt:message key="label.date.time"/> </th>
         <th> <fmt:message key="label.account.name"/> </th>
     </tr>
     </thead>
     <tbody>
-    <tr th:if="${requests.empty}">
-        <td colspan="4" th:utext="#{label.no.accounts}"> no accounts </td>
+    <c:if test="${empty requests}">
+    <tr>
+        <td colspan="4"> <fmt:message key="label.no.requests"/> </td>
     </tr>
-    <tr th:each="request : ${requests}">
-        <td><span th:text="${request.dateTime}"> data and time </span></td>
-        <td><span th:text="${request.account.accountName}"> Account name </span></td>
+    </c:if>
+    <c:forEach var="req" items="${requests}">
+    <tr>
+        <td><span> ${req.dateTime} </span></td>
+        <td><span> ${req.account.accountName} </span></td>
         <td>
-            <form name="banForm" th:action="@{/admin/unbanRequests/refuse}" method="post">
-                <input type = "hidden" name = "requestId" th:value = "${request.id}" />
-                <button type="submit" th:text="#{label.refuse}"></button>
+            <form name="banForm" action="/admin/unbanRequests/refuse" method="post">
+                <input type = "hidden" name = "requestId" value = "${req.id}" />
+                <button type="submit"><fmt:message key="label.refuse"/></button>
             </form>
         </td>
         <td>
-            <form name="unbanForm" th:action="@{/admin/unbanRequests/unban}" method="post">
-                <input type = "hidden" name = "requestId" th:value = "${request.id}" />
-                <button type="submit" th:text="#{label.unban}"></button>
+            <form name="unbanForm" action="/admin/unbanRequests/unban" method="post">
+                <input type = "hidden" name = "requestId" value = "${req.id}" />
+                <button type="submit"><fmt:message key="label.unban"/></button>
             </form>
         </td>
     </tr>
+    </c:forEach>
     </tbody>
 </table>
 </body>

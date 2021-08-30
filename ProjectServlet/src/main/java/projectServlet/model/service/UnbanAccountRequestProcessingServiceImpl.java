@@ -15,6 +15,6 @@ public class UnbanAccountRequestProcessingServiceImpl implements UnbanAccountReq
     //TODO transactional
     public void unbanAndSetResolvedByRequest(boolean ban, boolean resolved, UnbanAccountRequest unbanAccountRequest) {
         unbanAccountRequestService.setResolvedByRequest(resolved, unbanAccountRequest);
-        accountService.setBanByAccount(ban, unbanAccountRequest.getAccount());
+        accountService.setBanByAccount(ban, accountService.findById(unbanAccountRequest.getAccount().getId()).get());
     }
 }

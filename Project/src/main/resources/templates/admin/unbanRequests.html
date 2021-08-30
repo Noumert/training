@@ -22,7 +22,7 @@
     </thead>
     <tbody>
     <tr th:if="${requests.empty}">
-        <td colspan="4" th:utext="#{label.no.accounts}"> no accounts </td>
+        <td colspan="4" th:utext="#{label.no.requests}"> no requests </td>
     </tr>
     <tr th:each="request : ${requests}">
         <td><span th:text="${request.dateTime}"> data and time </span></td>

@@ -21,6 +21,24 @@ public class Servlet extends HttpServlet {
 
         servletConfig.getServletContext()
                 .setAttribute("loggedUsers", new HashSet<String>());
+        commands.put("/admin/unbanRequests/refuse",
+                new AdminUnbanRequestsBanCommand());
+        commands.put("/admin/unbanRequests/unban",
+                new AdminUnbanRequestsUnbanCommand());
+        commands.put("/admin/unbanRequests",
+                new AdminUnbanRequestsCommand());
+        commands.put("/admin/accounts/ban",
+                new AdminAccountBanCommand());
+        commands.put("/admin/accounts/unban",
+                new AdminAccountUnbanCommand());
+        commands.put("/admin/accounts",
+                new AccountAdministratingCommand());
+        commands.put("/admin/users/ban",
+                new AdminUserBanCommand());
+        commands.put("/admin/users/unban",
+                new AdminUserUnbanCommand());
+        commands.put("/admin/users",
+                new UserAdministratingCommand());
         commands.put("/user/accounts/unbanResult",
                 new UnbanResultCommand());
         commands.put("/user/accounts/ban",
@@ -35,18 +53,6 @@ public class Servlet extends HttpServlet {
                 new UserAccountAddCommand());
         commands.put("/user/accounts",
                 new UserAccountCommand());
-        commands.put("/admin/accounts/ban",
-                new AdminAccountBanCommand());
-        commands.put("/admin/accounts/unban",
-                new AdminAccountUnbanCommand());
-        commands.put("/admin/accounts",
-                new AccountAdministratingCommand());
-        commands.put("/admin/users/ban",
-                new AdminUserBanCommand());
-        commands.put("/admin/users/unban",
-                new AdminUserUnbanCommand());
-        commands.put("/admin/users",
-                new UserAdministratingCommand());
         commands.put("/main",
                 new MainCommand());
         commands.put("/user",

@@ -21,6 +21,6 @@
     </div>
 </c:if>
 
-<a href="${pageContext.request.contextPath}/users/accounts"><fmt:message key="label.back.to.accounts.page"/></a>
+<a href="${pageContext.request.contextPath}/user/accounts"><fmt:message key="label.back.to.accounts.page"/></a>
 </body>
 </html>

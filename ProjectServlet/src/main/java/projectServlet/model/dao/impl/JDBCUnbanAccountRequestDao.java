@@ -24,7 +24,7 @@ public class JDBCUnbanAccountRequestDao implements UnbanAccountRequestDao {
     public void save(UnbanAccountRequest unbanAccountRequest) {
         if (unbanAccountRequest.getId() == null) {
             try (PreparedStatement ps = connection.prepareStatement
-                    ("INSERT INTO unban_account_request (date_time, resolved ,account_id)" +
+                    ("INSERT INTO unban_account_request (date_time, resolved ,account_id) " +
                             " VALUES (? ,? ,?)")) {
                 ps.setTimestamp(1, Timestamp.valueOf(unbanAccountRequest.getDateTime()));
                 ps.setBoolean(2,unbanAccountRequest.isResolved());
@@ -35,7 +35,7 @@ public class JDBCUnbanAccountRequestDao implements UnbanAccountRequestDao {
             }
         } else {
             try (PreparedStatement ps = connection.prepareStatement
-                    ("update unban_account_request set date_time=?, resolved=? ,account_id=?" +
+                    ("update unban_account_request set date_time=?, resolved=? ,account_id=? " +
                             "where unban_account_request_id=?")) {
                 ps.setTimestamp(1, Timestamp.valueOf(unbanAccountRequest.getDateTime()));
                 ps.setBoolean(2,unbanAccountRequest.isResolved());
