@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
  */
 @Component
 public class PaymentDtoConverterImpl implements EntityDtoConverter<Payment, PaymentDTO> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter
+    private final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
 
     @Autowired
-    EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
     @Autowired
-    MoneyFormatConverter moneyFormatConverter;
+    private MoneyFormatConverter moneyFormatConverter;
 
 
     @Override

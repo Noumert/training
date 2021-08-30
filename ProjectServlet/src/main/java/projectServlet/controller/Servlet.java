@@ -1,6 +1,9 @@
 package projectServlet.controller;
 
 import projectServlet.controller.command.*;
+import projectServlet.controller.command.Admin.AdminCommand;
+import projectServlet.controller.command.Admin.UserAdministratingCommand;
+import projectServlet.controller.command.User.UserCommand;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,17 +22,21 @@ public class Servlet extends HttpServlet {
 
         servletConfig.getServletContext()
                 .setAttribute("loggedUsers", new HashSet<String>());
-        commands.put("user",
+        commands.put("/admin/users",
+                new UserAdministratingCommand());
+        commands.put("/main",
+                new MainCommand());
+        commands.put("/user",
                 new UserCommand());
-        commands.put("admin",
+        commands.put("/admin",
                 new AdminCommand());
-        commands.put("registration",
+        commands.put("/registration",
                 new RegistrationCommand());
-        commands.put("logout",
+        commands.put("/logout",
                 new LogOutCommand());
-        commands.put("login",
+        commands.put("/login",
                 new LoginCommand());
-        commands.put("exception" , new ExceptionCommand());
+        commands.put("/exception" , new ExceptionCommand());
     }
 
     public void doGet(HttpServletRequest request,
@@ -47,7 +54,6 @@ public class Servlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getRequestURI();
-        path = path.replaceAll(".*/" , "");
         Command command = commands.getOrDefault(path ,
                 (r)->"/index.jsp");
         System.out.println(command.getClass().getName());

@@ -17,13 +17,8 @@
 <html>
     <%@ include file="/WEB-INF/templates/header.jspf" %>
 <body>
-<%@ include file="/WEB-INF/templates/topPanelAdmin.jspf" %>
+<%@ include file="/WEB-INF/templates/topPanel.jspf" %>
 <br>
 <span> <fmt:message key="label.greeting"/></span>
-<br>
-<a href="${pageContext.request.contextPath}/login"><fmt:message key="label.login"/></a>
-<br>
-<a href="${pageContext.request.contextPath}/registration"><fmt:message key="label.registration"/></a>
-<br>
 </body>
 </html>

@@ -24,26 +24,37 @@ public class AuthFilter implements Filter {
 
         HttpSession session = req.getSession();
         ServletContext context = request.getServletContext();
+        RoleType role = (RoleType) session.getAttribute("role");
+        if (role == null) {
+            session.setAttribute("role", RoleType.ROLE_GUEST);
+            role = (RoleType) session.getAttribute("role");
+        }
         System.out.println(session);
-        System.out.println(session.getAttribute("role"));
+        System.out.println(role);
         System.out.println(context.getAttribute("loggedUsers"));
-        if(session.getAttribute("role")==null){
-            session.setAttribute("role",RoleType.ROLE_GUEST);
-        }
-        if (session.getAttribute("role").equals(RoleType.ROLE_ADMIN)){
-//            res.sendRedirect("/admin");
-            System.out.println("ADMIN");
-        } else if(session.getAttribute("role").equals(RoleType.ROLE_USER)) {
-//            res.sendRedirect("/user");
-            System.out.println("USER");
-        } else {
-//            res.sendRedirect("/login");
-            System.out.println("GUEST");
-        }
-//        res.se
 
+        if (!isPermitted(role, req.getRequestURI())) {
+            req.getRequestDispatcher("/forbidden.jsp").forward(req, res);
+            return;
+        }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
+    }
+
+    private boolean isPermitted(RoleType role, String path) {
+        boolean permitted = false;
+        switch (role) {
+            case ROLE_ADMIN:
+                permitted = path.matches("(/admin.*)|(/logout)");
+                break;
+            case ROLE_USER:
+                permitted = path.matches("(/user.*)|(/logout)");
+                break;
+            case ROLE_GUEST:
+                permitted = path.matches("(/login)|(/registration)|(/logout)");
+                break;
+        }
+        return permitted | path.matches("(/)|(/main)");
     }
 
     @Override

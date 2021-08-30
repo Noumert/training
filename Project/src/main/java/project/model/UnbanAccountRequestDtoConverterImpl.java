@@ -21,10 +21,10 @@ import java.util.stream.Collectors;
 @Component
 public class UnbanAccountRequestDtoConverterImpl implements
         EntityDtoConverter<UnbanAccountRequest, UnbanAccountRequestDTO> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter
+    private final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
     @Autowired
-    EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    private EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
 
     @Override
     public UnbanAccountRequestDTO convertEntityToDto(UnbanAccountRequest unbanAccountRequest) {

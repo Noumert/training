@@ -1,0 +1,9 @@
+<div class="panelTop" id="topPanelUser">
+    <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
+        <a href="${pageContext.request.contextPath}?lang=en-US">ENG</a>
+        <a href="${pageContext.request.contextPath}?lang=uk-UA">UA</a>
+        <a href="/login"><fmt:message key="label.login"/></a>
+        <a href="/registration" ><fmt:message key="label.registration"/></a>
+        <a href="/main"><fmt:message key="label.main"/></a>
+    </div>
+</div>

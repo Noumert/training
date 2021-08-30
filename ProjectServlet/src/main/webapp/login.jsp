@@ -10,7 +10,7 @@
 
 <body>
 
-<%@ include file="/WEB-INF/templates/topPanelAdmin.jspf" %>
+<%@ include file="/WEB-INF/templates/topPanel.jspf" %>
 
 <h1><fmt:message key="label.login"/></h1><br/>
 <form method="post" action="${pageContext.request.contextPath}/login">
@@ -19,16 +19,13 @@
     <input type="text" name="name" required><br/>
     <p><fmt:message key="label.password"/></p>
     <input type="password" name="pass" required><br/><br/>
-    <p style="color:red"><%=(request.getParameter("error") == null) ? ""
-            : "username/password incorrect"%>
-    </p>
     <c:if test="${param.error=='true'}">
         <p style="color:red"><fmt:message key="label.login.error"/></p>
     </c:if>
     <button type="submit" class="btn btn-success"><fmt:message key="label.form.submit"/></button>
 </form>
 <br/>
-<a href="${pageContext.request.contextPath}/registration">Registration</a>
+<a href="${pageContext.request.contextPath}/registration"><fmt:message key="label.registration"/></a>
 
 </body>
 </html>

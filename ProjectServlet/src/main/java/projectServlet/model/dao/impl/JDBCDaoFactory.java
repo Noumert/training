@@ -1,5 +1,6 @@
 package projectServlet.model.dao.impl;
 
+import projectServlet.model.dao.AccountDao;
 import projectServlet.model.dao.DaoFactory;
 import projectServlet.model.dao.UserDao;
 
@@ -14,6 +15,11 @@ public class JDBCDaoFactory extends DaoFactory {
     @Override
     public UserDao createUserDao() {
         return new JDBCUserDao(getConnection());
+    }
+
+    @Override
+    public AccountDao createAccountDao() {
+        return new JDBCAccountDao(getConnection());
     }
 
     private Connection getConnection(){

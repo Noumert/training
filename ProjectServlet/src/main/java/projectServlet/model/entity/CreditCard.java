@@ -1,6 +1,5 @@
 package projectServlet.model.entity;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -9,14 +8,14 @@ import java.util.Objects;
  */
 
 public class CreditCard {
-    private Long id;
+    private Long credit_card_id;
     private String cardNumber;
     private LocalDate expirationDate;
     private User user;
     private Account account;
 
     public CreditCard(Long id, String cardNumber, LocalDate expirationDate, User user, Account account) {
-        this.id = id;
+        this.credit_card_id = id;
         this.cardNumber = cardNumber;
         this.expirationDate = expirationDate;
         this.user = user;
@@ -36,16 +35,16 @@ public class CreditCard {
         if (o == null || getClass() != o.getClass()) return false;
         CreditCard that = (CreditCard) o;
 
-        return Objects.equals(id, that.id);
+        return Objects.equals(credit_card_id, that.credit_card_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(credit_card_id);
     }
 
     public Long getId() {
-        return this.id;
+        return this.credit_card_id;
     }
 
     public String getCardNumber() {
@@ -64,8 +63,8 @@ public class CreditCard {
         return this.account;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long credit_card_id) {
+        this.credit_card_id = credit_card_id;
     }
 
     public void setCardNumber(String cardNumber) {
@@ -89,7 +88,7 @@ public class CreditCard {
     }
 
     public static class CreditCardBuilder {
-        private Long id;
+        private Long credit_card_id;
         private String cardNumber;
         private LocalDate expirationDate;
         private User user;
@@ -99,7 +98,7 @@ public class CreditCard {
         }
 
         public CreditCardBuilder id(Long id) {
-            this.id = id;
+            this.credit_card_id = id;
             return this;
         }
 
@@ -124,11 +123,11 @@ public class CreditCard {
         }
 
         public CreditCard build() {
-            return new CreditCard(id, cardNumber, expirationDate, user, account);
+            return new CreditCard(credit_card_id, cardNumber, expirationDate, user, account);
         }
 
         public String toString() {
-            return "CreditCard.CreditCardBuilder(id=" + this.id + ", cardNumber=" + this.cardNumber + ", expirationDate=" + this.expirationDate + ", user=" + this.user + ", account=" + this.account + ")";
+            return "CreditCard.CreditCardBuilder(id=" + this.credit_card_id + ", cardNumber=" + this.cardNumber + ", expirationDate=" + this.expirationDate + ", user=" + this.user + ", account=" + this.account + ")";
         }
     }
 }

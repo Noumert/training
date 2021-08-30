@@ -1,37 +1,25 @@
 package projectServlet.model.entity;
 
-import javax.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
  * Created by Noumert on 12.08.2021.
  */
-@Entity
 public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-    @Column(nullable = false)
+    private Long payment_id;
     private String paymentNumber;
-    @Column(nullable = false)
-    private Long money;
-    @Column(nullable = false)
+    private Long payment_money;
     private LocalDateTime dateTime;
-    @Column(nullable = false)
     private String recipient;
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private StatusType status;
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
     public Payment(Long id, String paymentNumber, Long money, LocalDateTime dateTime, String recipient, StatusType status, Account account) {
-        this.id = id;
+        this.payment_id = id;
         this.paymentNumber = paymentNumber;
-        this.money = money;
+        this.payment_money = money;
         this.dateTime = dateTime;
         this.recipient = recipient;
         this.status = status;
@@ -51,16 +39,16 @@ public class Payment {
         if (o == null || getClass() != o.getClass()) return false;
         Payment payment = (Payment) o;
 
-        return Objects.equals(id, payment.id);
+        return Objects.equals(payment_id, payment.payment_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(payment_id);
     }
 
     public Long getId() {
-        return this.id;
+        return this.payment_id;
     }
 
     public String getPaymentNumber() {
@@ -68,7 +56,7 @@ public class Payment {
     }
 
     public Long getMoney() {
-        return this.money;
+        return this.payment_money;
     }
 
     public LocalDateTime getDateTime() {
@@ -88,15 +76,15 @@ public class Payment {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.payment_id = id;
     }
 
     public void setPaymentNumber(String paymentNumber) {
         this.paymentNumber = paymentNumber;
     }
 
-    public void setMoney(Long money) {
-        this.money = money;
+    public void setMoney(Long payment_money) {
+        this.payment_money = payment_money;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
@@ -120,9 +108,9 @@ public class Payment {
     }
 
     public static class PaymentBuilder {
-        private Long id;
+        private Long payment_id;
         private String paymentNumber;
-        private Long money;
+        private Long payment_money;
         private LocalDateTime dateTime;
         private String recipient;
         private StatusType status;
@@ -132,7 +120,7 @@ public class Payment {
         }
 
         public PaymentBuilder id(Long id) {
-            this.id = id;
+            this.payment_id = id;
             return this;
         }
 
@@ -142,7 +130,7 @@ public class Payment {
         }
 
         public PaymentBuilder money(Long money) {
-            this.money = money;
+            this.payment_money = money;
             return this;
         }
 
@@ -167,11 +155,11 @@ public class Payment {
         }
 
         public Payment build() {
-            return new Payment(id, paymentNumber, money, dateTime, recipient, status, account);
+            return new Payment(payment_id, paymentNumber, payment_money, dateTime, recipient, status, account);
         }
 
         public String toString() {
-            return "Payment.PaymentBuilder(id=" + this.id + ", paymentNumber=" + this.paymentNumber + ", money=" + this.money + ", dateTime=" + this.dateTime + ", recipient=" + this.recipient + ", status=" + this.status + ", account=" + this.account + ")";
+            return "Payment.PaymentBuilder(id=" + this.payment_id + ", paymentNumber=" + this.paymentNumber + ", money=" + this.payment_money + ", dateTime=" + this.dateTime + ", recipient=" + this.recipient + ", status=" + this.status + ", account=" + this.account + ")";
         }
     }
 }

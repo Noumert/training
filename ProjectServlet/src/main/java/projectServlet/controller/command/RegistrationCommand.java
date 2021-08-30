@@ -26,7 +26,7 @@ public class RegistrationCommand implements Command {
         }
         try {
                      userService.save(User.builder()
-                    .password(PasswordEncoder.encode(password))
+                    .password(PasswordEncoder.passwordEncoder().encode(password))
                     .email(email)
                     .accountNonLocked(true)
                     .lastName(lastName)

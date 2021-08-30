@@ -1,7 +1,7 @@
 <div class="panelTop" id="topPanelAdmin">
     <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
-        <a href="${pageContext.request.requestURL}?lang=en-US">ENG</a>
-        <a href="${pageContext.request.requestURL}?lang=uk-UA">UA</a>
+        <a href="${pageContext.request.contextPath}?lang=en-US">ENG</a>
+        <a href="${pageContext.request.contextPath}?lang=uk-UA">UA</a>
         <a href="/admin/accounts"><fmt:message key="label.accounts"/></a>
         <a href="/admin/users" ><fmt:message key="label.users"/></a>
         <a href="/admin/unbanRequests"><fmt:message key="label.unban.requests"/></a>

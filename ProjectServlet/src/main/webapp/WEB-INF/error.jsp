@@ -6,17 +6,15 @@
 
 
 
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Payment</title>
-</head>
-    <body>
-        <h2>
-           Error Page<br/>
-            <i>Error <%= exception %></i>
-        </h2>
+<%@ include file="/WEB-INF/templates/bundle.jspf" %>
 
+<html>
+
+<%@ include file="/WEB-INF/templates/header.jspf" %>
+
+<body>
+    <h1 style="color:red">500 <fmt:message key="label.error"/></h1>
+    <a href="${pageContext.request.contextPath}/main"><fmt:message key="label.main"/></a>
 
        <br>
 

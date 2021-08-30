@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class AccountDtoConverterImpl implements EntityDtoConverter<Account, AccountDTO> {
     @Autowired
-    MoneyFormatConverter moneyFormatConverter;
+    private MoneyFormatConverter moneyFormatConverter;
 
     @Override
     public AccountDTO convertEntityToDto(Account account) {

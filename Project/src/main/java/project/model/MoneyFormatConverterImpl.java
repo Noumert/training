@@ -1,7 +1,6 @@
 package project.model;
 
 import org.springframework.stereotype.Component;
-import project.controller.GlobalConstants;
 
 /**
  * Created by Noumert on 21.08.2021.

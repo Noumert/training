@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<div th:replace="headerTemplete :: panelTopMain">
+</div>
+
+<span th:if="${error}">
+    <div class="alert alert-info"
+         th:utext="#{label.error}">
+            error
+    </div>
+</span>
+
+<h1 th:utext="#{label.accounts}">
+</h1>
+
+<table style="border-spacing: 7px 11px; border-collapse: separate;">
+  <thead>
+  <tr>
+    <th th:utext="#{label.email}"> email </th>
+    <th th:utext="#{label.first.name}"> first name </th>
+    <th th:utext="#{label.last.name}"> last name </th>
+    <th th:utext="#{label.account.number}"> Card number </th>
+    <th th:utext="#{label.account.name}"> Expiration date </th>
+    <th th:utext="#{label.money}"> Money </th>
+    <th th:utext="#{label.banned}"> Banned </th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:if="${userAccounts.empty}">
+    <td colspan="4" th:utext="#{label.no.accounts}"> no accounts </td>
+  </tr>
+  <tr th:each="userAccount : ${userAccounts}">
+    <td><span th:text="${userAccount.email}"> email </span></td>
+    <td><span th:text="${userAccount.firstName}"> First name </span></td>
+    <td><span th:text="${userAccount.lastName}"> Last name </span></td>
+    <td><span th:text="${userAccount.accountNumber}"> account number </span></td>
+    <td><span th:text="${userAccount.accountName}"> account name </span></td>
+    <td><span th:text="${userAccount.money}"> Money </span></td>
+    <td><span th:text="${userAccount.ban} ? #{label.banned.account} : #{label.unbanned.account}"> Enable </span></td>
+    <td th:if="${!userAccount.ban}">
+      <form name="banForm" th:action="@{/admin/accounts/ban}" method="post">
+        <input type = "hidden" name = "accountId" th:value = "${userAccount.id}" />
+        <button type="submit" th:text="#{label.ban}"></button>
+      </form>
+    </td>
+    <td th:if="${userAccount.ban}">
+      <form name="unbanForm" th:action="@{/admin/accounts/unban}" method="post">
+        <input type = "hidden" name = "accountId" th:value = "${userAccount.id}" />
+        <button type="submit" th:text="#{label.unban}"></button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

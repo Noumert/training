@@ -7,7 +7,7 @@ import java.util.Objects;
  * Created by Noumert on 12.08.2021.
  */
 public class User{
-    private Long id;
+    private Long user_id;
     private String firstName;
     private String lastName;
     private String email;
@@ -16,7 +16,7 @@ public class User{
     private RoleType role;
 
     public User(Long id, String firstName, String lastName, String email, String password, boolean accountNonLocked, RoleType role) {
-        this.id = id;
+        this.user_id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -38,16 +38,16 @@ public class User{
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
 
-        return Objects.equals(id, user.id);
+        return Objects.equals(user_id, user.user_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(user_id);
     }
 
     public Long getId() {
-        return this.id;
+        return this.user_id;
     }
 
     public String getFirstName() {
@@ -74,8 +74,8 @@ public class User{
         return this.role;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long user_id) {
+        this.user_id = user_id;
     }
 
     public void setFirstName(String firstName) {
@@ -107,7 +107,7 @@ public class User{
     }
 
     public static class UserBuilder {
-        private Long id;
+        private Long user_id;
         private String firstName;
         private String lastName;
         private String email;
@@ -119,7 +119,7 @@ public class User{
         }
 
         public UserBuilder id(Long id) {
-            this.id = id;
+            this.user_id = id;
             return this;
         }
 
@@ -154,11 +154,11 @@ public class User{
         }
 
         public User build() {
-            return new User(id, firstName, lastName, email, password, accountNonLocked, role);
+            return new User(user_id, firstName, lastName, email, password, accountNonLocked, role);
         }
 
         public String toString() {
-            return "User.UserBuilder(id=" + this.id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", email=" + this.email + ", password=" + this.password + ", accountNonLocked=" + this.accountNonLocked + ", role=" + this.role + ")";
+            return "User.UserBuilder(id=" + this.user_id + ", firstName=" + this.firstName + ", lastName=" + this.lastName + ", email=" + this.email + ", password=" + this.password + ", accountNonLocked=" + this.accountNonLocked + ", role=" + this.role + ")";
         }
     }
 }

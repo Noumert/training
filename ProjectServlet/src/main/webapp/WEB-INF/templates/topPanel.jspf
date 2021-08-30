@@ -1,0 +1,11 @@
+<div class="panelTop" id="panelTopMain">
+    <c:if test="${sessionScope.role=='ROLE_GUEST'}">
+        <%@ include file="/WEB-INF/templates/topPanelGuest.jspf" %>
+    </c:if>
+    <c:if test="${sessionScope.role=='ROLE_USER'}">
+        <%@ include file="/WEB-INF/templates/topPanelUser.jspf" %>
+    </c:if>
+    <c:if test="${sessionScope.role=='ROLE_ADMIN'}">
+        <%@ include file="/WEB-INF/templates/topPanelAdmin.jspf" %>
+    </c:if>
+</div>

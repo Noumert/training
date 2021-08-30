@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class CreditCardDtoConverterImpl implements EntityDtoConverter<CreditCard, CreditCardDTO> {
-    private static final DateTimeFormatter formatter = DateTimeFormatter
+    private final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDate(FormatStyle.MEDIUM);
 
     @Override

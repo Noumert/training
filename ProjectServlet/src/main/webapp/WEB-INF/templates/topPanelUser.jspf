@@ -1,0 +1,12 @@
+<div class="panelTop" id="topPanelUser">
+    <div style="text-align: right;padding:5px;margin:5px 0px;background:#ccc;">
+        <a href="${pageContext.request.contextPath}?lang=en-US">ENG</a>
+        <a href="${pageContext.request.contextPath}?lang=uk-UA">UA</a>
+        <a href="/user/profile"><fmt:message key="label.profile"/></a>
+        <a href="/user/accounts" ><fmt:message key="label.accounts"/></a>
+        <a href="/user/creditCards" ><fmt:message key="label.credit.cards"/></a>
+        <a href="/user/payments"><fmt:message key="label.payments"/></a>
+        <a href="/main"><fmt:message key="label.main"/></a>
+        <a href="/logout" role="menuitem"> <fmt:message key="label.logout"/></a>
+    </div>
+</div>
