@@ -39,6 +39,13 @@ public class Servlet extends HttpServlet {
                 new AdminUserUnbanCommand());
         commands.put("/admin/users",
                 new UserAdministratingCommand());
+
+        commands.put("/user/payments/prepare",
+                new UserPaymentsPrepareCommand());
+        commands.put("/user/payments/prepareResult",
+                new UserPaymentsPrepareResultCommand());
+        commands.put("/user/payments",
+                new UserPaymentsCommand());
         commands.put("/user/creditCards",
                 new UserCreditCardsCommand());
         commands.put("/user/creditCards/add",
