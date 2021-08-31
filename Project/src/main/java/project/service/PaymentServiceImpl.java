@@ -31,13 +31,13 @@ public class PaymentServiceImpl implements  PaymentService {
     }
 
     @Override
-    public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable) {
-        return paymentRepository.findPaymentsByUserId(userId, pageable);
+    public Page<Payment> findByUserId(Long userId, Pageable pageable) {
+        return paymentRepository.findByUserId(userId, pageable);
     }
 
     @Override
-    public List<Payment> findPaymentsByUserId(Long userId) {
-        return paymentRepository.findPaymentsByUserId(userId);
+    public List<Payment> findByUserId(Long userId) {
+        return paymentRepository.findByUserId(userId);
     }
 
     @Override

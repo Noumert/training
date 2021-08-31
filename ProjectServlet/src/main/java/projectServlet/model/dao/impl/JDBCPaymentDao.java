@@ -47,7 +47,7 @@ public class JDBCPaymentDao implements PaymentDao {
                 ps.setString(4, payment.getStatus().name());
                 ps.setLong(5, payment.getMoney());
                 ps.setLong(6, payment.getAccount().getId());
-                ps.setLong(6, payment.getId());
+                ps.setLong(7, payment.getId());
                 ps.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -131,7 +131,7 @@ public class JDBCPaymentDao implements PaymentDao {
     }
 
     @Override
-    public List<Payment> findPaymentsByUserId(Long userId) {
+    public List<Payment> findByUserId(Long userId) {
         Map<Long, Account> cache = new HashMap<>();
         List<Payment> payments = new ArrayList<>();
 

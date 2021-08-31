@@ -19,8 +19,8 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
 //    Page<Payment> findByAccountIdIn(List<Long> accountIds, Pageable pageable);
 
     @Query("select p from Payment p left join Account a on a.id=p.account.id where a.user.id = :userId")
-    List<Payment> findPaymentsByUserId(Long userId);
+    List<Payment> findByUserId(Long userId);
 
     @Query("select p from Payment p left join Account a on a.id=p.account.id where a.user.id = :userId")
-    Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);
+    Page<Payment> findByUserId(Long userId, Pageable pageable);
 }

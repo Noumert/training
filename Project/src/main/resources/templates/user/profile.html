@@ -96,7 +96,7 @@
         </span>
         </td>
         <td th:if="${payment.status} == 'PREPARED'">
-            <form name="unbanForm" th:action="@{/user/profile/send(payPage=${payPage},paySortBy=${paySortBy},
+            <form name="sendForm" th:action="@{/user/profile/send(payPage=${payPage},paySortBy=${paySortBy},
             payAsc=${payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}" method="post">
                 <input type="hidden" name="paymentId" th:value="${payment.id}"/>
                 <button type="submit" th:text="#{label.send}"></button>

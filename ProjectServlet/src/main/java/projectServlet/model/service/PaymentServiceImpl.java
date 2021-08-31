@@ -35,9 +35,9 @@ public class PaymentServiceImpl implements  PaymentService {
 //    }
 
     @Override
-    public List<Payment> findPaymentsByUserId(Long userId) {
+    public List<Payment> findByUserId(Long userId) {
         try (PaymentDao dao = daoFactory.createPaymentDao()) {
-            return dao.findPaymentsByUserId(userId);
+            return dao.findByUserId(userId);
         }
     }
 

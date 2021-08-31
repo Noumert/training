@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PaymentDao extends GenericDao<Payment>{
-    List<Payment> findPaymentsByUserId(Long userId);
+    List<Payment> findByUserId(Long userId);
 
 
 //    Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);

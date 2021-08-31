@@ -17,9 +17,9 @@ public interface PaymentService {
 
         Payment save(Payment payment);
 
-        Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);
+        Page<Payment> findByUserId(Long userId, Pageable pageable);
 
-        List<Payment> findPaymentsByUserId(Long userId);
+        List<Payment> findByUserId(Long userId);
 
         Optional<Payment> findById(Long paymentId);
 

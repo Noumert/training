@@ -40,7 +40,7 @@ public class UserPaymentsPrepareCommand implements Command {
                     .build());
             return "redirect:/user/payments/prepareResult?success=true";
         }catch (RuntimeException e){
-            System.err.println(e.getMessage());
+//            System.err.println(e.getMessage());
             return "redirect:/user/payments/prepareResult?error=true";
         }
     }

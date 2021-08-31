@@ -74,9 +74,9 @@ class PaymentServiceTest {
                 .id(2L)
                 .build();
         List<Payment> payments = Arrays.asList(payment1, payment2);
-        Mockito.when(paymentRepository.findPaymentsByUserId(1L)).thenReturn(payments);
+        Mockito.when(paymentRepository.findByUserId(1L)).thenReturn(payments);
 
-        assertThat(paymentService.findPaymentsByUserId(1L)).isEqualTo(payments);
+        assertThat(paymentService.findByUserId(1L)).isEqualTo(payments);
 
     }
 
@@ -90,9 +90,9 @@ class PaymentServiceTest {
                 .build();
         Page<Payment> payments = new PageImpl<>(Arrays.asList(payment1, payment2));
         Pageable pageable = PageRequest.of(1, 2);
-        Mockito.when(paymentRepository.findPaymentsByUserId(1L, pageable)).thenReturn(payments);
+        Mockito.when(paymentRepository.findByUserId(1L, pageable)).thenReturn(payments);
 
-        assertThat(paymentService.findPaymentsByUserId(1L, pageable)).isEqualTo(payments);
+        assertThat(paymentService.findByUserId(1L, pageable)).isEqualTo(payments);
     }
 
     @Test

@@ -20,7 +20,8 @@ public class Servlet extends HttpServlet {
     public void init(ServletConfig servletConfig) {
 
         servletConfig.getServletContext()
-                .setAttribute("loggedUsers", new HashSet<String>());
+                .setAttribute("loggedUsers",
+                        new HashSet<String>());
         commands.put("/admin/unbanRequests/refuse",
                 new AdminUnbanRequestsBanCommand());
         commands.put("/admin/unbanRequests/unban",
@@ -40,6 +41,12 @@ public class Servlet extends HttpServlet {
         commands.put("/admin/users",
                 new UserAdministratingCommand());
 
+        commands.put("/user/profile",
+                new UserProfileCommand());
+        commands.put("/user/profile/send",
+                new UserSendPaymentCommand());
+        commands.put("/user/profile/sendResult",
+                new UserSendPaymentResultCommand());
         commands.put("/user/payments/prepare",
                 new UserPaymentsPrepareCommand());
         commands.put("/user/payments/prepareResult",
@@ -76,7 +83,8 @@ public class Servlet extends HttpServlet {
                 new LogOutCommand());
         commands.put("/login",
                 new LoginCommand());
-        commands.put("/exception", new ExceptionCommand());
+        commands.put("/exception",
+                new ExceptionCommand());
     }
 
     public void doGet(HttpServletRequest request,

@@ -13,7 +13,7 @@ import javax.ws.rs.NotFoundException;
 
 public class PaymentProcessingServiceImpl implements PaymentProcessingService{
     private PaymentService paymentService = new PaymentServiceImpl();
-    private AccountService accountService;
+    private AccountService accountService = new AccountServiceImpl();
 
     @Override
 //    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})
