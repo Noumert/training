@@ -64,10 +64,10 @@ public class JDBCCreditCardDao implements CreditCardDao {
     @Override
     public Optional<CreditCard> findById(Long id) {
         try (PreparedStatement ps = connection.prepareStatement
-                ("select * from credit_card " +
-                        "left join account using (account_id) " +
-                        " left join user using (user_id) " +
-                        " where credit_card_id = ?")) {
+                ("select * from credit_card c " +
+                        "left join account a on a.account_id=c.account_id " +
+                        " left join user u on u.user_id=c.user_id " +
+                        " where c.credit_card_id = ?")) {
             ps.setLong(1, id);
             ResultSet rs = ps.executeQuery();
             ObjectMapper<Account> accountMapper = new AccountMapper();
@@ -96,9 +96,9 @@ public class JDBCCreditCardDao implements CreditCardDao {
         Map<Long, Account> cacheAccount = new HashMap<>();
         List<CreditCard> creditCards = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card " +
-                "left join account using (account_id) " +
-                " left join user using (user_id) ")) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card c " +
+                "left join account a on a.account_id=c.account_id " +
+                " left join user u on u.user_id=c.user_id ")) {
 
             ResultSet rs = ps.executeQuery();
 
@@ -148,10 +148,10 @@ public class JDBCCreditCardDao implements CreditCardDao {
         Map<Long, Account> cacheAccount = new HashMap<>();
         List<CreditCard> creditCards = new ArrayList<>();
 
-        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card " +
-                "left join account using (account_id) " +
-                " left join user using (user_id) " +
-                " where user_id=?")) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card c " +
+                "left join account a on a.account_id=c.account_id " +
+                " left join user u on u.user_id=c.user_id " +
+                " where c.user_id=?")) {
 
             ps.setLong(1,userId);
             ResultSet rs = ps.executeQuery();
@@ -179,10 +179,10 @@ public class JDBCCreditCardDao implements CreditCardDao {
 
     @Override
     public Optional<CreditCard> findByAccountId(Long accountId) {
-        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card " +
-                "left join account using (account_id) " +
-                " left join user using (user_id) " +
-                " where account_id=?")) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from credit_card c " +
+                "left join account a on a.account_id=c.account_id " +
+                " left join user u on u.user_id=c.user_id " +
+                " where a.account_id=?")) {
 
             ps.setLong(1,accountId);
             ResultSet rs = ps.executeQuery();

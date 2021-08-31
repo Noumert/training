@@ -39,8 +39,12 @@ public class Servlet extends HttpServlet {
                 new AdminUserUnbanCommand());
         commands.put("/admin/users",
                 new UserAdministratingCommand());
+        commands.put("/user/creditCards",
+                new UserCreditCardsCommand());
+        commands.put("/user/creditCards/add",
+                new UserCreditCardAddCommand());
         commands.put("/user/accounts/unbanResult",
-                new UnbanResultCommand());
+                new UserAccountUnbanResultCommand());
         commands.put("/user/accounts/ban",
                 new UserAccountBanCommand());
         commands.put("/user/accounts/unban",
@@ -52,7 +56,7 @@ public class Servlet extends HttpServlet {
         commands.put("/user/accounts/add",
                 new UserAccountAddCommand());
         commands.put("/user/accounts",
-                new UserAccountCommand());
+                new UserAccountsCommand());
         commands.put("/main",
                 new MainCommand());
         commands.put("/user",

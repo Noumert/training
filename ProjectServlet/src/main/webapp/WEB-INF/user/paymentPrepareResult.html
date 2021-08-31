@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+        error
+    </div>
+</span>
+<span th:if="${success}">
+    <div class="alert alert-info"
+         th:utext="#{label.operation.success}">
+        success
+    </div>
+</span>
+<span th:if="${noAccountError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.account.not.found.error}">
+        error
+    </div>
+</span>
+<span th:if="${duplicatedError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.some.unique.field.duplicated.error}">
+        error
+    </div>
+</span>
+<a href="/" th:href="@{/user/payments}" th:utext="#{label.back.to.payment.page}">Back to Payment Page</a>
+</body>
+</html>

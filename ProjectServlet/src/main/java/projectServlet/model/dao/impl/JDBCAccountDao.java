@@ -116,7 +116,7 @@ public class JDBCAccountDao implements AccountDao {
         try (PreparedStatement ps = connection.prepareStatement("select a.*,u.* from account a " +
                 "left join user u using (user_id) " +
                 "left join credit_card c using (account_id) " +
-                "where a.user_id = ? and c.account_id is null")) {
+                "where a.user_id = ? and c.credit_card_id is null")) {
 
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();

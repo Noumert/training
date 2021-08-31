@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="headerTemplete :: headerTempl">
+</head>
+<body>
+<span th:if="${error}">
+    <div class="alert alert-danger"
+         th:utext="#{label.error}">
+        error
+    </div>
+</span>
+<span th:if="${noMoneyError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.no.money.error}">
+        error
+    </div>
+</span>
+<span th:if="${noPaymentError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.payment.not.found.error}">
+        error
+    </div>
+</span>
+<span th:if="${banError}">
+    <div class="alert alert-danger"
+         th:utext="#{label.ban.error}">
+        error
+    </div>
+</span>
+<a href="/" th:href="@{/user/profile(payPage=${payPage},paySortBy=${paySortBy},payAsc=${payAsc},accPage=${accPage},accSortBy=${accSortBy},accAsc=${accAsc})}" th:utext="#{label.back.to.profile.page}">Back to profile</a>
+</body>
+</html>

@@ -31,10 +31,11 @@ public class LoginCommand implements Command {
         if (!userOpt.isPresent()) {
             return "redirect:/login?error=true";
         } else {
-            CommandUtility.setUser(request, userOpt.get());
+            User user = userOpt.get();
+            CommandUtility.setUser(request, user);
+            CommandUtility.setUserRole(request, user.getRole(), user.getEmail());
         }
-
-
+        
         return "redirect:/main";
     }
 
