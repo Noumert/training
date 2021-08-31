@@ -27,7 +27,7 @@
   </thead>
   <tbody>
   <tr th:if="${users.empty}">
-    <td colspan="4" th:utext="#{label.no.accounts}"> no accounts </td>
+    <td colspan="4" th:utext="#{label.no.users}"> no users </td>
   </tr>
   <tr th:each="user : ${users}">
     <td><span th:text="${user.email}"> email </span></td>

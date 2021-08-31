@@ -21,26 +21,22 @@ public class LoginCommand implements Command {
             return "/login.jsp";
         }
 
+        if (CommandUtility.checkUserIsLogged(request, name)) {
+            request.setAttribute("userLoggedError", true);
+            return "/WEB-INF/error.jsp";
+        }
+
         Optional<User> userOpt = userService.authenticateUser(name, pass);
-        User user;
 
         if (!userOpt.isPresent()) {
             return "redirect:/login?error=true";
         } else {
-            user = userOpt.get();
+            User user = userOpt.get();
             CommandUtility.setUser(request, user);
+            CommandUtility.setUserRole(request, user.getRole(), user.getEmail());
         }
-
-        if (CommandUtility.checkUserIsLogged(request, name)) {
-            return "/WEB-INF/error.jsp";
-        }
-
-        if (user.getRole().equals(RoleType.ROLE_ADMIN) || user.getRole().equals(RoleType.ROLE_USER)) {
-            CommandUtility.setUserRole(request, user.getRole(), name);
-            return "redirect:/main";
-        } else {
-            return "redirect:/login";
-        }
+        
+        return "redirect:/main";
     }
 
 }

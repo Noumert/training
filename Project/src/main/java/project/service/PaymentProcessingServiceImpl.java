@@ -15,9 +15,9 @@ import project.exceptions.NotEnoughMoneyException;
 @Service
 public class PaymentProcessingServiceImpl implements PaymentProcessingService{
     @Autowired
-    PaymentService paymentService;
+    private PaymentService paymentService;
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})

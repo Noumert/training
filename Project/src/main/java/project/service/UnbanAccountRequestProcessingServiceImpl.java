@@ -11,9 +11,9 @@ import project.entity.UnbanAccountRequest;
 @Service
 public class UnbanAccountRequestProcessingServiceImpl implements UnbanAccountRequestProcessingService {
     @Autowired
-    UnbanAccountRequestService unbanAccountRequestService;
+    private UnbanAccountRequestService unbanAccountRequestService;
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Override
     @Transactional

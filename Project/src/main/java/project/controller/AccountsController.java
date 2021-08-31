@@ -36,7 +36,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/user/accounts")
 public class AccountsController {
-    final static long START_MONEY_VALUE = 0L;
+    final long START_MONEY_VALUE = 0L;
     @Autowired
     private CreditCardService creditCardService;
     @Autowired

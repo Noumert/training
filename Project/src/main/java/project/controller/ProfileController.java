@@ -91,7 +91,7 @@ public class ProfileController {
             Page<Account> accounts = accountService
                     .findByUserId(currentUserId, pageableAccount);
             Page<Payment> payments = paymentService
-                    .findPaymentsByUserId(currentUserId, pageablePayment);
+                    .findByUserId(currentUserId, pageablePayment);
 
             Page<AccountDTO> accountDTOS = accountDtoConverter.convertEntityPageToDtoPage(accounts);
             Page<PaymentDTO> paymentDTOS = paymentDtoConverter.convertEntityPageToDtoPage(payments);
