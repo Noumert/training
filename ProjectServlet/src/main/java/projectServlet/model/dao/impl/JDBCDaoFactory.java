@@ -1,9 +1,6 @@
 package projectServlet.model.dao.impl;
 
-import projectServlet.model.dao.AccountDao;
-import projectServlet.model.dao.DaoFactory;
-import projectServlet.model.dao.UnbanAccountRequestDao;
-import projectServlet.model.dao.UserDao;
+import projectServlet.model.dao.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -26,6 +23,16 @@ public class JDBCDaoFactory extends DaoFactory {
     @Override
     public UnbanAccountRequestDao createUnbanAccountRequestDao() {
         return new JDBCUnbanAccountRequestDao(getConnection());
+    }
+
+    @Override
+    public PaymentDao createPaymentDao() {
+        return new JDBCPaymentDao(getConnection());
+    }
+
+    @Override
+    public CreditCardDao createCreditCardDao() {
+        return new JDBCCreditCardDao(getConnection());
     }
 
     private Connection getConnection(){

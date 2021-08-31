@@ -11,6 +11,10 @@ public abstract class DaoFactory {
 
     public abstract UnbanAccountRequestDao createUnbanAccountRequestDao();
 
+    public abstract PaymentDao createPaymentDao();
+
+    public abstract CreditCardDao createCreditCardDao();
+
     public static DaoFactory getInstance(){
         if( daoFactory == null ){
             synchronized (DaoFactory.class){

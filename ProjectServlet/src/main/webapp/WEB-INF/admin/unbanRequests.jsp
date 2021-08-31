@@ -19,7 +19,7 @@
 </c:if>
 
 <h1>
-    <fmt:message key="label.users"/>
+    <fmt:message key="label.unban.requests"/>
 </h1>
 
 <table style="border-spacing: 7px 11px; border-collapse: separate;">

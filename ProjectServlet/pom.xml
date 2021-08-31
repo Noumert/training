@@ -79,7 +79,11 @@
             <version>5.5.1</version>
             <scope>compile</scope>
         </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-core</artifactId>-->
+<!--            <version>7.0.47</version>-->
+<!--        </dependency>-->
     </dependencies>
     <build>
         <finalName>ProjectServlet</finalName>
