@@ -35,11 +35,14 @@
     </div>
     <div class="form-group">
         <p> <fmt:message key="label.money"/> </p>
-        <input type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name = "paymentMoney" required/>
+        <input type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name = "paymentMoney" value="${paymentMoney}" required/>
+        <c:if test="${moneyIncorrect}">
+            <p style="color:red"><fmt:message key="label.money.not.valid"/></p>
+        </c:if>
     </div>
     <div class="form-group">
         <p> <fmt:message key="label.recipient"/> </p>
-        <input type = "text" name = "recipient" required/>
+        <input type = "text" name = "recipient" value="${recipient}" required/>
     </div>
     <button type="submit"><fmt:message key="label.prepare"/></button>
 </form>
