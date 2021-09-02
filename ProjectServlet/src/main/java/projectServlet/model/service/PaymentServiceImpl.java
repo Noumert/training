@@ -1,7 +1,9 @@
 package projectServlet.model.service;
 
+import projectServlet.model.dao.AccountDao;
 import projectServlet.model.dao.DaoFactory;
 import projectServlet.model.dao.PaymentDao;
+import projectServlet.model.entity.Account;
 import projectServlet.model.entity.Payment;
 import projectServlet.model.entity.StatusType;
 
@@ -29,10 +31,12 @@ public class PaymentServiceImpl implements  PaymentService {
         }
     }
 
-//    @Override
-//    public Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable) {
-//        return paymentRepository.findPaymentsByUserId(userId, pageable);
-//    }
+    @Override
+    public List<Payment> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc) {
+        try (PaymentDao dao = daoFactory.createPaymentDao()) {
+            return dao.findByUserId(userId,page,pageSize,sortBy,asc);
+        }
+    }
 
     @Override
     public List<Payment> findByUserId(Long userId) {

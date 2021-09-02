@@ -2,7 +2,12 @@ package projectServlet.model.service;
 
 
 import projectServlet.exceptions.NotEnoughMoneyException;
+import projectServlet.model.dao.AccountDao;
+import projectServlet.model.dao.PaymentDao;
 import projectServlet.model.dao.impl.ConnectionPoolHolder;
+import projectServlet.model.dao.impl.JDBCAccountDao;
+import projectServlet.model.dao.impl.JDBCPaymentDao;
+import projectServlet.model.entity.Account;
 import projectServlet.model.entity.Payment;
 import projectServlet.model.entity.StatusType;
 
@@ -15,26 +20,30 @@ import java.sql.SQLException;
  */
 
 public class PaymentProcessingServiceImpl implements PaymentProcessingService{
-    private PaymentService paymentService = new PaymentServiceImpl();
-    private AccountService accountService = new AccountServiceImpl();
+
 
     @Override
-//    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {NotEnoughMoneyException.class})
-    //TODO transactional
     public void sendPayment(Payment payment) throws NotEnoughMoneyException, NotFoundException {
-//        try(Connection connection = ConnectionPoolHolder.getDataSource().getConnection()){
-//            connection.setAutoCommit(false);
-//            try{
-//                paymentService.setStatusByPayment(StatusType.SENT, payment);
-//                accountService.decreaseMoneyById(payment.getMoney(), payment.getAccount().getId());
-//                connection.commit();
-//            }catch (Throwable e){
-//                connection.rollback();
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException();
-//        }
-        paymentService.setStatusByPayment(StatusType.SENT, payment);
-        accountService.decreaseMoneyById(payment.getMoney(), payment.getAccount().getId());
+        try(Connection connection = ConnectionPoolHolder.getDataSource().getConnection();
+            PaymentDao paymentDao = new JDBCPaymentDao(connection);
+            AccountDao accountDao = new JDBCAccountDao(connection)){
+            connection.setAutoCommit(false);
+            try{
+                payment.setStatus(StatusType.SENT);
+                paymentDao.save(payment);
+                Account account = accountDao.findById(payment.getAccount().getId()).orElseThrow(NotFoundException::new);
+                account.setMoney(account.getMoney() - payment.getMoney());
+                if (account.getMoney() < 0) {
+                    throw new NotEnoughMoneyException("money can't be negative");
+                }
+                accountDao.save(account);
+                connection.commit();
+            }catch (SQLException | NotFoundException | NotEnoughMoneyException exception){
+                connection.rollback();
+                throw exception;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

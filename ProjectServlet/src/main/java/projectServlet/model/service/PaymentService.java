@@ -15,7 +15,7 @@ public interface PaymentService {
 
         void save(Payment payment);
 
-//        Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);
+        List<Payment> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc);
 
         List<Payment> findByUserId(Long userId);
 

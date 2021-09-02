@@ -17,7 +17,7 @@ public interface AccountService {
 
     List<Account> findByUserId(Long userId);
 
-//    Page<Account> findByUserId(Long userId, Pageable pageable);
+    List<Account> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc);
 
     List<Account> findAll();
 
@@ -28,6 +28,4 @@ public interface AccountService {
     void setBanByAccount(boolean ban, Account account);
 
     void addMoneyById(Long money, @NotNull Long accountId) throws NotFoundException;
-
-    void decreaseMoneyById(Long money, @NotNull Long accountId) throws NotEnoughMoneyException, NotFoundException;
 }
