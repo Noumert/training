@@ -6,8 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.entity.UnbanAccountRequest;
-import project.repository.UnbanAccountRequestRepository;
+import projectServlet.model.dao.DaoFactory;
+import projectServlet.model.dao.UnbanAccountRequestDao;
+import projectServlet.model.entity.UnbanAccountRequest;
+import projectServlet.model.entity.User;
+import projectServlet.model.service.UnbanAccountRequestServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +25,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class UnbanAccountRequestServiceTest {
     @Mock
-    private UnbanAccountRequestRepository unbanAccountRequestRepository;
+    private DaoFactory daoFactory;
+    @Mock
+    private UnbanAccountRequestDao unbanAccountRequestDao;
 
     @InjectMocks
     private UnbanAccountRequestServiceImpl unbanAccountRequestService;
@@ -32,9 +37,10 @@ class UnbanAccountRequestServiceTest {
         UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest.builder()
                 .id(1L)
                 .build();
-        Mockito.when(unbanAccountRequestRepository.save(any(UnbanAccountRequest.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doNothing().when(unbanAccountRequestDao).save(any(UnbanAccountRequest.class));
 
-        assertThat(unbanAccountRequestService.save(unbanAccountRequest)).isEqualTo(unbanAccountRequest);
+        assertDoesNotThrow(()->unbanAccountRequestService.save(unbanAccountRequest));
     }
 
     @Test
@@ -42,7 +48,8 @@ class UnbanAccountRequestServiceTest {
         UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest.builder()
                 .id(1L)
                 .build();
-        Mockito.when(unbanAccountRequestRepository.save(any(UnbanAccountRequest.class))).thenThrow(RuntimeException.class);
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doThrow(RuntimeException.class).when(unbanAccountRequestDao).save(any(UnbanAccountRequest.class));
 
         assertThrows(RuntimeException.class, () -> unbanAccountRequestService.save(unbanAccountRequest));
     }
@@ -56,7 +63,8 @@ class UnbanAccountRequestServiceTest {
                 .id(2L)
                 .build();
         List<UnbanAccountRequest> unbanAccountRequests = Arrays.asList(unbanAccountRequest1, unbanAccountRequest2);
-        Mockito.when(unbanAccountRequestRepository.findAll()).thenReturn(unbanAccountRequests);
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doReturn(unbanAccountRequests).when(unbanAccountRequestDao).findAll();
 
         assertThat(unbanAccountRequestService.findAll()).isEqualTo(unbanAccountRequests);
     }
@@ -72,7 +80,8 @@ class UnbanAccountRequestServiceTest {
                 .resolved(true)
                 .build();
         List<UnbanAccountRequest> unbanAccountRequests = Arrays.asList(unbanAccountRequest1, unbanAccountRequest2);
-        Mockito.when(unbanAccountRequestRepository.findByResolved(true)).thenReturn(unbanAccountRequests);
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doReturn(unbanAccountRequests).when(unbanAccountRequestDao).findByResolved(true);
 
         assertThat(unbanAccountRequestService.findByResolved(true)).isEqualTo(unbanAccountRequests);
     }
@@ -83,9 +92,10 @@ class UnbanAccountRequestServiceTest {
                 .id(1L)
                 .resolved(true)
                 .build();
-        Mockito.when(unbanAccountRequestRepository.save(any(UnbanAccountRequest.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doNothing().when(unbanAccountRequestDao).save(any(UnbanAccountRequest.class));
 
-        assertThat(unbanAccountRequestService.setResolvedByRequest(true,unbanAccountRequest).isResolved()).isEqualTo(true);
+        assertDoesNotThrow(()->unbanAccountRequestService.save(unbanAccountRequest));
     }
 
     @Test
@@ -93,7 +103,8 @@ class UnbanAccountRequestServiceTest {
         UnbanAccountRequest unbanAccountRequest = UnbanAccountRequest.builder()
                 .id(1L)
                 .build();
-        Mockito.when(unbanAccountRequestRepository.findById(1L)).thenReturn(Optional.of(unbanAccountRequest));
+        Mockito.when(daoFactory.createUnbanAccountRequestDao()).thenReturn(unbanAccountRequestDao);
+        Mockito.doReturn(Optional.of(unbanAccountRequest)).when(unbanAccountRequestDao).findById(1L);
 
         assertThat(unbanAccountRequestService.findById(1L)).isEqualTo(Optional.of(unbanAccountRequest));
     }

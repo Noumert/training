@@ -1,25 +1,26 @@
 package project.service;
 
-import javassist.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import project.entity.Account;
-import project.exceptions.NotEnoughMoneyException;
-import project.repository.AccountRepository;
+import projectServlet.model.dao.AccountDao;
+import projectServlet.model.dao.CreditCardDao;
+import projectServlet.model.dao.DaoFactory;
+import projectServlet.model.entity.Account;
+import projectServlet.model.entity.CreditCard;
+import projectServlet.model.entity.Payment;
+import projectServlet.model.service.AccountServiceImpl;
 
+import javax.ws.rs.NotFoundException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +28,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
     @Mock
-    private AccountRepository accountRepository;
+    private DaoFactory daoFactory;
+    @Mock
+    private AccountDao accountDao;
 
     @InjectMocks
     private AccountServiceImpl accountService;
@@ -37,9 +40,10 @@ public class AccountServiceTest {
         Account account = Account.builder()
                 .id(1L)
                 .build();
-        Mockito.when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doNothing().when(accountDao).save(any(Account.class));
 
-        assertThat(accountService.save(account)).isEqualTo(account);
+        assertDoesNotThrow(()->accountService.save(account));
     }
 
     @Test
@@ -47,9 +51,10 @@ public class AccountServiceTest {
         Account account = Account.builder()
                 .id(1L)
                 .build();
-        Mockito.when(accountRepository.save(any(Account.class))).thenThrow(RuntimeException.class);
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doThrow(RuntimeException.class).when(accountDao).save(any(Account.class));
 
-        assertThrows(RuntimeException.class, () -> accountService.save(account));
+        assertThrows(RuntimeException.class,()->accountService.save(account));
     }
 
     @Test
@@ -61,7 +66,8 @@ public class AccountServiceTest {
                 .id(2L)
                 .build();
         List<Account> accounts = Arrays.asList(account1, account2);
-        Mockito.when(accountRepository.findFreeUserAccountsByUserId(1L)).thenReturn(accounts);
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doReturn(accounts).when(accountDao).findFreeUserAccountsByUserId(1L);
 
         assertThat(accountService.findFreeUserAccountsByUserId(1L)).isEqualTo(accounts);
     }
@@ -71,58 +77,10 @@ public class AccountServiceTest {
         Account account = Account.builder()
                 .id(1L)
                 .build();
-        Mockito.when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doNothing().when(accountDao).save(any(Account.class));
 
-        assertThat(accountService.setBanByAccount(true,account).isBan()).isEqualTo(true);
-    }
-
-    @Test
-    public void addMoneyByIdSuccess() throws NotFoundException {
-        Account account = Account.builder()
-                .id(1L)
-                .money(0L)
-                .build();
-        Mockito.when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-
-        assertThat(accountService.addMoneyById(300L,1L).getMoney()).isEqualTo(300L);
-    }
-
-    @Test
-    public void addMoneyByIdNotFoundException() {
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> accountService.addMoneyById(300L,1L));
-    }
-
-    @Test
-    public void decreaseMoneyByIdSuccess() throws NotEnoughMoneyException, NotFoundException {
-        Account account = Account.builder()
-                .id(1L)
-                .money(300L)
-                .build();
-        Mockito.when(accountRepository.save(any(Account.class))).then(returnsFirstArg());
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-
-        assertThat(accountService.decreaseMoneyById(300L,1L).getMoney()).isEqualTo(0L);
-    }
-
-    @Test
-    public void decreaseMoneyByIdNotEnoughMoneyException(){
-        Account account = Account.builder()
-                .id(1L)
-                .money(200L)
-                .build();
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
-
-        assertThrows(NotEnoughMoneyException.class, () -> accountService.decreaseMoneyById(300L,1L));
-    }
-
-    @Test
-    public void decreaseMoneyByIdNotFoundException(){
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(NotFoundException.class, () -> accountService.decreaseMoneyById(100L,1L));
+        assertDoesNotThrow(()->accountService.setBanByAccount(true,account));
     }
 
     @Test
@@ -133,11 +91,11 @@ public class AccountServiceTest {
         Account account2 = Account.builder()
                 .id(2L)
                 .build();
-        Page<Account> accounts = new PageImpl<>(Arrays.asList(account1,account2));
-        Pageable pageable = PageRequest.of(1,2);
-        Mockito.when(accountRepository.findByUserId(1L,pageable)).thenReturn(accounts);
+        List<Account> accounts = Arrays.asList(account1, account2);
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doReturn(accounts).when(accountDao).findByUserId(1L,1,5,"payment_id",true);
 
-        assertThat(accountService.findByUserId(1L,pageable)).isEqualTo(accounts);
+        assertThat(accountService.findByUserId(1L,1,5,"payment_id",true)).isEqualTo(accounts);
     }
 
     @Test
@@ -148,8 +106,9 @@ public class AccountServiceTest {
         Account account2 = Account.builder()
                 .id(2L)
                 .build();
-        List<Account> accounts = Arrays.asList(account1,account2);
-        Mockito.when(accountRepository.findByUserId(1L)).thenReturn(accounts);
+        List<Account> accounts = Arrays.asList(account1, account2);
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doReturn(accounts).when(accountDao).findByUserId(1L);
 
         assertThat(accountService.findByUserId(1L)).isEqualTo(accounts);
     }
@@ -163,7 +122,8 @@ public class AccountServiceTest {
                 .id(2L)
                 .build();
         List<Account> accounts = Arrays.asList(account1,account2);
-        Mockito.when(accountRepository.findAll()).thenReturn(accounts);
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doReturn(accounts).when(accountDao).findAll();
 
         assertThat(accountService.findAll()).isEqualTo(accounts);
     }
@@ -173,7 +133,8 @@ public class AccountServiceTest {
         Account account = Account.builder()
                 .id(1L)
                 .build();
-        Mockito.when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+        Mockito.when(daoFactory.createAccountDao()).thenReturn(accountDao);
+        Mockito.doReturn(Optional.of(account)).when(accountDao).findById(1L);
 
         assertThat(accountService.findById(1L)).isEqualTo(Optional.of(account));
     }

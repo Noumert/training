@@ -2,24 +2,24 @@ package project.model;
 
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.i18n.LocaleContextHolder;
-import project.dto.CreditCardDTO;
-import project.entity.CreditCard;
+import projectServlet.model.converters.CreditCardDtoConverterImpl;
+import projectServlet.model.converters.EntityDtoConverter;
+import projectServlet.model.dto.CreditCardDTO;
+import projectServlet.model.entity.CreditCard;
+
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
 class CreditCardDtoConverterImplTest {
     private static final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDate(FormatStyle.MEDIUM);
-    @Autowired
-    EntityDtoConverter<CreditCard, CreditCardDTO> creditCardDtoConverter;
+
+    EntityDtoConverter<CreditCard, CreditCardDTO> creditCardDtoConverter = new CreditCardDtoConverterImpl();
 
     @Test
     void convertEntityToDto() {
@@ -31,7 +31,7 @@ class CreditCardDtoConverterImplTest {
                 .build();
         CreditCardDTO creditCardDTO = creditCardDtoConverter.convertEntityToDto(creditCard);
         assertThat(creditCardDTO.getId()).isEqualTo(1L);
-        assertThat(creditCardDTO.getExpirationDate()).isEqualTo(localDate.format(formatter.withLocale(LocaleContextHolder.getLocale())));
+        assertThat(creditCardDTO.getExpirationDate()).isEqualTo(localDate.format(formatter.withLocale(Locale.getDefault())));
         assertThat(creditCardDTO.getCardNumber()).isEqualTo("1234-sdf-1234");
     }
 
@@ -41,7 +41,7 @@ class CreditCardDtoConverterImplTest {
         CreditCardDTO creditCardDTO = CreditCardDTO.builder()
                 .id(1L)
                 .expirationDate(localDate
-                        .format(formatter.withLocale(LocaleContextHolder.getLocale())))
+                        .format(formatter.withLocale(Locale.getDefault())))
                 .cardNumber("1234-sdf-1234")
                 .build();
         CreditCard creditCard = creditCardDtoConverter.convertDtoToEntity(creditCardDTO);

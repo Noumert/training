@@ -6,13 +6,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import project.entity.Payment;
-import project.entity.StatusType;
-import project.repository.PaymentRepository;
+import projectServlet.model.dao.DaoFactory;
+import projectServlet.model.dao.PaymentDao;
+import projectServlet.model.entity.Payment;
+import projectServlet.model.entity.StatusType;
+import projectServlet.model.entity.User;
+import projectServlet.model.service.PaymentServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +26,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
     @Mock
-    private PaymentRepository paymentRepository;
+    private PaymentDao paymentDao;
+    @Mock
+    private DaoFactory daoFactory;
 
     @InjectMocks
     private PaymentServiceImpl paymentService;
@@ -37,9 +38,10 @@ class PaymentServiceTest {
         Payment payment = Payment.builder()
                 .id(1L)
                 .build();
-        Mockito.when(paymentRepository.save(any(Payment.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doNothing().when(paymentDao).save(any(Payment.class));
 
-        assertThat(paymentService.save(payment)).isEqualTo(payment);
+        assertDoesNotThrow(()->paymentService.save(payment));
     }
 
     @Test
@@ -47,7 +49,8 @@ class PaymentServiceTest {
         Payment payment = Payment.builder()
                 .id(1L)
                 .build();
-        Mockito.when(paymentRepository.save(any(Payment.class))).thenThrow(RuntimeException.class);
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doThrow(RuntimeException.class).when(paymentDao).save(any(Payment.class));
 
         assertThrows(RuntimeException.class, () -> paymentService.save(payment));
     }
@@ -61,7 +64,8 @@ class PaymentServiceTest {
                 .id(2L)
                 .build();
         List<Payment> payments = Arrays.asList(payment1, payment2);
-        Mockito.when(paymentRepository.findAll()).thenReturn(payments);
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doReturn(payments).when(paymentDao).findAll();
 
         assertThat(paymentService.findAll()).isEqualTo(payments);
     }
@@ -75,7 +79,8 @@ class PaymentServiceTest {
                 .id(2L)
                 .build();
         List<Payment> payments = Arrays.asList(payment1, payment2);
-        Mockito.when(paymentRepository.findByUserId(1L)).thenReturn(payments);
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doReturn(payments).when(paymentDao).findByUserId(1L);
 
         assertThat(paymentService.findByUserId(1L)).isEqualTo(payments);
 
@@ -89,11 +94,11 @@ class PaymentServiceTest {
         Payment payment2 = Payment.builder()
                 .id(2L)
                 .build();
-        Page<Payment> payments = new PageImpl<>(Arrays.asList(payment1, payment2));
-        Pageable pageable = PageRequest.of(1, 2);
-        Mockito.when(paymentRepository.findByUserId(1L, pageable)).thenReturn(payments);
+        List<Payment> payments = Arrays.asList(payment1, payment2);
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doReturn(payments).when(paymentDao).findByUserId(1L,1,5,"payment_id",true);
 
-        assertThat(paymentService.findByUserId(1L, pageable)).isEqualTo(payments);
+        assertThat(paymentService.findByUserId(1L,1,5,"payment_id",true)).isEqualTo(payments);
     }
 
     @Test
@@ -101,7 +106,8 @@ class PaymentServiceTest {
         Payment payment = Payment.builder()
                 .id(1L)
                 .build();
-        Mockito.when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doReturn(Optional.of(payment)).when(paymentDao).findById(1L);
 
         assertThat(paymentService.findById(1L)).isEqualTo(Optional.of(payment));
     }
@@ -111,8 +117,9 @@ class PaymentServiceTest {
         Payment payment = Payment.builder()
                 .id(1L)
                 .build();
-        Mockito.when(paymentRepository.save(any(Payment.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createPaymentDao()).thenReturn(paymentDao);
+        Mockito.doNothing().when(paymentDao).save(payment);
 
-        assertThat(paymentService.setStatusByPayment(StatusType.SENT,payment).getStatus()).isEqualTo(StatusType.SENT);
+        assertDoesNotThrow(()->paymentService.setStatusByPayment(StatusType.SENT,payment));
     }
 }

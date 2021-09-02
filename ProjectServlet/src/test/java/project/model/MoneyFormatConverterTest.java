@@ -3,17 +3,14 @@ package project.model;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import projectServlet.model.converters.MoneyFormatConverter;
+import projectServlet.model.converters.MoneyFormatConverterImpl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MoneyFormatConverterTest {
-    private MoneyFormatConverter moneyFormatConverter;
-
-    @BeforeAll
-    public void init() {
-        moneyFormatConverter = new MoneyFormatConverterImpl();
-    }
+    private final MoneyFormatConverter moneyFormatConverter = new MoneyFormatConverterImpl();
 
     @Test
     void getMoneyValueCorrectString() {

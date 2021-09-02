@@ -1,29 +1,29 @@
 package project.model;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.i18n.LocaleContextHolder;
-import project.dto.AccountDTO;
-import project.dto.PaymentDTO;
-import project.entity.Account;
-import project.entity.Payment;
-import project.entity.StatusType;
+import projectServlet.model.converters.AccountDtoConverterImpl;
+import projectServlet.model.converters.EntityDtoConverter;
+import projectServlet.model.converters.PaymentDtoConverterImpl;
+import projectServlet.model.dto.AccountDTO;
+import projectServlet.model.dto.PaymentDTO;
+import projectServlet.model.entity.Account;
+import projectServlet.model.entity.Payment;
+import projectServlet.model.entity.StatusType;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+
 class PaymentDtoConverterImplTest {
     private static final DateTimeFormatter formatter = DateTimeFormatter
             .ofLocalizedDateTime(FormatStyle.MEDIUM);
-    @Autowired
-    EntityDtoConverter<Payment, PaymentDTO> paymentDtoConverter;
-    @Autowired
-    EntityDtoConverter<Account, AccountDTO> accountDtoConverter;
+    EntityDtoConverter<Payment, PaymentDTO> paymentDtoConverter = new PaymentDtoConverterImpl();
+    EntityDtoConverter<Account, AccountDTO> accountDtoConverter = new AccountDtoConverterImpl();
 
 
 
@@ -53,7 +53,7 @@ class PaymentDtoConverterImplTest {
         assertThat(paymentDTO.getId()).isEqualTo(1L);
         assertThat(paymentDTO.getStatus()).isEqualTo(StatusType.PREPARED.name());
         assertThat(paymentDTO.getRecipient()).isEqualTo("Test");
-        assertThat(paymentDTO.getDateTime()).isEqualTo(localDateTime.format(formatter.withLocale(LocaleContextHolder.getLocale())));
+        assertThat(paymentDTO.getDateTime()).isEqualTo(localDateTime.format(formatter.withLocale(Locale.getDefault())));
         assertThat(paymentDTO.getPaymentNumber()).isEqualTo("123-234as-1234");
         assertThat(paymentDTO.getAccount()).isEqualTo(accountDtoConverter.convertEntityToDto(account));
         assertThat(paymentDTO.getMoney()).isEqualTo("3.00");
@@ -74,7 +74,7 @@ class PaymentDtoConverterImplTest {
                 .builder()
                 .account(accountDTO)
                 .id(1L)
-                .dateTime(localDateTime.format(formatter.withLocale(LocaleContextHolder.getLocale())))
+                .dateTime(localDateTime.format(formatter.withLocale(Locale.getDefault())))
                 .paymentNumber("123-234as-1234")
                 .recipient("Test")
                 .status(StatusType.PREPARED.name())
