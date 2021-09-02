@@ -1,5 +1,11 @@
 package projectServlet.controller;
 
+
+;
+
+import org.apache.logging.log4j.LogManager;
+
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.*;
 import projectServlet.controller.command.Admin.*;
 import projectServlet.controller.command.User.*;
@@ -16,6 +22,7 @@ import java.util.Map;
 
 public class Servlet extends HttpServlet {
     private Map<String, Command> commands = new HashMap<>();
+    private final Logger logger = LogManager.getLogger(this.getClass());
 
     public void init(ServletConfig servletConfig) {
 
@@ -73,10 +80,6 @@ public class Servlet extends HttpServlet {
                 new UserAccountsCommand());
         commands.put("/main",
                 new MainCommand());
-        commands.put("/user",
-                new UserCommand());
-        commands.put("/admin",
-                new AdminCommand());
         commands.put("/registration",
                 new RegistrationCommand());
         commands.put("/logout",
@@ -85,13 +88,14 @@ public class Servlet extends HttpServlet {
                 new LoginCommand());
         commands.put("/exception",
                 new ExceptionCommand());
+
+        logger.info("Mapping configured");
     }
 
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
             throws IOException, ServletException {
         processRequest(request, response);
-        //response.getWriter().print("Hello from servlet");
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -104,9 +108,8 @@ public class Servlet extends HttpServlet {
         String path = request.getRequestURI();
         Command command = commands.getOrDefault(path,
                 (r) -> "/index.jsp");
-        System.out.println(command.getClass().getName());
+        logger.info("class called {}",command.getClass().getName());
         String page = command.execute(request);
-        //request.getRequestDispatcher(page).forward(request,response);
         if (page.contains("redirect:")) {
             response.sendRedirect(page.replace("redirect:", ""));
         } else {

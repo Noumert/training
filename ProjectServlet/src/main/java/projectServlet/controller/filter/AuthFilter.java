@@ -1,5 +1,7 @@
 package projectServlet.controller.filter;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.model.entity.RoleType;
 
 import javax.servlet.*;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 public class AuthFilter implements Filter {
+    private final Logger logger = LogManager.getLogger(this.getClass());
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -29,11 +33,15 @@ public class AuthFilter implements Filter {
             session.setAttribute("role", RoleType.ROLE_GUEST);
             role = (RoleType) session.getAttribute("role");
         }
-        System.out.println(session);
-        System.out.println(role);
-        System.out.println(context.getAttribute("loggedUsers"));
 
-        if (!isPermitted(role, req.getRequestURI())) {
+        logger.info("Request session is {}",session);
+        logger.info("Role: {}",role);
+        logger.info("Logged users {}",context.getAttribute("loggedUsers"));
+
+        String requestURI = req.getRequestURI();
+
+        if (!isPermitted(role, requestURI)) {
+            logger.info("Access forbidden path:{}",requestURI);
             req.getRequestDispatcher("/forbidden.jsp").forward(req, res);
             return;
         }

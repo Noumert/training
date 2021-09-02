@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.entity.Account;
 import projectServlet.model.entity.CreditCard;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 public class UserCreditCardAddCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final AccountService accountService = new AccountServiceImpl();
     private final CreditCardService creditCardService = new CreditCardServiceImpl();
 
@@ -30,6 +33,7 @@ public class UserCreditCardAddCommand implements Command {
                 .user(user)
                 .build()
         );
+        logger.info("credit card successfully added");
         return "redirect:/user/creditCards";
     }
 }

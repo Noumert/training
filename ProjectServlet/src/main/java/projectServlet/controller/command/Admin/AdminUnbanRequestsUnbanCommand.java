@@ -1,5 +1,7 @@
 package projectServlet.controller.command.Admin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.entity.UnbanAccountRequest;
 import projectServlet.model.service.UnbanAccountRequestProcessingService;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotFoundException;
 
 public class AdminUnbanRequestsUnbanCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final UnbanAccountRequestProcessingService unbanAccountRequestProcessingService
             = new UnbanAccountRequestProcessingServiceImpl();
     private final UnbanAccountRequestService unbanAccountRequestService = new UnbanAccountRequestServiceImpl();
@@ -22,6 +25,7 @@ public class AdminUnbanRequestsUnbanCommand implements Command {
         final boolean resolved = true;
         final boolean ban = false;
         unbanAccountRequestProcessingService.unbanAndSetResolvedByRequest(ban,resolved,unbanAccountRequest);
+        logger.info("account unbanned successfully");
         return "redirect:/admin/unbanRequests";
     }
 }

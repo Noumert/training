@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.GlobalConstants;
 import projectServlet.model.converters.AccountDtoConverterImpl;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotFoundException;
 
 public class UserAccountTopUp implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final MoneyFormatConverter moneyFormatConverter = new MoneyFormatConverterImpl();
     private final AccountService accountService = new AccountServiceImpl();
     private final EntityDtoConverter<Account, AccountDTO> accountDtoConverter= new AccountDtoConverterImpl();
@@ -28,6 +31,7 @@ public class UserAccountTopUp implements Command {
 
         if (accountIdString == null || accountIdString.equals("")
                 || moneyString == null || moneyString.equals("")) {
+            logger.info("load top up form");
             return "redirect:/user/accounts/topUpForm";
         }
 
@@ -46,11 +50,12 @@ public class UserAccountTopUp implements Command {
             request.setAttribute("account",
                     accountDtoConverter
                             .convertEntityToDto(accountService.findById(accountId).orElseThrow(NotFoundException::new)));
+            logger.info("load top up form with validation errors");
             return "/WEB-INF/user/accountTopUpForm.jsp";
         }
 
         accountService.addMoneyById(moneyValue,accountId);
-
+        logger.info("successfully top up account");
         return "redirect:/user/accounts";
     }
 }

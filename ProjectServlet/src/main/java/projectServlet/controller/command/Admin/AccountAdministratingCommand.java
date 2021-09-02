@@ -1,5 +1,7 @@
 package projectServlet.controller.command.Admin;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.converters.AccountUserAccountDtoConverterImpl;
 import projectServlet.model.converters.EntityDtoConverter;
@@ -14,6 +16,7 @@ import projectServlet.model.service.UserServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 
 public class AccountAdministratingCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     AccountService accountService = new AccountServiceImpl();
     EntityDtoConverter<Account, UserAccountDTO> accountUserAccountDtoConverter= new AccountUserAccountDtoConverterImpl();
 
@@ -22,6 +25,7 @@ public class AccountAdministratingCommand implements Command {
         request.setAttribute("userAccounts",
                 accountUserAccountDtoConverter
                 .convertEntityListToDtoList(accountService.findAll()));
+        logger.info("Account administrating page");
         return "/WEB-INF/admin/accountsAdministration.jsp";
     }
 }

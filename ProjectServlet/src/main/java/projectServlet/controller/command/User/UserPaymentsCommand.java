@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.converters.AccountDtoConverterImpl;
 import projectServlet.model.converters.CreditCardDtoConverterImpl;
@@ -17,6 +19,7 @@ import projectServlet.model.service.CreditCardServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 
 public class UserPaymentsCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final AccountService accountService = new AccountServiceImpl();
     private final EntityDtoConverter<Account, AccountDTO> accountDtoConverter= new AccountDtoConverterImpl();
 
@@ -26,6 +29,7 @@ public class UserPaymentsCommand implements Command {
         request.setAttribute("accounts",
                 accountDtoConverter
                         .convertEntityListToDtoList(accountService.findByUserId(user.getId())));
+        logger.info("payments page loaded");
         return "/WEB-INF/user/payments.jsp";
     }
 }

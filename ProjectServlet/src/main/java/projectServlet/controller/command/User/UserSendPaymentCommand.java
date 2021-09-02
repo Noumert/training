@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.exceptions.BanException;
 import projectServlet.exceptions.NotEnoughMoneyException;
@@ -14,6 +16,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
 public class UserSendPaymentCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final PaymentProcessingService paymentProcessingService = new PaymentProcessingServiceImpl();
     private final PaymentService paymentService = new PaymentServiceImpl();
 
@@ -34,25 +37,28 @@ public class UserSendPaymentCommand implements Command {
                 throw new BanException("account was banned");
             }
             paymentProcessingService.sendPayment(payment);
+            logger.info("payment successfully sent");
             return "redirect:/user/profile" +
                     "?payPage=" + payPage.orElse("1") + "&paySortBy=" + paySortBy.orElse("payment_id") +
                     "&payAsc=" + payAsc.orElse("true") +
                     "&accPage=" + accPage.orElse("1") + "&accSortBy=" + accSortBy.orElse("account_id") +
                     "&accAsc=" + accAsc.orElse("true");
         } catch (NotEnoughMoneyException e) {
+            logger.info("{}",e.getMessage());
             return "redirect:/user/profile/sendResult?noMoneyError=true" +
                     "&payPage=" + payPage.orElse("1") + "&paySortBy=" + paySortBy.orElse("payment_id") +
                     "&payAsc=" + payAsc.orElse("true") +
                     "&accPage=" + accPage.orElse("1") + "&accSortBy=" + accSortBy.orElse("account_id") +
                     "&accAsc=" + accAsc.orElse("true");
         } catch (BanException e) {
+            logger.info("{}",e.getMessage());
             return "redirect:/user/profile/sendResult?banError=true" +
                     "&payPage=" + payPage.orElse("1") + "&paySortBy=" + paySortBy.orElse("payment_id") +
                     "&payAsc=" + payAsc.orElse("true") +
                     "&accPage=" + accPage.orElse("1") + "&accSortBy=" + accSortBy.orElse("account_id") +
                     "&accAsc=" + accAsc.orElse("true");
         } catch (RuntimeException e) {
-//            System.err.println(e.getMessage());
+            logger.info("{}",e.getMessage());
             return "redirect:/user/profile/sendResult?error=true" +
                     "&payPage=" + payPage.orElse("1") + "&paySortBy=" + paySortBy.orElse("payment_id") +
                     "&payAsc=" + payAsc.orElse("true") +

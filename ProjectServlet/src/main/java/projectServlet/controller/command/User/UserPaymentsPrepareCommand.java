@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.GlobalConstants;
 import projectServlet.model.converters.AccountDtoConverterImpl;
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class UserPaymentsPrepareCommand implements Command {
-
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private final EntityDtoConverter<Account, AccountDTO> accountDtoConverter = new AccountDtoConverterImpl();
     private final PaymentService paymentService = new PaymentServiceImpl();
     private final AccountService accountService = new AccountServiceImpl();
@@ -40,6 +42,7 @@ public class UserPaymentsPrepareCommand implements Command {
         if (accountIdString == null || accountIdString.equals("")
                 || moneyString == null || moneyString.equals("")
                 || recipient == null || recipient.equals("")) {
+            logger.info("payments page loaded");
             return "redirect:/user/payments";
         }
 
@@ -60,6 +63,7 @@ public class UserPaymentsPrepareCommand implements Command {
             request.setAttribute("accounts",
                     accountDtoConverter
                             .convertEntityListToDtoList(accountService.findByUserId(user.getId())));
+            logger.info("payments page loaded with validation errors");
             return "/WEB-INF/user/payments.jsp";
         }
 
@@ -73,8 +77,10 @@ public class UserPaymentsPrepareCommand implements Command {
                     .dateTime(LocalDateTime.now())
                     .paymentNumber(UUID.randomUUID().toString())
                     .build());
+            logger.info("account successfully added");
             return "redirect:/user/payments/prepareResult?success=true";
         } catch (RuntimeException e) {
+            logger.info("{}",e.getMessage());
             return "redirect:/user/payments/prepareResult?error=true";
         }
     }

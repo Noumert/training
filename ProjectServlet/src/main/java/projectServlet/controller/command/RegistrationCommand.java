@@ -1,6 +1,9 @@
 package projectServlet.controller.command;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.config.PasswordEncoder;
+import projectServlet.controller.filter.AuthFilter;
 import projectServlet.model.entity.RoleType;
 import projectServlet.model.entity.User;
 import projectServlet.model.service.UserService;
@@ -9,6 +12,7 @@ import projectServlet.model.service.UserServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 
 public class RegistrationCommand implements Command {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     @Override
     public String execute(HttpServletRequest request) {
         UserService userService = new UserServiceImpl();
@@ -22,6 +26,7 @@ public class RegistrationCommand implements Command {
                 email == null || email.equals("") ||
                 password == null || password.equals("")
         ) {
+            logger.info("Load registration form");
             return "/registration.jsp";
         }
 
@@ -41,6 +46,7 @@ public class RegistrationCommand implements Command {
             request.setAttribute("firstName",firstName);
             request.setAttribute("lastName",lastName);
             request.setAttribute("email",email);
+            logger.info("Load registration with validation errors");
             return "/registration.jsp";
         }
 
@@ -54,7 +60,7 @@ public class RegistrationCommand implements Command {
                     .role(RoleType.ROLE_USER)
                     .build());
         }catch (RuntimeException e){
-            System.out.println("problems with saving");
+            logger.info("Problems with registration {}",e.getMessage());
             return "redirect:/registration?error=true";
         }
         return "redirect:/login";

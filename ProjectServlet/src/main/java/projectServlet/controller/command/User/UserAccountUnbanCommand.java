@@ -1,5 +1,7 @@
 package projectServlet.controller.command.User;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import projectServlet.controller.command.Command;
 import projectServlet.model.entity.Account;
 import projectServlet.model.entity.UnbanAccountRequest;
@@ -13,7 +15,8 @@ import javax.ws.rs.NotFoundException;
 import java.time.LocalDateTime;
 
 public class UserAccountUnbanCommand implements Command {
-    private final UnbanAccountRequestService unbanAccountRequestService=
+    private final Logger logger = LogManager.getLogger(this.getClass());
+    private final UnbanAccountRequestService unbanAccountRequestService =
             new UnbanAccountRequestServiceImpl();
     private final AccountService accountService = new AccountServiceImpl();
 
@@ -23,12 +26,12 @@ public class UserAccountUnbanCommand implements Command {
         Long accountId = Long.valueOf(request.getParameter("accountId"));
         Account account = accountService.findById(accountId).orElseThrow(NotFoundException::new);
         unbanAccountRequestService.save(UnbanAccountRequest.builder()
-                        .dateTime(LocalDateTime.now())
-                        .resolved(false)
-                        .account(account)
+                .dateTime(LocalDateTime.now())
+                .resolved(false)
+                .account(account)
                 .build()
         );
-
+        logger.info("account unban request sent successfully");
         return "redirect:/user/accounts/unbanResult?success=true";
     }
 }
