@@ -159,4 +159,45 @@ public class JDBCPaymentDao implements PaymentDao {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public List<Payment> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc) {
+        Map<Long, Account> cache = new HashMap<>();
+        List<Payment> payments = new ArrayList<>();
+
+        String query = "select p.*,a.* from payment p " +
+                " left join account a using (account_id) " +
+                " left join user u using (user_id) " +
+                " where user_id = ?";
+
+        if(asc){
+            query+=" order by " + sortBy + " asc limit ?,?";
+        }else {
+            query+=" order by " + sortBy + " desc limit ?,?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+
+            ps.setLong(1,userId);
+            int start=(page-1) * pageSize;
+            ps.setInt(2, start);
+            ps.setInt(3, (start+pageSize));
+            ResultSet rs = ps.executeQuery();
+
+            ObjectMapper<Account> accountMapper = new AccountMapper();
+            ObjectMapper<Payment> paymentMapper = new PaymentMapper();
+
+            while (rs.next()) {
+                Account account = accountMapper
+                        .extractFromResultSet(rs);
+                Payment payment = paymentMapper
+                        .extractFromResultSet(rs);
+                payment.setAccount(accountMapper.makeUnique(cache,account));
+                payments.add(payment);
+            }
+            return payments;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -91,8 +91,11 @@
     </c:forEach>
 </table>
 
-<%--<div th:replace="pagination :: acc">--%>
-<%--</div>--%>
+<c:forEach begin="1" end="${accTotal}" var="i">
+    <a href="/user/profile?payPage=${payPage}&paySortBy=${paySortBy}&payAsc=${payAsc}&accPage=${i}&accSortBy=${accSortBy}&accAsc=${accAsc}">
+        ${i}
+    </a>
+</c:forEach>
 
 <h1>
     <fmt:message key="label.payments"/>
@@ -170,8 +173,11 @@
     </c:forEach>
 </table>
 
-<%--<div th:replace="pagination :: pay">--%>
-<%--</div>--%>
+<c:forEach begin="1" end="${payTotal}" var="i">
+    <a href="/user/profile?payPage=${i}&paySortBy=${paySortBy}&payAsc=${payAsc}&accPage=${accPage}&accSortBy=${accSortBy}&accAsc=${accAsc}">
+            ${i}
+    </a>
+</c:forEach>
 
 </body>
 </html>

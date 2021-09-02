@@ -83,6 +83,45 @@ public class JDBCAccountDao implements AccountDao {
     }
 
     @Override
+    public List<Account> findByUserId(Long userId, int page,int pageSize, String sortBy, boolean asc) {
+        Map<Long, User> cache = new HashMap<>();
+        List<Account> accounts = new ArrayList<>();
+
+        String query = "select * from account " +
+                "left join user using (user_id) where user_id = ? ";
+
+        if(asc){
+            query+=" order by " + sortBy + " asc limit ?,?";
+        }else {
+            query+=" order by " + sortBy + " desc limit ?,?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setLong(1, userId);
+            int start=(page-1) * pageSize;
+            ps.setInt(2, start);
+            ps.setInt(3, (start+pageSize));
+
+            ResultSet rs = ps.executeQuery();
+
+            ObjectMapper<Account> accountMapper = new AccountMapper();
+            ObjectMapper<User> userMapper = new UserMapper();
+
+            while (rs.next()) {
+                Account account = accountMapper
+                        .extractFromResultSet(rs);
+                User user = userMapper
+                        .extractFromResultSet(rs);
+                account.setUser(userMapper.makeUnique(cache, user));
+                accounts.add(account);
+            }
+            return accounts;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Optional<Account> findByAccountName(String accountName) {
 
         try (PreparedStatement ps = connection.prepareStatement("select * from account " +

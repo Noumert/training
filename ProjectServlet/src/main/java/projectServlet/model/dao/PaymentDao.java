@@ -9,6 +9,5 @@ import java.util.Optional;
 public interface PaymentDao extends GenericDao<Payment>{
     List<Payment> findByUserId(Long userId);
 
-
-//    Page<Payment> findPaymentsByUserId(Long userId, Pageable pageable);
+    List<Payment> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc);
 }

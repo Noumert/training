@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class UserProfileCommand implements Command {
+    private final int PAGE_SIZE=5;
     private final Logger logger = LogManager.getLogger(this.getClass());
     private final AccountService accountService = new AccountServiceImpl();
     private final PaymentService paymentService = new PaymentServiceImpl();
@@ -30,27 +31,37 @@ public class UserProfileCommand implements Command {
     private final EntityDtoConverter<User, UserDTO> userDtoConverter= new UserDtoConverterImpl();
     @Override
     public String execute(HttpServletRequest request) {
-        Optional<String> accPage = Optional.ofNullable(request.getParameter("accPage"));
-        Optional<String> accSortBy = Optional.ofNullable(request.getParameter("accSortBy"));
-        Optional<String> accAsc = Optional.ofNullable(request.getParameter("accAsc"));
-        Optional<String> payPage = Optional.ofNullable(request.getParameter("payPage"));
-        Optional<String> paySortBy = Optional.ofNullable(request.getParameter("paySortBy"));
-        Optional<String> payAsc = Optional.ofNullable(request.getParameter("payAsc"));
-        request.setAttribute("accPage", accPage.orElse("1"));
-        request.setAttribute("accSortBy", accSortBy.orElse("account_id"));
-        request.setAttribute("accAsc", accAsc.orElse("true"));
-        request.setAttribute("payPage", payPage.orElse("1"));
-        request.setAttribute("paySortBy", paySortBy.orElse("payment_id"));
-        request.setAttribute("payAsc", payAsc.orElse("true"));
+        int accPage = Integer.parseInt(Optional.ofNullable(request.getParameter("accPage")).orElse("1"));
+        String accSortBy = Optional.ofNullable(request.getParameter("accSortBy")).orElse("account_id");
+        boolean accAsc = Boolean.parseBoolean(Optional.ofNullable(request.getParameter("accAsc")).orElse("true"));
+        int payPage = Integer.parseInt(Optional.ofNullable(request.getParameter("payPage")).orElse("1"));
+        String paySortBy = Optional.ofNullable(request.getParameter("paySortBy")).orElse("payment_id");
+        boolean payAsc = Boolean.parseBoolean(Optional.ofNullable(request.getParameter("payAsc")).orElse("true"));
+        request.setAttribute("accPage", accPage);
+        request.setAttribute("accSortBy", accSortBy);
+        request.setAttribute("accAsc", accAsc);
+        request.setAttribute("payPage", payPage);
+        request.setAttribute("paySortBy", paySortBy);
+        request.setAttribute("payAsc", payAsc);
+
 
         User user = (User)request.getSession().getAttribute("user");
         request.setAttribute("user",userDtoConverter.convertEntityToDto(user));
         request.setAttribute("accounts",
                 accountDtoConverter
-                        .convertEntityListToDtoList(accountService.findByUserId(user.getId())));
+                        .convertEntityListToDtoList(
+                                accountService.findByUserId(user.getId(),accPage,PAGE_SIZE,accSortBy,accAsc)
+                        ));
         request.setAttribute("payments",
                 paymentDtoConverter
-                        .convertEntityListToDtoList(paymentService.findByUserId(user.getId())));
+                        .convertEntityListToDtoList(
+                                paymentService.findByUserId(user.getId(),payPage,PAGE_SIZE,paySortBy,payAsc)
+                        ));
+
+        request.setAttribute("accTotal", (accountService.findByUserId(user.getId()).size()/PAGE_SIZE)+1);
+
+        request.setAttribute("payTotal",  (paymentService.findByUserId(user.getId()).size()/PAGE_SIZE)+1);
+
         logger.info("Load Profile page");
         return "/WEB-INF/user/profile.jsp";
     }

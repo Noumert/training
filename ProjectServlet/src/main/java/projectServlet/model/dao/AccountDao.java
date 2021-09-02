@@ -13,4 +13,6 @@ public interface AccountDao extends GenericDao<Account>{
     Optional<Account> findByAccountName(String accountName);
 
     List<Account> findFreeUserAccountsByUserId(Long userId);
+
+    List<Account> findByUserId(Long userId, int page, int pageSize, String sortBy, boolean asc);
 }
