@@ -6,8 +6,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import project.entity.CreditCard;
-import project.repository.CreditCardRepository;
+import projectServlet.model.dao.CreditCardDao;
+import projectServlet.model.dao.DaoFactory;
+import projectServlet.model.entity.CreditCard;
+import projectServlet.model.entity.User;
+import projectServlet.model.service.CreditCardServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +25,9 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class CreditCardServiceTest {
     @Mock
-    private CreditCardRepository creditCardRepository;
+    private DaoFactory daoFactory;
+    @Mock
+    private CreditCardDao creditCardDao;
 
     @InjectMocks
     private CreditCardServiceImpl creditCardService;
@@ -32,9 +37,10 @@ class CreditCardServiceTest {
         CreditCard creditCard = CreditCard.builder()
                 .id(1L)
                 .build();
-        Mockito.when(creditCardRepository.save(any(CreditCard.class))).then(returnsFirstArg());
+        Mockito.when(daoFactory.createCreditCardDao()).thenReturn(creditCardDao);
+        Mockito.doNothing().when(creditCardDao).save(any(CreditCard.class));
 
-        assertThat(creditCardService.save(creditCard)).isEqualTo(creditCard);
+        assertDoesNotThrow(()->creditCardService.save(creditCard));
     }
 
     @Test
@@ -42,7 +48,8 @@ class CreditCardServiceTest {
         CreditCard creditCard = CreditCard.builder()
                 .id(1L)
                 .build();
-        Mockito.when(creditCardRepository.save(any(CreditCard.class))).thenThrow(RuntimeException.class);
+        Mockito.when(daoFactory.createCreditCardDao()).thenReturn(creditCardDao);
+        Mockito.doThrow(RuntimeException.class).when(creditCardDao).save(any(CreditCard.class));
 
         assertThrows(RuntimeException.class, () -> creditCardService.save(creditCard));
     }
@@ -56,7 +63,8 @@ class CreditCardServiceTest {
                 .id(2L)
                 .build();
         List<CreditCard> creditCards= Arrays.asList(creditCard1,creditCard2);
-        Mockito.when(creditCardRepository.findByUserId(1L)).thenReturn(creditCards);
+        Mockito.when(daoFactory.createCreditCardDao()).thenReturn(creditCardDao);
+        Mockito.doReturn(creditCards).when(creditCardDao).findByUserId(1L);
 
         assertThat(creditCardService.findUserCardsById(1L)).isEqualTo(creditCards);
     }
@@ -70,7 +78,8 @@ class CreditCardServiceTest {
                 .id(2L)
                 .build();
         List<CreditCard> creditCards= Arrays.asList(creditCard1,creditCard2);
-        Mockito.when(creditCardRepository.findAll()).thenReturn(creditCards);
+        Mockito.when(daoFactory.createCreditCardDao()).thenReturn(creditCardDao);
+        Mockito.doReturn(creditCards).when(creditCardDao).findAll();
 
         assertThat(creditCardService.findAll()).isEqualTo(creditCards);
     }
@@ -80,7 +89,8 @@ class CreditCardServiceTest {
         CreditCard creditCard = CreditCard.builder()
                 .id(1L)
                 .build();
-        Mockito.when(creditCardRepository.findByAccountId(1L)).thenReturn(Optional.of(creditCard));
+        Mockito.when(daoFactory.createCreditCardDao()).thenReturn(creditCardDao);
+        Mockito.doReturn(Optional.of(creditCard)).when(creditCardDao).findByAccountId(1L);
 
         assertThat(creditCardService.findByAccountId(1L)).isEqualTo(Optional.of(creditCard));
     }

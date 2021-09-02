@@ -1,18 +1,18 @@
 package project.model;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import project.dto.UserAccountDTO;
-import project.entity.Account;
-import project.entity.User;
+import projectServlet.model.converters.AccountUserAccountDtoConverterImpl;
+import projectServlet.model.converters.EntityDtoConverter;
+import projectServlet.model.dto.UserAccountDTO;
+import projectServlet.model.entity.Account;
+import projectServlet.model.entity.User;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+
 class AccountUserAccountDtoConverterImplTest {
-    @Autowired
-    EntityDtoConverter<Account, UserAccountDTO> accountUserAccountDtoConverter;
+    EntityDtoConverter<Account, UserAccountDTO> accountUserAccountDtoConverter = new AccountUserAccountDtoConverterImpl();
 
     @Test
     void convertEntityToDto() {

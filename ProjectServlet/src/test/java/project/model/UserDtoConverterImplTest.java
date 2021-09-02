@@ -1,20 +1,20 @@
 package project.model;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import project.dto.UserDTO;
-import project.entity.User;
+
+
+import projectServlet.config.PasswordEncoder;
+import projectServlet.model.converters.EntityDtoConverter;
+import projectServlet.model.converters.UserDtoConverterImpl;
+import projectServlet.model.dto.UserDTO;
+import projectServlet.model.entity.User;
+
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
+
 class UserDtoConverterImplTest {
-    @Autowired
-    EntityDtoConverter<User, UserDTO> userDtoConverter;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    EntityDtoConverter<User, UserDTO> userDtoConverter = new UserDtoConverterImpl();
 
     @Test
     void convertEntityToDto() {
@@ -52,7 +52,7 @@ class UserDtoConverterImplTest {
         assertThat(user.getFirstName()).isEqualTo("TestName");
         assertThat(user.getLastName()).isEqualTo("TestLastName");
         assertThat(user.getEmail()).isEqualTo("test@gmail.com");
-        assertThat(passwordEncoder.matches("password",user.getPassword())).isEqualTo(true);
+        assertThat(PasswordEncoder.passwordEncoder().matches("password",user.getPassword())).isEqualTo(true);
         assertThat(user.isAccountNonLocked()).isEqualTo(true);
     }
 }
