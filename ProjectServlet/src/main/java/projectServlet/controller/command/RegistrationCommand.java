@@ -24,6 +24,26 @@ public class RegistrationCommand implements Command {
         ) {
             return "/registration.jsp";
         }
+
+        boolean haveErrors = false;
+
+        if(!email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")){
+            request.setAttribute("emailIncorrect",true);
+            haveErrors = true;
+        }
+
+        if(!password.matches("^.{8,16}$")){
+            request.setAttribute("passwordIncorrect",true);
+            haveErrors = true;
+        }
+
+        if(haveErrors){
+            request.setAttribute("firstName",firstName);
+            request.setAttribute("lastName",lastName);
+            request.setAttribute("email",email);
+            return "/registration.jsp";
+        }
+
         try {
                      userService.save(User.builder()
                     .password(PasswordEncoder.passwordEncoder().encode(password))
@@ -34,7 +54,6 @@ public class RegistrationCommand implements Command {
                     .role(RoleType.ROLE_USER)
                     .build());
         }catch (RuntimeException e){
-            e.printStackTrace();
             System.out.println("problems with saving");
             return "redirect:/registration?error=true";
         }

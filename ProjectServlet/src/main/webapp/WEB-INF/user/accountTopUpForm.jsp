@@ -13,7 +13,7 @@
 <%@ include file="/WEB-INF/templates/topPanel.jspf" %>
 
 <c:if test="${param.error=='true'}">
-    <div class="alert alert-info">
+    <div class="alert alert-danger">
         <fmt:message key="label.error"/>
     </div>
 </c:if>
@@ -39,6 +39,9 @@
             <form name="topUpForm" action="/user/accounts/topUpForm/topUp" method="post">
                 <input id="topUpMoney" type = "number" pattern="[0-9]+([\.,][0-9]+)?"
                        step="0.01" name = "topUpMoney" required/>
+                <c:if test="${moneyIncorrect}">
+                    <p style="color:red"><fmt:message key="label.money.not.valid"/></p>
+                </c:if>
                 <input type = "hidden" name = "accountId" value = "${account.id}"  />
                 <button type="submit" <c:if test="${account.ban}"><c:out value="disabled='disabled'"/></c:if>>
                     <fmt:message key="label.top.up"/>
